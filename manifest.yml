@@ -1,0 +1,8 @@
+---
+applications:
+- name: DataAppCloud
+  memory: 256M
+  host: DataAppCloud
+  domain: mybluemix.net
+  services:
+  - Db2-il
