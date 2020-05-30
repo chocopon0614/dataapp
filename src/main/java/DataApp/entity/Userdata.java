@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -62,7 +61,6 @@ public class Userdata implements Serializable {
 		this.id = id;
 	}
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return this.createTime;
 	}
