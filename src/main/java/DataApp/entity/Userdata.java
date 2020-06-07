@@ -32,7 +32,7 @@ public class Userdata implements Serializable {
 	private int id;
 
 	@Column(name="CREATE_TIME")
-	@JsonProperty("Registration time")
+//	@JsonProperty("Registration time")
 	private Timestamp createTime;
 
 	@JsonProperty("Height")

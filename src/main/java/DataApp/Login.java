@@ -1,50 +1,32 @@
 package DataApp;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import DataApp.entity.Userinformation;
+import DataApp.util.jwtutil;
 
-/**
- * Servlet implementation class Login
- */
-@WebServlet("/Login")
-public class Login extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Login() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String UserName = request.getParameter("username");
-		String PassWord = request.getParameter("password");
+@Path("/login")
+public class Login {
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
+	public Response userLogin(@FormParam("username") final String UserName, 
+			@FormParam("password") final String PassWord) {
 		
+//		String hash_password = hashutil.getSHA256(PassWord);
+
+
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 		
@@ -54,22 +36,26 @@ public class Login extends HttpServlet {
 		
 		if (!(UserObj == null || UserObj.size() == 0)) {
 			String DbPass = UserObj.get(0).getPassword();
+//			if (hash_password.equals(DbPass)) {
 			if (PassWord.equals(DbPass)) {
 				
-				request.setAttribute("UserId", UserObj.get(0).getId());
-				request.setAttribute("UserName", UserObj.get(0).getUsername());
-				this.getServletContext().getRequestDispatcher("/UserData.jsp").forward(request, response);
+				String jwttoken = jwtutil.createJWT(UserName);
+				String res = "{\"JWT\" : \"" + jwttoken + "\" }";
+
+			    ResponseBuilder rb = Response.ok().type(MediaType.APPLICATION_JSON_TYPE);
+				return rb.entity(res).build();
 				
 			} else {
-				request.setAttribute("ErrorMes", "Password Error");
-				this.getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
+
+				Response response = Response.status(400).build();
+			    return response;
+
 			}
 				
 		}else {
-			request.setAttribute("ErrorMes", "Username Error");
-			this.getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
+			Response response = Response.status(500).build();
+		    return response;
 		}
-	 
 	  }
 
  }
