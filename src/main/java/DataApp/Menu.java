@@ -5,7 +5,9 @@ import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -60,6 +62,47 @@ public class Menu {
 		
 	}
  
+ }
+	
+	
+	
+	@DELETE
+	@Path("/trash")
+    public Response datatrash(@FormParam("jwt") final String jwt, @FormParam("id") final int id ) throws JsonProcessingException {
+		
+	try{
+
+		EntityTransaction tx = null;
+		String UserName = jwtutil.varifyJWT(jwt);
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em = emf.createEntityManager();
+		
+		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
+				.setParameter(1, UserName)
+				.getSingleResult();
+		
+	    tx = em.getTransaction();
+	    tx.begin();
+
+		em.createNamedQuery("Userdata.deleteData",Userdata.class)
+				.setParameter(1, UserObj)
+				.setParameter(2, id)
+				.executeUpdate();
+	    
+	    tx.commit();
+
+		Response response = Response.ok().build();
+		return response;
+		
+			
+	  }catch(Exception e){
+		Response response = Response.status(500).build();
+		return response;
+		
+	}
+ 
  }	
+
 
 }

@@ -44,7 +44,7 @@
             </p>
 
             <p class="mb-4 d-none d-md-block">
-              <strong>Furthermore, this can be connected another app which can visualize your data with some graphs. Let's connect from below link.</strong>
+              <strong>Furthermore, this can be connected another application which can visualize your data with some graphs. Let's connect from below link.</strong>
             </p>
 
             <a target="_blank" href="" class="btn btn-indigo btn-lg">Start connection
@@ -70,15 +70,16 @@
                     <strong>Login here</strong>
                   </h3>
                   <hr>
+                  <div align ="center" style = "color:red" >{{login_message}}</div>
 
                   <div class="md-form">
                     <i class="fas fa-user prefix grey-text"></i>
-                    <input type="text" id="form3" class="form-control" ng-model="username">
+                    <input type="text" id="username" class="form-control" ng-model="username">
                     <label for="form3">Your name</label>
                   </div>
                   <div class="md-form">
                     <i class="fas fa-lock prefix grey-text"></i>
-                    <input type="password" id="form3" class="form-control" ng-model="password">
+                    <input type="password" id="password" class="form-control" ng-model="password">
                     <label for="form3">Your password</label>
                   </div>
 
@@ -117,15 +118,56 @@
   <!-- Full Page Intro -->
 
 
+ <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Register</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div align ="center" style = "color:red" >{{register_message}}</div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <i class="fas fa-user prefix grey-text"></i>
+          <input type="text" ng-model="mdusername" id="orangeForm-name" class="form-control validate" >
+          <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
+        </div>
+ 
+        <div class="md-form mb-4">
+          <i class="fas fa-lock prefix grey-text"></i>
+          <input type="password" ng-model="mdpassword" id="orangeForm-pass" class="form-control validate" >
+          <label data-error="wrong" data-success="right" for="orangeForm-pass">Your password</label>
+        </div>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-deep-orange" ng-click="register()">Create Account</button>
+      </div>
+    </div>
+  </div>
+ </div>
+
+
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
 
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+<!--
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.6/ui-bootstrap-tpls.min.js"></script>
+-->
+ <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.4.js"></script>
 
- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
- <script type="text/javascript" src="//cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+<!--
+ <script data-require="angular.js@1.5.0" data-semver="1.5.0" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+ <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.4.js"></script>
+-->
+
  <script src="js/app.js"></script>
 
 </body>

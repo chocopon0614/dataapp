@@ -71,22 +71,25 @@
               <table class="table table-hover">
                 <thead class="blue-grey lighten-4"  id ="thead">
                  <tr>
+                  <th style="display:none;">ID</th>
                   <th>Time</th>
                   <th>Height</th>
                   <th>Weight</th>
+                  <th></th>
                  </tr>
                 </thead>
                 <tbody id ="tbody">
-                    <tr ng-repeat="data in filter =  (data_source) |  limitTo: pageLimit: limitBegin">
+                    <tr ng-repeat="data in data_source |  limitTo: pageLimit: limitBegin">
                      <td>{{data.createTime}}</td>
                      <td>{{data.Height}}</td>
                      <td>{{data.Weight}}</td>
+                     <td><i class="fa fa-trash" data-toggle="modal" ng-click="setId(data.id)"></i></td>
                     </tr>
                 </tbody>
               </table>
               <!-- Table  -->
                <ul class="pagination">
-                 <a class="page-link" ng-repeat="pager in pagerArr(filter.length / pageLimit)" ng-click="pagerClick($index)">[{{pager + 1}}]</a>
+                 <a class="page-link" ng-repeat="pager in pagerArr(data_source.length / pageLimit)" ng-click="pagerClick($index)">[{{pager + 1}}]</a>
               </ul>
             </div>
           </div>

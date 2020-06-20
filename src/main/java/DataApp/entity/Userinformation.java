@@ -25,6 +25,7 @@ public class Userinformation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(insertable=false)
 	private int id;
 
 	@Column(name="CREATE_TIME")
