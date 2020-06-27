@@ -22,10 +22,6 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamSerializerJQLike',
 	 function($scope, $http, $window, $httpParamSerializerJQLike){
-	   $scope.username = null;
-	   $scope.mdusername = null;
-	   $scope.mdemail = null;
-	   
 	   sessionStorage.removeItem('jwt');
 	
        $scope.login = function(){
@@ -87,7 +83,7 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
 
 	var jwt = sessionStorage.getItem('jwt');
 
-    $scope.pageLimit = 5; 
+    $scope.pageLimit = 10; 
     $scope.limitBegin = 0; 
  
 
@@ -135,7 +131,8 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
     };
 
 
-    $scope.setId = function(id){
+    $scope.setId = function(id, index){
+    	var tabledata = $scope.data_source;
     	
     	$uibModal.open({
     		templateUrl : 'templates/modal.html',
@@ -152,7 +149,7 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
     	    	          data: { jwt: jwt, id: id}
     	    	        }).then(function successCallback(response){
     	    	            $uibModalInstance.close();
-    	    	            $window.location.reload(); 
+    	    	            tabledata.splice(index,1);
 
     	    	        }, function errorCallback(response) {
     	    	            $uibModalInstance.close();
@@ -168,20 +165,41 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
           });
   	};
 
+  	
+  	$scope.insertdata = function(){
 
+    	var tabledata = $scope.data_source;
+
+  		$uibModal.open({
+    		templateUrl : 'templates/insertmodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+
+    	    	$scope.register = function () {
+    	    		
+    	        $http({
+    	             method: 'POST',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'api/menu/insertdata',
+    	       	       data: { jwt: jwt, height: $scope.mdheight, weight: $scope.mdweight }
+    	           }).then(function successCallback(response){
+	    	            $uibModalInstance.close();
+	    	            $window.location.reload();
+    	             	   
+    	            }, function errorCallback(response) {
+    	              $location.path('/error');
+    	           
+    	        });
+
+    	  };
+    	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+  	
   }]);
-
-
-DataApp.controller('TrashController', function modalController( $scope , $uibModalInstance ){
-	 $scope.message = 'メッセージ';  
-	
-	  $scope.ok = function(){
-	      
-	      $uibModalInstance.close()
-	  }
-	  
-	  $scope.cancel = function(){
-	      
-	      $uibModalInstance.close()
-	  }
-	})

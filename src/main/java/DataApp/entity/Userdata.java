@@ -30,9 +30,10 @@ public class Userdata implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	@Column(insertable=false)
+	private Integer id;
 
-	@Column(name="CREATE_TIME")
+	@Column(name="CREATE_TIME" )
 	private Timestamp createTime;
 
 	@JsonProperty("Height")

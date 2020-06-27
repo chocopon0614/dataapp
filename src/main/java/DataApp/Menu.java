@@ -1,5 +1,6 @@
 package DataApp;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,7 +69,7 @@ public class Menu {
 	
 	@DELETE
 	@Path("/trash")
-    public Response datatrash(@FormParam("jwt") final String jwt, @FormParam("id") final int id ) throws JsonProcessingException {
+    public Response datatrash(@FormParam("jwt") final String jwt, @FormParam("id") final int id )  {
 		
 	try{
 
@@ -104,5 +105,62 @@ public class Menu {
  
  }	
 
+	
+	@POST
+	@Path("/insertdata")
+    public Response insertdata(@FormParam("jwt") final String jwt, @FormParam("height") final double height, 
+    		@FormParam("weight") final double weight) {
+		
+	try{
+
+		EntityTransaction tx = null;
+		String UserName = jwtutil.varifyJWT(jwt);
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em = emf.createEntityManager();
+		
+		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
+				.setParameter(1, UserName)
+				.getSingleResult();
+		
+	    tx = em.getTransaction();
+	    tx.begin();
+	    
+	    Userdata userdata = new Userdata();
+	    userdata.setUserinformation(UserObj);
+	    userdata.setHeight(height);
+	    userdata.setWeight(weight);
+	    
+	    long millis = System.currentTimeMillis();
+	    userdata.setCreateTime(new Timestamp(millis));
+	    userdata.setModifiedTime(new Timestamp(millis));
+
+	    em.persist(userdata);
+	    
+	    tx.commit();
+
+	    
+		List<Userdata> UserDataList = em.createNamedQuery("Userdata.findUserid_desc", Userdata.class)
+				.setParameter(1, UserObj)
+				.getResultList();
+
+
+		ObjectMapper mapper = new ObjectMapper();
+		String ResJson = mapper.writeValueAsString(UserDataList);
+
+		Response response = Response.ok().entity(ResJson).
+				type(MediaType.APPLICATION_JSON).build();
+
+		return response;
+		
+			
+	  }catch(Exception e){
+		Response response = Response.status(500).build();
+		return response;
+		
+	}
+ 
+ }	
+	
 
 }
