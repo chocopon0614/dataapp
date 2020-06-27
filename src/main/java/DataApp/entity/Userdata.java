@@ -23,16 +23,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @NamedQueries({
 @NamedQuery(name="Userdata.findAll", query="SELECT u FROM Userdata u"),
 @NamedQuery(name="Userdata.findUserid", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id"),
-@NamedQuery(name="Userdata.findUserid_desc", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id desc")
+@NamedQuery(name="Userdata.findUserid_desc", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id desc"),
+@NamedQuery(name="Userdata.deleteData", query="DELETE FROM Userdata u where u.userinformation =?1 and u.id =?2")
 })
 public class Userdata implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	@Column(insertable=false)
+	private Integer id;
 
-	@Column(name="CREATE_TIME")
-//	@JsonProperty("Registration time")
+	@Column(name="CREATE_TIME" )
 	private Timestamp createTime;
 
 	@JsonProperty("Height")
@@ -52,7 +53,6 @@ public class Userdata implements Serializable {
 	public Userdata() {
 	}
 
-	@JsonIgnore
 	public int getId() {
 		return this.id;
 	}
