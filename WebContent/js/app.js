@@ -1,4 +1,4 @@
-var DataApp = angular.module('DataApp', ['ngRoute']);
+var DataApp = angular.module('DataApp', ['ui.bootstrap','ngRoute']);
 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
@@ -22,10 +22,6 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamSerializerJQLike',
 	 function($scope, $http, $window, $httpParamSerializerJQLike){
-	   $scope.username = null;
-	   $scope.mdusername = null;
-	   $scope.mdemail = null;
-	   
 	   sessionStorage.removeItem('jwt');
 	
        $scope.login = function(){
@@ -59,7 +55,7 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamS
     	
     	$scope.register = function(){
       	  var method = "POST";	
-      	  var url = 'api/resources/register';	
+      	  var url = 'api/login/register';	
       		
       	  $http({
       	          method: method,
@@ -79,15 +75,15 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamS
     }]);
 
 
-DataApp.controller('MenuController', ['$scope', '$http', '$location','$httpParamSerializerJQLike',
-	function($scope, $http, $location, $httpParamSerializerJQLike){
-	
+DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location','$httpParamSerializerJQLike', '$window',
+	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
+
 	var method = "POST";	
 	var url = 'api/menu';	
 
 	var jwt = sessionStorage.getItem('jwt');
 
-    $scope.pageLimit = 5; 
+    $scope.pageLimit = 10; 
     $scope.limitBegin = 0; 
  
 
@@ -135,5 +131,75 @@ DataApp.controller('MenuController', ['$scope', '$http', '$location','$httpParam
     };
 
 
-     
+    $scope.setId = function(id, index){
+    	var tabledata = $scope.data_source;
+    	
+    	$uibModal.open({
+    		templateUrl : 'templates/modal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+    	          $scope.ok = function () {
+
+    	        	  $http({
+    	    	          method: 'DELETE',
+    	    	          headers : {
+    	                      'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	                  },
+    	                  transformRequest: $httpParamSerializerJQLike,
+    	    	          url:  'api/menu/trash',
+    	    	          data: { jwt: jwt, id: id}
+    	    	        }).then(function successCallback(response){
+    	    	            $uibModalInstance.close();
+    	    	            tabledata.splice(index,1);
+
+    	    	        }, function errorCallback(response) {
+    	    	            $uibModalInstance.close();
+
+    	    	        });
+
+    	          };
+    	        
+    	          $scope.cancel = function () {
+    	            $uibModalInstance.dismiss('cancel');
+    	          };
+    	      }
+          });
+  	};
+
+  	
+  	$scope.insertdata = function(){
+
+    	var tabledata = $scope.data_source;
+
+  		$uibModal.open({
+    		templateUrl : 'templates/insertmodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+
+    	    	$scope.register = function () {
+    	    		
+    	        $http({
+    	             method: 'POST',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'api/menu/insertdata',
+    	       	       data: { jwt: jwt, height: $scope.mdheight, weight: $scope.mdweight }
+    	           }).then(function successCallback(response){
+	    	            $uibModalInstance.close();
+	    	            $window.location.reload();
+    	             	   
+    	            }, function errorCallback(response) {
+    	              $location.path('/error');
+    	           
+    	        });
+
+    	  };
+    	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+  	
   }]);
