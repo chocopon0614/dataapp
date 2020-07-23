@@ -30,7 +30,7 @@ public class Menu {
 		
 	try{
 
-		String UserName = jwtutil.varifyJWT(jwt);
+		String UserName = jwtutil.varifyJWT(jwt,"username");
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
@@ -74,7 +74,7 @@ public class Menu {
 	try{
 
 		EntityTransaction tx = null;
-		String UserName = jwtutil.varifyJWT(jwt);
+		String UserName = jwtutil.varifyJWT(jwt,"username");
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
@@ -114,7 +114,7 @@ public class Menu {
 	try{
 
 		EntityTransaction tx = null;
-		String UserName = jwtutil.varifyJWT(jwt);
+		String UserName = jwtutil.varifyJWT(jwt,"username");
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();

@@ -11,7 +11,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class jwtutil {
 
-    public static String createJWT(String username){
+    public static String createJWT(String username, String password){
         long timeout = 60* 30 * 1000;
         String token = "";
         
@@ -24,6 +24,7 @@ public class jwtutil {
                 .withExpiresAt(new Date(System.currentTimeMillis() + timeout))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withClaim("username", username)
+                .withClaim("password", password)
                 .sign(algorithm);
         } catch (JWTCreationException exception){
             //Invalid Signing configuration / Couldn't convert Claims.
@@ -32,7 +33,7 @@ public class jwtutil {
         return token;
     }
     
-    public static String varifyJWT(String token) throws Exception {
+    public static String varifyJWT(String token, String key) throws Exception {
 
     	try {
     	    Algorithm algorithm = Algorithm.HMAC256("secret");
@@ -41,9 +42,7 @@ public class jwtutil {
    	        .build(); 
 
     	    DecodedJWT jwt = verifier.verify(token);
-    	    String username = jwt.getClaim("username").asString();
-    	    
-    	    return username;
+    	    return jwt.getClaim(key).asString();
     	    
     	} catch (JWTVerificationException exception){
     		throw exception;
