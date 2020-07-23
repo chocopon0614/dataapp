@@ -41,7 +41,7 @@ public class Login {
 			String DbPass = UserObj.get(0).getPassword();
 			if (hash_password.equals(DbPass)) {
 				
-				String jwttoken = jwtutil.createJWT(UserName);
+				String jwttoken = jwtutil.createJWT(UserName, DbPass);
 				String res = "{\"JWT\" : \"" + jwttoken + "\" }";
 
 			    ResponseBuilder rb = Response.ok().type(MediaType.APPLICATION_JSON_TYPE);

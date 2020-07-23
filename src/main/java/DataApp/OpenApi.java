@@ -17,12 +17,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DataApp.entity.Userdata;
 import DataApp.entity.Userinformation;
+import DataApp.util.jwtutil;
 
 @Path("/Open")
 public class OpenApi {
@@ -129,6 +131,26 @@ public class OpenApi {
 		  return response;
 
 		}
+    }
+	
+	@Path("/Authorization")
+    @POST
+    public Response authorization(@FormParam("jwt") final String jwt ) throws Exception {
+
+	try{
+		
+		String username = jwtutil.varifyJWT(jwt, "username");
+		String password = jwtutil.varifyJWT(jwt, "password");
+		
+		String res = "{\"username\" : \"" + username + "\" , \"password\" : \"" + password + "\"}";
+
+	    ResponseBuilder rb = Response.ok().type(MediaType.APPLICATION_JSON_TYPE);
+		return rb.entity(res).build();
+
+    }catch(Exception e) {
+    	throw e;
+
+	  }
     }
 
 

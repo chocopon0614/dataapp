@@ -71,7 +71,7 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamS
       	        	$scope.register_message = 'Error occurred. Please check your input.';
       	        });
       	};
-
+      	
     }]);
 
 
@@ -202,4 +202,82 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
       });
   	};
   	
+  }]);
+
+DataApp.controller('AuthLogin', ['$scope', '$http', '$window','$httpParamSerializerJQLike','$location',
+	 function($scope, $http, $window, $httpParamSerializerJQLike, $location){
+     	
+     	
+ 	   var originalurl = $location.absUrl();
+ 	   var urlParm = originalurl.split('?')[1];
+
+       $scope.authentication = function(){
+    	  sessionStorage.removeItem('jwt');
+     	  
+    	  var method = "POST";	
+     	  var url = 'api/login';	
+     		
+     	  $http({
+     	          method: method,
+     	          headers : {
+                       'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                   },
+                   transformRequest: $httpParamSerializerJQLike,
+     	          url: url,
+     	          data: { username: $scope.username, password: $scope.password }
+     	        }).then(function successCallback(response){
+     	        	var resdata = response.data;
+     	        	var jwt = resdata.JWT;
+     	        	sessionStorage.setItem('jwt', jwt);
+     	        	
+   	        	    $window.location.href = 'authorization.html?' + urlParm;
+     	        	
+     	        }, function errorCallback(response) {
+     	        	var sts = response.status;
+
+     	        	if(sts == 400){
+       	        	   $scope.login_message = 'Password is wrong.';
+     	        	}else{
+          	           $scope.login_message = 'Your ID does not exist.';
+     	        	}
+     	      });
+     	};
+     	
+   }]);
+
+
+DataApp.controller('AuthController', ['$scope', '$http', '$window','$httpParamSerializerJQLike','$location',
+	 function($scope, $http, $window, $httpParamSerializerJQLike, $location){
+    	
+	  var url = $location.absUrl();
+ 	  var urlParm = url.split('?')[1];
+ 	  var originalurl = urlParm.split('&')[0];
+ 	  
+ 	  var originalurl_temp = decodeURIComponent(originalurl.split('=')[1]);
+	
+	  $scope.authorization = function(){
+      	  var method = "POST";	
+      	  var url = 'api/Open/Authorization';
+      	  
+     	  var jwt = sessionStorage.getItem('jwt');
+
+      	  $http({
+      	          method: method,
+      	          headers : {
+                        'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                   },
+                  transformRequest: $httpParamSerializerJQLike,
+      	          url: url,
+   	              data: { jwt: jwt}
+      	        }).then(function successCallback(response){
+      	        	var resdata = response.data;
+      	        	var url = originalurl_temp + '&username=' + resdata.username + '&confirmation=' + resdata.password ;
+       	        	$window.location.href = url;
+      	        }, function errorCallback(response) {
+      	        	console.log(response);
+
+      	      });
+      	};
+
+    	
   }]);
