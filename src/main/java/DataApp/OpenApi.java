@@ -23,41 +23,46 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DataApp.entity.Userdata;
+import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
 import DataApp.util.jwtutil;
 
 @Path("/Open")
 public class OpenApi {
 
-	@Path("/TableData")
-	@POST
-      public Response tabledata(@FormParam("UserId") final int UserId) throws JsonProcessingException {
+	@Path("/ChartData")
+    @GET
+    public Response chartdata(@Context HttpHeaders headers) throws JsonProcessingException {
+		
+		String UserName = headers.getRequestHeader("resource-owner").get(0);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 		
-		Userinformation UserObj = em.find(Userinformation.class, UserId);
-		
-		List<Userdata> UserDataList = em.createNamedQuery("Userdata.findUserid_desc", Userdata.class)
-				.setParameter(1, UserObj)
+		Userinformation userobj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
+				.setParameter(1, UserName)
+				.getSingleResult();
+
+		List<Userdatablood> userdata_list = em.createNamedQuery("Userdatablood.findUserid", Userdatablood.class)
+				.setParameter(1, userobj)
 				.getResultList();
 		
-		if (!Objects.isNull(UserDataList)) {
+		if (!Objects.isNull(userdata_list)) {
 			ObjectMapper mapper = new ObjectMapper();
-			String ResJson = mapper.writeValueAsString(UserDataList);
+			String resjson = mapper.writeValueAsString(userdata_list);
 
-			Response response = Response.ok().entity(ResJson).
+			Response response = Response.ok().entity(resjson).
 					type(MediaType.APPLICATION_JSON).build();
 
 			return response;
 			    
 			} else {
-				Response response = Response.status(500).build();
+				Response response = Response.status(401).build();
 			    return response;
-			}
 			
+			}
 		}
-
+	
 	@Path("/UserInfo")
     @GET
     public Response userinfo(@Context HttpHeaders headers) throws JsonProcessingException {
@@ -71,7 +76,7 @@ public class OpenApi {
 				.setParameter(1, UserName)
 				.getSingleResult();
 
-		List<Userdata> userdata_list = em.createNamedQuery("Userdata.findUserid", Userdata.class)
+		List<Userdata> userdata_list = em.createNamedQuery("Userdata.findUserid_selected", Userdata.class)
 				.setParameter(1, userobj)
 				.getResultList();
 		

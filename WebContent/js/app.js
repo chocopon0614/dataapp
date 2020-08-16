@@ -1,14 +1,20 @@
-var DataApp = angular.module('DataApp', ['ui.bootstrap','ngRoute']);
+var DataApp = angular.module('DataApp', ['ngRoute']);
 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
     .when('/', {
-      templateUrl: 'templates/menu.html',
-      controller: 'MenuController'
+      templateUrl: 'templates/top.html'
     })
     .when('/menu', {
       templateUrl: 'templates/menu.html',
       controller: 'MenuController'
+    })
+    .when('/top', {
+      templateUrl: 'templates/top.html'
+    })
+    .when('/blooddata', {
+      templateUrl: 'templates/blooddata.html',
+      controller: 'BloodController'
     })
     .when('/error', {
       templateUrl: 'templates/error.html'
@@ -79,7 +85,7 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
 	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
 
 	var method = "POST";	
-	var url = 'api/menu';	
+	var url = 'api/menu/BodyData';	
 
 	var jwt = sessionStorage.getItem('jwt');
 
@@ -201,6 +207,38 @@ DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location'
     	 }
       });
   	};
+  	
+  }]);
+
+
+DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location','$httpParamSerializerJQLike', '$window',
+	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
+
+	var method = "POST";	
+	var url = 'api/menu/BloodData';	
+
+	var jwt = sessionStorage.getItem('jwt');
+
+	$http({
+          method: method,
+          headers : {
+              'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+          },
+          transformRequest: $httpParamSerializerJQLike,
+          url: url,
+          data: { jwt: jwt}
+        }).then(function successCallback(response){
+        	var resdata = response.data;
+        	
+	        $scope.gtp = resdata[0].gtp;
+	        $scope.hdl = resdata[0].hdl;
+	        $scope.ldl = resdata[0].ldl;
+	        $scope.tg = resdata[0].tg;
+	        $scope.fpg = resdata[0].fpg;
+
+	    }, function errorCallback(response) {
+   	        $location.path('/error');
+     })  
   	
   }]);
 

@@ -29,7 +29,7 @@
               <a class="nav-link waves-effect" href="#!/menu"><i class="fa fa-heart"></i> BloodData</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link waves-effect" href="" target="_blank"><i class="fa fa-user"></i> Account</a>
+              <a class="nav-link waves-effect" href=""><i class="fa fa-user"></i> Account</a>
             </li>
           </ul>
 
@@ -53,57 +53,50 @@
 
   <!--Main layout-->
   <main class="pt-5 mx-lg-5">
+  <div class="container my-5 py-5 z-depth-1">
 
-    <div class="container-fluid mt-5">
+ 
+    <!--Section: Content-->
+    <section class="px-md-5 mx-md-5 dark-grey-text text-center text-lg-left">
 
       <!--Grid row-->
-      <div class="row wow fadeIn">
-
+      <div class="row">
 
         <!--Grid column-->
-        <div class="col-md-12 mb-4">
+        <div class="col-lg-6 mb-4 mb-lg-0 d-flex align-items-center justify-content-center">
 
+          <img src="pic/healthcare.png" class="img-fluid" alt="">
 
-          <!--Card-->
-          <div class="card">
-
-
-            <!--Card content-->
-            <div class="card-body">
-            
-
-              <!-- Table  -->
-              <table class="table table-hover">
-                <thead class="blue-grey lighten-4"  id ="thead">
-                 <tr>
-                  <th style="display:none;">ID</th>
-                  <th>Time</th>
-                  <th>Height</th>
-                  <th>Weight</th>
-                  <th></th>
-                 </tr>
-                </thead>
-                <tbody id ="tbody">
-                    <tr ng-repeat="data in data_source |  limitTo: pageLimit: limitBegin">
-                     <td>{{data.createTime}}</td>
-                     <td>{{data.Height}}</td>
-                     <td>{{data.Weight}}</td>
-                     <td><i class="fa fa-trash" data-toggle="modal" ng-click="setId(data.id,$index)"></i></td>
-                    </tr>
-                </tbody>
-              </table>
-              <!-- Table  -->
-               <ul class="pagination">
-                 <a class="page-link" ng-repeat="pager in pagerArr(data_source.length / pageLimit)" ng-click="pagerClick($index)">[{{pager + 1}}]</a>
-              </ul>
-
-            <button type="button" class="btn btn-primary" > 
-               <a ng-click="insertdata()">Register</a>
-            </button>
-            </div>
-          </div>
         </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+
+          <h3 class="font-weight-bold">Hello</h3>
+
+          <p class="font-weight-bold">You can manage your health data here. </br>You can add, delete and update data.</p>
+
+          <p class="text-muted">If you want to manage your body data (height and weight), please proceed from the below link.</p>
+
+          <a class="font-weight-bold" href="#!/menu" >Here<i class="fas fa-angle-right ml-2"></i></a>
+          
+          <p class="text-muted">If you want to manage your blood data (the main five components), please proceed from the below link.</p>
+
+          <a class="font-weight-bold" href="#!/blooddata" >Here<i class="fas fa-angle-right ml-2"></i></a>
+
+        </div>
+        <!--Grid column-->
+
       </div>
-    </div>
+      <!--Grid row-->
+
+
+    </section>
+    <!--Section: Content-->
+
+
+  </div>
   </main>
 </div>
+

@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @NamedQuery(name="Userdata.findAll", query="SELECT u FROM Userdata u"),
 @NamedQuery(name="Userdata.findUserid", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id"),
 @NamedQuery(name="Userdata.findUserid_desc", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id desc"),
+@NamedQuery(name="Userdata.findUserid_selected", query="SELECT u.createTime, u.height, u.weight FROM Userdata u where u.userinformation =?1 order by u.id desc"),
 @NamedQuery(name="Userdata.deleteData", query="DELETE FROM Userdata u where u.userinformation =?1 and u.id =?2")
 })
 public class Userdata implements Serializable {
