@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html ng-app="DataApp">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,132 +8,29 @@
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" >
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css">
-
-  <link rel="stylesheet" href="css/login.css">
  
 </head>
 
 <body ng-controller="LoginController">
-
-  <!-- Full Page Intro -->
-  <div class="view full-page-intro" style="background-image: url('pic/login.jpg'); background-repeat: no-repeat; background-size: cover;">
-
-    <!-- Mask & flexbox options-->
-    <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
-
-      <!-- Content -->
-      <div class="container">
-
-        <!--Grid row-->
-        <div class="row wow fadeIn">
-
-          <!--Grid column-->
-          <div class="col-md-6 mb-4 white-text text-center text-md-left">
-
-            <h1 class="display-4 font-weight-bold">Welcome</h1>
-
-            <hr class="hr-light">
-
-            <p>
-              <strong>You can manage your health data.</strong>
-            </p>
-
-          </div>
-          <!--Grid column-->
-
-          <!--Grid column-->
-          <div class="col-md-6 col-xl-5 mb-4">
-
-            <!--Card-->
-            <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-
-                <!-- Form -->
-                <form name="" ng-submit="login()">
-                  <!-- Heading -->
-                  <h3 class="dark-grey-text text-center">
-                    <strong>Login here</strong>
-                  </h3>
-                  <hr>
-                  <div align ="center" style = "color:red" >{{login_message}}</div>
-
-                  <div class="md-form">
-                    <i class="fas fa-user prefix grey-text"></i>
-                    <input type="text" id="username" class="form-control" ng-model="username">
-                    <label for="form3">Your name</label>
-                  </div>
-                  <div class="md-form">
-                    <i class="fas fa-lock prefix grey-text"></i>
-                    <input type="password" id="password" class="form-control" ng-model="password">
-                    <label for="form3">Your password</label>
-                  </div>
-
-                  <div class="text-center">
-                    <button class="btn btn-indigo">Login</button>
-                    <hr>
-                     <div>
-                        <a href="">Forgot password?</a>
-                     </div>
-                     <p>Not a member?
-                      <a href=""  data-toggle="modal" data-target="#modalRegisterForm">Register</a>
-                     </p>
-                  </div>
-
-                </form>
-                <!-- Form -->
-
-              </div>
-
-            </div>
-            <!--/.Card-->
-
-          </div>
-          <!--Grid column-->
-
-        </div>
-        <!--Grid row-->
-
-      </div>
-      <!-- Content -->
-
-    </div>
-    <!-- Mask & flexbox options-->
-
-  </div>
-  <!-- Full Page Intro -->
-
-
- <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Register</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div align ="center" style = "color:red" >{{register_message}}</div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input type="text" ng-model="mdusername" id="orangeForm-name" class="form-control validate" >
-          <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
-        </div>
  
-        <div class="md-form mb-4">
-          <i class="fas fa-lock prefix grey-text"></i>
-          <input type="password" ng-model="mdpassword" id="orangeForm-pass" class="form-control validate" >
-          <label data-error="wrong" data-success="right" for="orangeForm-pass">Your password</label>
-        </div>
+ <div style="height: 100vh">
+  <div class="flex-center flex-column">
+  <form class="text-center border border-light p-5" ng-submit="submit()">
+    
+    <div align ="center" style = "color:red" >{{login_message}}</div>
 
-      </div>
-      <div class="modal-footer d-flex justify-content-center">
-        <button class="btn btn-deep-orange" ng-click="register()">Create Account</button>
-      </div>
-    </div>
+    <p class="h4 mb-4">Sign in</p>
+
+    <!-- Username -->
+    <input type="text" id="defaultLoginForUsername" class="form-control mb-4" placeholder="Username" ng-model="username"><value>
+
+    <!-- Password -->
+    <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password" ng-model="password"></value>
+
+    <!-- Sign in button -->
+    <button class="btn btn-info btn-block my-4" type="submit">Sign in</button>
+
+  </form>
   </div>
  </div>
 
@@ -146,9 +42,9 @@
 
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
- <script type="text/javascript" src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.4.js"></script>
-
+ <script type="text/javascript" src="//cdn.jsdelivr.net/npm/ui-bootstrap4@3.0.6/dist/ui-bootstrap-tpls.min.js"></script>
+ 
  <script src="js/app.js"></script>
-
+ 
 </body>
 </html>

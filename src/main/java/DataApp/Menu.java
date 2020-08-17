@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DataApp.entity.Userdata;
+import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
 import DataApp.util.jwtutil;
 
@@ -26,6 +27,7 @@ import DataApp.util.jwtutil;
 public class Menu {
 	
 	@POST
+	@Path("/BodyData")
     public Response tabledata(@FormParam("jwt") final String jwt ) throws JsonProcessingException {
 		
 	try{
@@ -64,8 +66,6 @@ public class Menu {
 	}
  
  }
-	
-	
 	
 	@DELETE
 	@Path("/trash")
@@ -160,7 +160,48 @@ public class Menu {
 		
 	}
  
- }	
+  }
+	
+	@POST
+	@Path("/BloodData")
+    public Response blooddata(@FormParam("jwt") final String jwt ) throws JsonProcessingException {
+		
+	try{
+
+		String UserName = jwtutil.varifyJWT(jwt,"username");
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em = emf.createEntityManager();
+		
+		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
+				.setParameter(1, UserName)
+				.getSingleResult();
+		
+		List<Userdatablood> UserDataList = em.createNamedQuery("Userdatablood.findUserid", Userdatablood.class)
+				.setParameter(1, UserObj)
+				.getResultList();
+		
+		if (!Objects.isNull(UserDataList)) {
+			ObjectMapper mapper = new ObjectMapper();
+			String ResJson = mapper.writeValueAsString(UserDataList);
+
+			Response response = Response.ok().entity(ResJson).
+					type(MediaType.APPLICATION_JSON).build();
+
+			return response;
+			    
+			} else {
+				Response response = Response.status(500).build();
+			    return response;
+			}
+			
+	  }catch(Exception e){
+		Response response = Response.status(500).build();
+		return response;
+		
+	}
+ 
+ }
 	
 
 }
