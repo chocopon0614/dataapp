@@ -1,4 +1,4 @@
-var DataApp = angular.module('DataApp', ['ngRoute']);
+var DataApp = angular.module('DataApp', ['ui.bootstrap','ngRoute']);
 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
@@ -30,7 +30,7 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamS
 	 function($scope, $http, $window, $httpParamSerializerJQLike){
 	   sessionStorage.removeItem('jwt');
 	
-       $scope.login = function(){
+       $scope.submit = function(){
     	  var method = "POST";	
     	  var url = 'api/login';	
     		
