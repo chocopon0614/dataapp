@@ -5,12 +5,9 @@ DataApp.config(['$routeProvider', function($routeProvider){
     .when('/', {
       templateUrl: 'templates/top.html'
     })
-    .when('/menu', {
-      templateUrl: 'templates/menu.html',
-      controller: 'MenuController'
-    })
-    .when('/top', {
-      templateUrl: 'templates/top.html'
+    .when('/bodydata', {
+      templateUrl: 'templates/bodydata.html',
+      controller: 'BodyController'
     })
     .when('/blooddata', {
       templateUrl: 'templates/blooddata.html',
@@ -58,30 +55,10 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamS
     	        	}
     	      });
     	};
-    	
-    	$scope.register = function(){
-      	  var method = "POST";	
-      	  var url = 'api/login/register';	
-      		
-      	  $http({
-      	          method: method,
-      	          headers : {
-                        'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
-                    },
-                    transformRequest: $httpParamSerializerJQLike,
-      	          url: url,
-      	          data: { username: $scope.mdusername, password: $scope.mdpassword }
-      	        }).then(function successCallback(response){
-      	        	$scope.register_message = 'Registerd your new ID. Please login.';
-      	        }, function errorCallback(response) {
-      	        	$scope.register_message = 'Error occurred. Please check your input.';
-      	        });
-      	};
-      	
     }]);
 
 
-DataApp.controller('MenuController', ['$uibModal','$scope', '$http', '$location','$httpParamSerializerJQLike', '$window',
+DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location','$httpParamSerializerJQLike', '$window',
 	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
 
 	var method = "POST";	
