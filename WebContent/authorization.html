@@ -9,76 +9,53 @@
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" >
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css">
-
-  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
  
 </head>
 
 <body ng-controller="AuthController">
-  <div class="view full-page-intro" style="background-color: #2788b3; background-repeat: no-repeat; background-size: cover;">
+  <div class="container my-5 py-5 z-depth-1">
 
-    <!-- Mask & flexbox options-->
-    <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+ 
+    <!--Section: Content-->
+    <section class="px-md-5 mx-md-5 dark-grey-text text-center text-lg-left">
 
-      <!-- Content -->
-      <div class="container">
+      <!--Grid row-->
+      <div class="row">
 
-        <!--Grid row-->
-        <div class="row wow fadeIn">
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0 d-flex align-items-center justify-content-center">
 
-          <!--Grid column-->
-          <div class="col-md-6 mb-4 white-text text-center text-md-left">
-
-            <h1 class="display-4 font-weight-bold">Connection</h1>
-
-            <hr class="hr-light">
-
-            <p>
-              <strong>Please authorize an application.</strong>
-            </p>
-
-          </div>
-          <!--Grid column-->
-
-          <!--Grid column-->
-          <div class="col-md-6 col-xl-5 mb-4">
-
-            <!--Card-->
-            <div class="card">
-
-              <!--Card content-->
-              <div class="card-body">
-
-                <!-- Form -->
-                <form name="" ng-submit="authorization()">
-                  <!-- Heading -->
-                  <h3 class="dark-grey-text text-center">
-                    <strong>Do you authorize that an application uses your account?</strong>
-                  </h3>
-                  <div class="text-center">
-                    <button class="btn btn-indigo">Cancel</button>
-                    <button class="btn btn-pink" ng-click="authorization()">Authorize</button>
-                  </div>
-                  
-                </form>
-                <!-- Form -->
-
-              </div>
-
-            </div>
-            <!--/.Card-->
-
-          </div>
-          <!--Grid column-->
+          <img src="pic/authorization.png" class="img-fluid" alt="">
 
         </div>
-        <!--Grid row-->
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+
+          <h3 class="font-weight-bold">Authorization</h3>
+
+          <p class="font-weight-bold">Do you authorize that an application uses your account?</p>
+
+          <button type="button" class="btn btn-blue-grey"  ng-click="authorization()" >
+            Cancel
+           </button>
+           
+          <button type="button" class="btn btn-pink" ng-click="authorization()">
+            Authorize
+          </button>
+
+        </div>
+        <!--Grid column-->
 
       </div>
-      <!-- Content -->
+      <!--Grid row-->
 
-    </div>
-    <!-- Mask & flexbox options-->
+
+    </section>
+    <!--Section: Content-->
+
 
   </div>
 

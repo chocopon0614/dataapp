@@ -5,10 +5,10 @@
 		<class>DataApp.entity.Userinformation</class>
 		<class>DataApp.entity.Userdatablood</class>
        <properties>
-            <property name="javax.persistence.jdbc.driver" value="com.ibm.db2.jcc.DB2Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:db2://dashdb-txn-sbox-yp-lon02-02.services.eu-gb.bluemix.net:50000/BLUDB" />
-            <property name="javax.persistence.jdbc.user" value="qmx27812" /> 
-            <property name="javax.persistence.jdbc.password" value="lm6c1jpc+9srq6l3" />
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://172.17.0.2:3306/localdb" />
+            <property name="javax.persistence.jdbc.user" value="chocopon" />
+            <property name="javax.persistence.jdbc.password" value="aiko0899" />
        </properties>		
 	</persistence-unit>
 </persistence>
