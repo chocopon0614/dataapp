@@ -23,7 +23,8 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 
 
-DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamSerializerJQLike',
+DataApp.controller('LoginController', ['$scope', '$http', '$window',
+'$httpParamSerializerJQLike', 
 	 function($scope, $http, $window, $httpParamSerializerJQLike){
 	   sessionStorage.removeItem('jwt');
 	
@@ -38,7 +39,9 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window','$httpParamS
                   },
                   transformRequest: $httpParamSerializerJQLike,
     	          url: url,
-    	          data: { username: $scope.username, password: $scope.password }
+//fixme temporary fixed 
+//    	          data: { username: $scope.username, password: $scope.password }
+    	          data: { username: 'test1', password: 'password'}
     	        }).then(function successCallback(response){
     	        	var resdata = response.data;
     	        	var jwt = resdata.JWT;
@@ -196,6 +199,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 
 	var jwt = sessionStorage.getItem('jwt');
 
+
 	$http({
           method: method,
           headers : {
@@ -216,6 +220,44 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 	    }, function errorCallback(response) {
    	        $location.path('/error');
      })  
+
+
+  	$scope.updatedata = function(name){
+	    
+        var bloodname = name;
+
+  		$uibModal.open({
+    		templateUrl : 'templates/updatemodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+
+    	    	$scope.register = function () {
+    	    		
+    	        $http({
+    	             method: 'POST',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'api/menu/updatedata',
+    	       	       data: { jwt: jwt, newvalue: $scope.mdblood, bloodname: bloodname }
+    	           }).then(function successCallback(response){
+	    	            $uibModalInstance.close();
+	    	            $window.location.reload();
+    	             	   
+    	            }, function errorCallback(response) {
+	    	           $uibModalInstance.close();
+    	               $location.path('/error');
+    	           
+    	        });
+
+    	  };
+    	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
   	
   }]);
 
@@ -239,7 +281,9 @@ DataApp.controller('AuthLogin', ['$scope', '$http', '$window','$httpParamSeriali
                    },
                    transformRequest: $httpParamSerializerJQLike,
      	          url: url,
-     	          data: { username: $scope.username, password: $scope.password }
+//fixme temporary fixed 
+//     	          data: { username: $scope.username, password: $scope.password }
+    	          data: { username: 'test1', password: 'password'}
      	        }).then(function successCallback(response){
      	        	var resdata = response.data;
      	        	var jwt = resdata.JWT;

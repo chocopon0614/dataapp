@@ -202,6 +202,47 @@ public class Menu {
 	}
  
  }
+
+	@POST
+	@Path("/updatedata")
+    public Response updatedata(@FormParam("jwt") final String jwt, 
+    		@FormParam("newvalue") final double newvalue, 
+    		@FormParam("bloodname") final String bloodname) throws JsonProcessingException {
+		
+	try{
+
+		String UserName = jwtutil.varifyJWT(jwt,"username");
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em = emf.createEntityManager();
+		
+		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
+				.setParameter(1, UserName)
+				.getSingleResult();
+		
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		String QueryName = "Userdatablood.update_"+ bloodname;
+
+		em.createNamedQuery(QueryName, Userdatablood.class)
+				.setParameter(1, newvalue)
+				.setParameter(2, UserObj)
+				.executeUpdate();
+		
+		tx.commit();
+		
+		Response response = Response.ok().build();
+
+		return response;
+			
+	  }catch(Exception e){
+		Response response = Response.status(500).build();
+		return response;
+		
+	}
+ 
+  }
 	
 
 }

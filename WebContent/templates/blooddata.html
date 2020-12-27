@@ -8,51 +8,71 @@
   <section class="p-5 z-depth-1">
     
     <h3 class="text-center font-weight-bold mb-5">Your Blood Data</h3>
+    <h6 class="text-center font-weight-bold mb-5">
+      <font style="font-family:'Meiryo UI'">
+       Please touch the number if you want to change the value.
+      </font>
+    </h6>
 
     <div class="row d-flex justify-content-center">
 
-      <div class="col-md-6 col-lg-3 mb-4 text-center">
+      <div class="col-md-6 col-lg-3 mb-4 text-center" data-toggle="tooltip" data-placement="bottom" 
+      title="Natural fat. High levels of TG(triglycerides) in the bloodstream have been linked to atherosclerosis, heart disease and stroke.">
+        <a ng-click="updatedata('TG')">
         <h4 class="h1 font-weight-normal mb-3">
-          <i class="fab fa-react indigo-text"></i>
+          <i class="fas fa-check" style="color:#ee82ee"></i>
           <span class="d-inline-block count-up" >{{tg}}</span>
         </h4>
         <p class="font-weight-normal text-muted">TG</p>
+       </a> 
       </div>
 
-      <div class="col-md-6 col-lg-3 mb-4 text-center">
-        <h4 class="h1 font-weight-normal mb-3">
-          <i class="fab fa-react indigo-text"></i>
+      <div class="col-md-6 col-lg-3 mb-4 text-center" data-toggle="tooltip" data-placement="bottom" 
+      title="It is an amino acid-metabolizing enzyme that is abundant in the cells of the bile ducts and biliary tract of the liver, and is particularly sensitive to alcohol.">
+        <a ng-click="updatedata('GTP')">
+         <h4 class="h1 font-weight-normal mb-3">
+          <i class="fas fa-check" style="color:#ff8c00"></i>
           <span class="d-inline-block count2" >{{gtp}}</span>
-        </h4>
-        <p class="font-weight-normal text-muted">γ-GTP</p>
+         </h4>
+         <p class="font-weight-normal text-muted">γ-GTP</p>
+       </a> 
       </div>
       
-      <div class="col-md-6 col-lg-3 mb-4 text-center">
+      <div class="col-md-6 col-lg-3 mb-4 text-center" data-toggle="tooltip" data-placement="bottom" 
+      title="HDL stands for high-density lipoproteins. It is sometimes called the good cholesterol because it carries cholesterol from other parts of your body back to your liver. Your liver then removes the cholesterol from your body.">
+       <a ng-click="updatedata('HDL')">
         <h4 class="h1 font-weight-normal mb-3">
-          <i class="fab fa-react indigo-text"></i>
+          <i class="fas fa-check" style="color:#00ff7f"></i>
           <span class="d-inline-block count3" >{{hdl}}</span>
         </h4>
         <p class="font-weight-normal text-muted">HDL</p>
+       </a> 
       </div>
 
     </div>
 
     <div class="row d-flex justify-content-center">
 
-      <div class="col-md-6 col-lg-3 mb-4 text-center">
-        <h4 class="h1 font-weight-normal mb-3">
-          <i class="fab fa-react indigo-text"></i>
+      <div class="col-md-6 col-lg-3 mb-4 text-center" data-toggle="tooltip" data-placement="bottom" 
+      title="LDL stands for low-density lipoproteins. It is sometimes called the bad cholesterol because a high LDL level leads to a buildup of cholesterol in your arteries.">
+       <a ng-click="updatedata('LDL')">
+         <h4 class="h1 font-weight-normal mb-3">
+          <i class="fas fa-check" style="color:#00bfff"></i>
           <span class="d-inline-block count3" >{{ldl}}</span>
         </h4>
         <p class="font-weight-normal text-muted">LDL</p>
+       </a> 
       </div>
 
-      <div class="col-md-6 col-lg-3 mb-4 text-center">
+      <div class="col-md-6 col-lg-3 mb-4 text-center" data-toggle="tooltip" data-placement="bottom" 
+      title="Fasting Plasma Glucose (FPG). This test checks your fasting blood sugar levels. Fasting means after not having anything to eat or drink (except water) for at least 8 hours before the test.">
+       <a ng-click="updatedata('FPG')">
         <h4 class="h1 font-weight-normal mb-3">
-          <i class="fab fa-react indigo-text"></i>
+          <i class="fas fa-check" style="color:#9400d3"></i>
           <span class="d-inline-block count3" >{{fpg}}</span>
         </h4>
         <p class="font-weight-normal text-muted">FPG</p>
+       </a> 
       </div>
 
     </div>
