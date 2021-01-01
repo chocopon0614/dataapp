@@ -30,7 +30,7 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window',
 	
        $scope.submit = function(){
     	  var method = "POST";	
-    	  var url = 'api/login';	
+    	  var url = 'login/userlogin';	
     		
     	  $http({
     	          method: method,
@@ -65,7 +65,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
 
 	var method = "POST";	
-	var url = 'api/menu/BodyData';	
+	var url = 'menu/bodydata';	
 
 	var jwt = sessionStorage.getItem('jwt');
 
@@ -131,7 +131,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	                      'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
     	                  },
     	                  transformRequest: $httpParamSerializerJQLike,
-    	    	          url:  'api/menu/trash',
+    	    	          url:  'menu/trash',
     	    	          data: { jwt: jwt, id: id}
     	    	        }).then(function successCallback(response){
     	    	            $uibModalInstance.close();
@@ -168,7 +168,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
     	               },
     	               transformRequest: $httpParamSerializerJQLike,
-    	               url: 'api/menu/insertdata',
+    	               url: 'menu/insertdata',
     	       	       data: { jwt: jwt, height: $scope.mdheight, weight: $scope.mdweight }
     	           }).then(function successCallback(response){
 	    	            $uibModalInstance.close();
@@ -195,7 +195,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
 
 	var method = "POST";	
-	var url = 'api/menu/BloodData';	
+	var url = 'menu/blooddata';	
 
 	var jwt = sessionStorage.getItem('jwt');
 
@@ -238,7 +238,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
     	               },
     	               transformRequest: $httpParamSerializerJQLike,
-    	               url: 'api/menu/updatedata',
+    	               url: 'menu/updatedata',
     	       	       data: { jwt: jwt, newvalue: $scope.mdblood, bloodname: bloodname }
     	           }).then(function successCallback(response){
 	    	            $uibModalInstance.close();
@@ -272,7 +272,7 @@ DataApp.controller('AuthLogin', ['$scope', '$http', '$window','$httpParamSeriali
     	  sessionStorage.removeItem('jwt');
      	  
     	  var method = "POST";	
-     	  var url = 'api/login';	
+     	  var url = 'login/userlogin';	
      		
      	  $http({
      	          method: method,
@@ -316,7 +316,7 @@ DataApp.controller('AuthController', ['$scope', '$http', '$window','$httpParamSe
 	
 	  $scope.authorization = function(){
       	  var method = "POST";	
-      	  var url = 'api/Open/Authorization';
+      	  var url = 'open/authorization';
       	  
      	  var jwt = sessionStorage.getItem('jwt');
 

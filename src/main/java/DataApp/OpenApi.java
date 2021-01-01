@@ -9,15 +9,16 @@ import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,20 +28,18 @@ import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
 import DataApp.util.jwtutil;
 
-@Path("/Open")
+@RestController
+@RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OpenApi {
 
-	@Path("/ChartData")
-    @GET
-    public Response chartdata(@Context HttpHeaders headers) throws JsonProcessingException {
-		
-		String UserName = headers.getRequestHeader("resource-owner").get(0);
+	@GetMapping("chartdata")
+    public ResponseEntity<String> chartdata(@RequestHeader("resource-owner") String resourceowner) throws JsonProcessingException {
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 		
 		Userinformation userobj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
-				.setParameter(1, UserName)
+				.setParameter(1, resourceowner)
 				.getSingleResult();
 
 		List<Userdatablood> userdata_list = em.createNamedQuery("Userdatablood.findUserid", Userdatablood.class)
@@ -51,29 +50,22 @@ public class OpenApi {
 			ObjectMapper mapper = new ObjectMapper();
 			String resjson = mapper.writeValueAsString(userdata_list);
 
-			Response response = Response.ok().entity(resjson).
-					type(MediaType.APPLICATION_JSON).build();
-
-			return response;
+			return new ResponseEntity<String>(resjson, HttpStatus.OK);
 			    
 			} else {
-				Response response = Response.status(401).build();
-			    return response;
+			    return ResponseEntity.badRequest().build();
 			
 			}
 		}
 	
-	@Path("/UserInfo")
-    @GET
-    public Response userinfo(@Context HttpHeaders headers) throws JsonProcessingException {
-		
-		String UserName = headers.getRequestHeader("resource-owner").get(0);
-		
+	@GetMapping("userinfo")
+    public ResponseEntity<String> userinfo(@RequestHeader("resource-owner") String resourceowner) throws JsonProcessingException {
+	
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 		
 		Userinformation userobj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
-				.setParameter(1, UserName)
+				.setParameter(1, resourceowner)
 				.getSingleResult();
 
 		List<Userdata> userdata_list = em.createNamedQuery("Userdata.findUserid_selected", Userdata.class)
@@ -84,23 +76,19 @@ public class OpenApi {
 			ObjectMapper mapper = new ObjectMapper();
 			String resjson = mapper.writeValueAsString(userdata_list);
 
-			Response response = Response.ok().entity(resjson).
-					type(MediaType.APPLICATION_JSON).build();
-
-			return response;
+			return new ResponseEntity<String>(resjson, HttpStatus.OK);
 			    
 			} else {
-				Response response = Response.status(401).build();
-			    return response;
+			    return ResponseEntity.badRequest().build();
 			
 			}
 		}
 
-	@Path("/Verification")
-    @GET
-    public Response verification(@Context HttpHeaders headers) {
+
+	@GetMapping("verification")
+    public ResponseEntity<String> verification(@RequestHeader("Authorization") String authorization) {
 		
-		String ConfirmationCode = headers.getRequestHeader("Authorization").get(0).split(" ")[1];
+		String ConfirmationCode = authorization.split(" ")[1];
 
 		Charset charset = StandardCharsets.UTF_8;
 
@@ -122,25 +110,21 @@ public class OpenApi {
 			String DbPass = UserObj.getPassword();
 			if (PassWord.equals(DbPass)) {
 
-			Response response = Response.ok().build();
-			return response;
+		      return ResponseEntity.ok().build();
 			    
 			} else {
-				
-				Response response = Response.status(401).build();
-			    return response;
+			    return ResponseEntity.badRequest().build();
 			}
+
 		}else {
 
-		  Response response = Response.status(500).build();
-		  return response;
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 		}
     }
 	
-	@Path("/Authorization")
-    @POST
-    public Response authorization(@FormParam("jwt") final String jwt ) throws Exception {
+	@PostMapping("authorization")
+    public ResponseEntity<String> authorization(@RequestParam("jwt") final String jwt ) throws Exception {
 
 	try{
 		
@@ -149,14 +133,12 @@ public class OpenApi {
 		
 		String res = "{\"username\" : \"" + username + "\" , \"password\" : \"" + password + "\"}";
 
-	    ResponseBuilder rb = Response.ok().type(MediaType.APPLICATION_JSON_TYPE);
-		return rb.entity(res).build();
+		return new ResponseEntity<String>(res, HttpStatus.OK);
 
     }catch(Exception e) {
     	throw e;
 
 	  }
     }
-
 
 }
