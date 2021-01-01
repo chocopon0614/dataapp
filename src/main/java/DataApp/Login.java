@@ -7,25 +7,26 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import DataApp.entity.Userinformation;
 import DataApp.util.hashutil;
 import DataApp.util.jwtutil;
 
-@Path("/login")
+@RestController
+@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Login {
 	
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-	public Response userLogin(@FormParam("username") final String UserName, 
-			@FormParam("password") final String PassWord) {
+	@PostMapping("userlogin")
+	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName, 
+			@RequestParam("password") final String PassWord) {
 		
 		String hash_password = hashutil.getSHA256(PassWord);
 
@@ -43,27 +44,22 @@ public class Login {
 				
 				String jwttoken = jwtutil.createJWT(UserName, DbPass);
 				String res = "{\"JWT\" : \"" + jwttoken + "\" }";
-
-			    ResponseBuilder rb = Response.ok().type(MediaType.APPLICATION_JSON_TYPE);
-				return rb.entity(res).build();
+				
+				return new ResponseEntity<String>(res, HttpStatus.OK);
 				
 			} else {
-
-				Response response = Response.status(400).build();
-			    return response;
+			    return ResponseEntity.badRequest().build();
 
 			}
 				
 		}else {
-			Response response = Response.status(500).build();
-		    return response;
+		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	  }
 	
-	@POST
-	@Path("/register")
-	public Response register(@FormParam("username") final String username,
-			@FormParam("password") final String password) throws Exception {
+	@PostMapping("/register")
+	public ResponseEntity<String> register(@RequestParam("username") final String username,
+			@RequestParam("password") final String password) throws Exception {
 		
 		String hash_password = hashutil.getSHA256(password);
 
@@ -85,15 +81,12 @@ public class Login {
 	    
 	      tx.commit();
 
-		  Response response = Response.ok().build();
-		  return response;
+		  return ResponseEntity.ok().build();
 
 		}catch (RuntimeException e) {
 			if ( tx != null && tx.isActive() ) tx.rollback();
 
-			Response response = Response.status(500).build();
-			return response;
-
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			
 		} finally {
 			em.close();
