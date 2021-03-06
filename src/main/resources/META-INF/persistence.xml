@@ -6,7 +6,7 @@
 		<class>DataApp.entity.Userdatablood</class>
        <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://172.17.0.2:3306/localdb" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/localdb" />
             <property name="javax.persistence.jdbc.user" value="chocopon" />
             <property name="javax.persistence.jdbc.password" value="aiko0899" />
        </properties>		
