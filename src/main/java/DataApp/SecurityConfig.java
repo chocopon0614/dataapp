@@ -10,11 +10,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/open/chartdata")
-				.hasAnyAuthority("SCOPE_chocopon.cognito/body.read", "SCOPE_aws.cognito.signin.user.admin")
-				.antMatchers(HttpMethod.GET, "/open/userinfo")
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/open/**")
 				.hasAnyAuthority("SCOPE_chocopon.cognito/body.read", "SCOPE_aws.cognito.signin.user.admin");
-
 		http.oauth2ResourceServer().jwt();
 	}
 }
