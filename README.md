@@ -29,7 +29,7 @@ The resource owner's information in this application is securely accessed by oth
 Please access to the below link.<br>
 
 
-<http://ec2-44-239-106-99.us-west-2.compute.amazonaws.com:8888/DataApp/#!/>
+<https://chocopon-forest.com/DataApp/#!/>
 
 <br>
 
