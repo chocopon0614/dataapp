@@ -67,7 +67,6 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 	var method = "POST";	
 	var url = 'menu/bodydata';	
 
-	var jwt = sessionStorage.getItem('jwt');
 
     $scope.pageLimit = 10; 
     $scope.limitBegin = 0; 
@@ -99,7 +98,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
         	
         	$scope.data_source = resdata;
 
-	    }, function errorCallback(response) {
+	    }, function errorCallback() {
    	        $location.path('/error');
      })  
 
@@ -121,7 +120,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	var tabledata = $scope.data_source;
     	
     	$uibModal.open({
-    		templateUrl : 'templates/modal.html',
+    		templateUrl : 'templates/deletemodal.html',
     	    controller: function ($scope, $uibModalInstance) {
     	          $scope.ok = function () {
 
@@ -137,7 +136,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	    	            $uibModalInstance.close();
     	    	            tabledata.splice(index,1);
 
-    	    	        }, function errorCallback(response) {
+    	    	        }, function errorCallback() {
     	    	            $uibModalInstance.close();
 
     	    	        });
@@ -174,7 +173,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'menu/insertdata',
     	       	       data: { jwt: sessionStorage.getItem('jwt'), height: $scope.mdheight, weight: $scope.mdweight }
-    	           }).then(function successCallback(response){
+    	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
 	    	            $window.location.reload();
     	             	   
@@ -186,7 +185,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 
       	        	   $scope.error_message_height = resdata.Height;
       	        	   $scope.error_message_weight = resdata.Weight;
-      	        	   $scope.error_message_jwt = resdata.Jwt;
+      	        	   $scope.error_message_other = resdata.Other;
     	        	  }else{
     	              $location.path('/error');
     	        	 }
@@ -210,8 +209,6 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 	var method = "POST";	
 	var url = 'menu/blooddata';	
 
-	var jwt = sessionStorage.getItem('jwt');
-
 
 	$http({
           method: method,
@@ -230,7 +227,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 	        $scope.tg = resdata[0].tg;
 	        $scope.fpg = resdata[0].fpg;
 
-	    }, function errorCallback(response) {
+	    }, function errorCallback() {
    	        $location.path('/error');
      })  
 
@@ -244,7 +241,10 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	    controller: function ($scope, $uibModalInstance) {
 
     	    	$scope.register = function () {
-    	    		
+
+ 	             if(!$scope.mdblood) {$scope.error_message_value = "New value is required." ; return;};
+	             if(isNaN($scope.mdblood)) {$scope.error_message_value = "New value must be numeric." ; return;};
+   	    		
     	        $http({
     	             method: 'POST',
     	              headers : {
@@ -253,13 +253,24 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'menu/updatedata',
     	       	       data: { jwt: sessionStorage.getItem('jwt'), newvalue: $scope.mdblood, bloodname: bloodname }
-    	           }).then(function successCallback(response){
+    	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
 	    	            $window.location.reload();
     	             	   
     	            }, function errorCallback(response) {
-	    	           $uibModalInstance.close();
-    	               $location.path('/error');
+	    	        
+                     var sts = response.status;
+
+    	        	  if(sts == 400){
+	                   var resdata = response.data;
+
+      	        	   $scope.error_message_value = resdata.Value;
+      	        	   $scope.error_message_other = resdata.Other;
+
+    	        	  }else{
+
+    	              $location.path('/error');
+    	        	 }
     	           
     	        });
 

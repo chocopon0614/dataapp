@@ -1,7 +1,6 @@
 package DataApp;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import DataApp.dto.BloodDataRequest;
 import DataApp.dto.BodyDataRequest;
 import DataApp.entity.Userdata;
 import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
+import DataApp.util.checkutil;
 import DataApp.util.jwtutil;
 
 @RestController
@@ -106,12 +106,7 @@ public class Menu {
 			throws JsonProcessingException {
 
 		if (result.hasErrors()) {
-			Map<String, String> valueMap = new HashMap<>();
-
-			for (ObjectError error : result.getAllErrors()) {
-				String temp = error.getDefaultMessage();
-				valueMap.put(temp.split(":")[0], temp.split(":")[1]);
-			}
+			Map<String, String> valueMap = checkutil.validCheck(result);
 
 			ObjectMapper mapper = new ObjectMapper();
 			String ResJson = mapper.writeValueAsString(valueMap);
@@ -196,13 +191,22 @@ public class Menu {
 	}
 
 	@PostMapping("updatedata")
-	public ResponseEntity<String> updatedata(@RequestParam("jwt") final String jwt,
-			@RequestParam("newvalue") final double newvalue, @RequestParam("bloodname") final String bloodname)
+	public ResponseEntity<String> updatedata(@Validated BloodDataRequest blooddata, BindingResult result)
 			throws JsonProcessingException {
+
+		if (result.hasErrors()) {
+			Map<String, String> valueMap = checkutil.validCheck(result);
+
+			ObjectMapper mapper = new ObjectMapper();
+			String ResJson = mapper.writeValueAsString(valueMap);
+
+			return new ResponseEntity<String>(ResJson, HttpStatus.BAD_REQUEST);
+
+		}
 
 		try {
 
-			String UserName = jwtutil.varifyJWT(jwt, "username");
+			String UserName = jwtutil.varifyJWT(blooddata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
@@ -213,10 +217,10 @@ public class Menu {
 			EntityTransaction tx = em.getTransaction();
 			tx.begin();
 
-			String QueryName = "Userdatablood.update_" + bloodname;
+			String QueryName = "Userdatablood.update_" + blooddata.getBloodname();
 
-			em.createNamedQuery(QueryName, Userdatablood.class).setParameter(1, newvalue).setParameter(2, UserObj)
-					.executeUpdate();
+			em.createNamedQuery(QueryName, Userdatablood.class).setParameter(1, blooddata.getNewvalue())
+					.setParameter(2, UserObj).executeUpdate();
 
 			tx.commit();
 

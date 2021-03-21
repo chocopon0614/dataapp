@@ -15,8 +15,8 @@ public class BodyDataRequest {
 	@Digits(integer = 3, fraction = 2, message = "Weight:Weight must be within 3 digit integer and 2 digit fraction.")
 	private double weight;
 
-	@NotBlank(message = "Jwt:Invalid input error occured. Please retry or start over.")
-	@Size(min = 1, max = 512, message = "Jwt:Invalid input error occured. Please retry or start over.")
+	@NotBlank(message = "Other:Invalid input error occured. Please retry or start over.")
+	@Size(min = 1, max = 512, message = "Other:Invalid input error occured. Please retry or start over.")
 	private String jwt;
 
 	public double getHeight() {
