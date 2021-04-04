@@ -14,41 +14,39 @@ import javax.persistence.NamedQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 /**
  * The persistent class for the USERDATA database table.
  * 
  */
 @Entity
-@NamedQueries({
-@NamedQuery(name="Userdata.findAll", query="SELECT u FROM Userdata u"),
-@NamedQuery(name="Userdata.findUserid", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id"),
-@NamedQuery(name="Userdata.findUserid_desc", query="SELECT u FROM Userdata u where u.userinformation =?1 order by u.id desc"),
-@NamedQuery(name="Userdata.findUserid_selected", query="SELECT u.createTime, u.height, u.weight FROM Userdata u where u.userinformation =?1 order by u.id desc"),
-@NamedQuery(name="Userdata.deleteData", query="DELETE FROM Userdata u where u.userinformation =?1 and u.id =?2")
-})
+@NamedQueries({ @NamedQuery(name = "Userdata.findAll", query = "SELECT u FROM Userdata u"),
+		@NamedQuery(name = "Userdata.findUserid", query = "SELECT u FROM Userdata u where u.userinformation =?1 order by u.id"),
+		@NamedQuery(name = "Userdata.findUserid_desc", query = "SELECT u FROM Userdata u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "Userdata.findUserid_selected", query = "SELECT u.createTime, u.height, u.weight FROM Userdata u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "Userdata.selectData", query = "SELECT u FROM Userdata u where u.userinformation =?1 and u.id =?2"),
+		@NamedQuery(name = "Userdata.deleteData", query = "DELETE FROM Userdata u where u.userinformation =?1 and u.id =?2") })
 public class Userdata implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(insertable=false)
+	@Column(insertable = false)
 	private Integer id;
 
-	@Column(name="CREATE_TIME" )
+	@Column(name = "CREATE_TIME")
 	private Timestamp createTime;
 
 	@JsonProperty("Height")
 	private double height;
 
-	@Column(name="MODIFIED_TIME")
+	@Column(name = "MODIFIED_TIME")
 	private Timestamp modifiedTime;
 
 	@JsonProperty("Weight")
 	private double weight;
 
-	//bi-directional many-to-one association to Userinformation
+	// bi-directional many-to-one association to Userinformation
 	@ManyToOne
-	@JoinColumn(name="USERID")
+	@JoinColumn(name = "USERID")
 	private Userinformation userinformation;
 
 	public Userdata() {

@@ -87,12 +87,23 @@ public class Menu {
 			tx = em.getTransaction();
 			tx.begin();
 
+			Userdata del_data = em.createNamedQuery("Userdata.selectData", Userdata.class).setParameter(1, UserObj)
+					.setParameter(2, id).getSingleResult();
+
 			em.createNamedQuery("Userdata.deleteData", Userdata.class).setParameter(1, UserObj).setParameter(2, id)
 					.executeUpdate();
 
 			tx.commit();
 
-			return ResponseEntity.ok().build();
+			if (!Objects.isNull(del_data)) {
+				ObjectMapper mapper = new ObjectMapper();
+				String ResJson = mapper.writeValueAsString(del_data);
+
+				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
+
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
 
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

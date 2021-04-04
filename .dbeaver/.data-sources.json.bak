@@ -18,6 +18,9 @@
 					"connectTimeout": "20000",
 					"allowPublicKeyRetrieval": "TRUE"
 				},
+				"provider-properties": {
+					"@dbeaver-serverTimezone@": "Asia/Tokyo"
+				},
 				"auth-model": "native",
 				"handlers": {}
 			}
