@@ -1,4 +1,4 @@
-var DataApp = angular.module('DataApp', ['ui.bootstrap','ngRoute']);
+var DataApp = angular.module('DataApp', ['ngAnimate','toaster', 'ui.bootstrap', 'ngRoute']);
 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
@@ -61,17 +61,14 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window',
     }]);
 
 
-DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location','$httpParamSerializerJQLike', '$window',
-	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
-
+DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
+,'$httpParamSerializerJQLike', 'toaster' ,'$window',
+	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, toaster, $window){
 	var method = "POST";	
 	var url = 'menu/bodydata';	
 
-	var jwt = sessionStorage.getItem('jwt');
-
     $scope.pageLimit = 10; 
     $scope.limitBegin = 0; 
- 
 
 	$http({
           method: method,
@@ -80,7 +77,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
           },
           transformRequest: $httpParamSerializerJQLike,
           url: url,
-          data: { jwt: jwt}
+          data: { jwt: sessionStorage.getItem('jwt')}
         }).then(function successCallback(response){
         	var resdata = response.data;
         	
@@ -99,7 +96,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
         	
         	$scope.data_source = resdata;
 
-	    }, function errorCallback(response) {
+	    }, function errorCallback() {
    	        $location.path('/error');
      })  
 
@@ -121,10 +118,9 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	var tabledata = $scope.data_source;
     	
     	$uibModal.open({
-    		templateUrl : 'templates/modal.html',
+    		templateUrl : 'templates/deletemodal.html',
     	    controller: function ($scope, $uibModalInstance) {
     	          $scope.ok = function () {
-
     	        	  $http({
     	    	          method: 'DELETE',
     	    	          headers : {
@@ -132,12 +128,27 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	                  },
     	                  transformRequest: $httpParamSerializerJQLike,
     	    	          url:  'menu/trash',
-    	    	          data: { jwt: jwt, id: id}
+    	    	          data: { jwt: sessionStorage.getItem('jwt'), id: id}
     	    	        }).then(function successCallback(response){
+                            var resdata = response.data;;
+	
     	    	            $uibModalInstance.close();
     	    	            tabledata.splice(index,1);
+          	                
+                            var d = new Date(resdata.createTime);
+                            var yyyy = d.getUTCFullYear();
+                            var MM = ('0' + (d.getUTCMonth() + 1)).slice(-2);
+                            var dd = ('0' + d.getUTCDate()).slice(-2);
+                            var hh = ('0' + d.getUTCHours()).slice(-2);
+                            var mm = ('0' + d.getUTCMinutes()).slice(-2);
+                            var ss = ('0' + d.getUTCSeconds()).slice(-2);
+                            var displayTime = dd + '-' + MM + '-' + yyyy + ' ' + hh + ':' + mm + ':' + ss;
 
-    	    	        }, function errorCallback(response) {
+
+                            toaster.success({title: "Deleted", 
+                            body: "Time:" + displayTime + " Height:" + resdata.Height + " Weight:" + resdata.Weight});
+
+    	    	        }, function errorCallback() {
     	    	            $uibModalInstance.close();
 
     	    	        });
@@ -154,13 +165,16 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
   	
   	$scope.insertdata = function(){
 
-    	var tabledata = $scope.data_source;
-
   		$uibModal.open({
     		templateUrl : 'templates/insertmodal.html',
     	    controller: function ($scope, $uibModalInstance) {
 
     	    	$scope.register = function () {
+	
+	             if(!$scope.mdheight) {$scope.error_message_height = "Height is required." ; return;};
+	             if(isNaN($scope.mdheight)) {$scope.error_message_height = "Height must be numeric." ; return;};
+	             if(!$scope.mdweight) {$scope.error_message_weight = "Weight is required." ; return;};
+	             if(isNaN($scope.mdweight)) {$scope.error_message_weight = "Weight must be numeric." ; return;};
     	    		
     	        $http({
     	             method: 'POST',
@@ -169,14 +183,31 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	               },
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'menu/insertdata',
-    	       	       data: { jwt: jwt, height: $scope.mdheight, weight: $scope.mdweight }
-    	           }).then(function successCallback(response){
+    	       	       data: { jwt: sessionStorage.getItem('jwt'), height: $scope.mdheight, weight: $scope.mdweight }
+    	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
-	    	            $window.location.reload();
-    	             	   
+                        toaster.success({title: "inserted", 
+                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 5sec..",
+                                 bodyOutputType: 'trustedHtml'});
+                        setTimeout(
+                           function () {
+	    	                   $window.location.reload();
+                          },
+                           "5000"
+                        );
+
     	            }, function errorCallback(response) {
+	
+    	        	var sts = response.status;
+    	        	  if(sts == 400){
+	                   var resdata = response.data;
+
+      	        	   $scope.error_message_height = resdata.Height;
+      	        	   $scope.error_message_weight = resdata.Weight;
+      	        	   $scope.error_message_other = resdata.Other;
+    	        	  }else{
     	              $location.path('/error');
-    	           
+    	        	 }
     	        });
 
     	  };
@@ -197,8 +228,6 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 	var method = "POST";	
 	var url = 'menu/blooddata';	
 
-	var jwt = sessionStorage.getItem('jwt');
-
 
 	$http({
           method: method,
@@ -207,7 +236,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
           },
           transformRequest: $httpParamSerializerJQLike,
           url: url,
-          data: { jwt: jwt}
+          data: { jwt: sessionStorage.getItem('jwt')}
         }).then(function successCallback(response){
         	var resdata = response.data;
         	
@@ -217,7 +246,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
 	        $scope.tg = resdata[0].tg;
 	        $scope.fpg = resdata[0].fpg;
 
-	    }, function errorCallback(response) {
+	    }, function errorCallback() {
    	        $location.path('/error');
      })  
 
@@ -231,7 +260,10 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	    controller: function ($scope, $uibModalInstance) {
 
     	    	$scope.register = function () {
-    	    		
+
+ 	             if(!$scope.mdblood) {$scope.error_message_value = "New value is required." ; return;};
+	             if(isNaN($scope.mdblood)) {$scope.error_message_value = "New value must be numeric." ; return;};
+   	    		
     	        $http({
     	             method: 'POST',
     	              headers : {
@@ -239,14 +271,25 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	               },
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'menu/updatedata',
-    	       	       data: { jwt: jwt, newvalue: $scope.mdblood, bloodname: bloodname }
-    	           }).then(function successCallback(response){
+    	       	       data: { jwt: sessionStorage.getItem('jwt'), newvalue: $scope.mdblood, bloodname: bloodname }
+    	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
 	    	            $window.location.reload();
     	             	   
     	            }, function errorCallback(response) {
-	    	           $uibModalInstance.close();
-    	               $location.path('/error');
+	    	        
+                     var sts = response.status;
+
+    	        	  if(sts == 400){
+	                   var resdata = response.data;
+
+      	        	   $scope.error_message_value = resdata.Value;
+      	        	   $scope.error_message_other = resdata.Other;
+
+    	        	  }else{
+
+    	              $location.path('/error');
+    	        	 }
     	           
     	        });
 
@@ -318,8 +361,6 @@ DataApp.controller('AuthController', ['$scope', '$http', '$window','$httpParamSe
       	  var method = "POST";	
       	  var url = 'open/authorization';
       	  
-     	  var jwt = sessionStorage.getItem('jwt');
-
       	  $http({
       	          method: method,
       	          headers : {
@@ -327,7 +368,7 @@ DataApp.controller('AuthController', ['$scope', '$http', '$window','$httpParamSe
                    },
                   transformRequest: $httpParamSerializerJQLike,
       	          url: url,
-   	              data: { jwt: jwt}
+   	              data: { jwt: sessionStorage.getItem('jwt')}
       	        }).then(function successCallback(response){
       	        	var resdata = response.data;
       	        	var url = originalurl_temp + '&username=' + resdata.username + '&confirmation=' + resdata.password ;

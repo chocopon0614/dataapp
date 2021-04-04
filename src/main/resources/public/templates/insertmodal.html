@@ -7,25 +7,29 @@
 </div>
 
 <div class="modal-body mx-3">
-
+    
+    <div align ="center" style = "color:red" >{{error_message_height}}</div>
+    <div align ="center" style = "color:red" >{{error_message_weight}}</div>
+    <div align ="center" style = "color:red" >{{error_message_other}}</div>
+    
 	<div class="md-form mb-4">
 		<i class="fas fa-text-height prefix grey-text" aria-hidden="true"></i> <input
 			type="text" ng-model="mdheight" id="orangeForm-name1"
 			class="form-control validate" autocomplete="off"> <label
-			data-error="wrong" data-success="right" for="orangeForm-name">Height</label>
+			for="orangeForm-name">Height</label>
 	</div>
 
 	<div class="md-form mb-4">
 		<i class="fas fa-weight prefix grey-text" aria-hidden="true"></i> <input
 			type="text" ng-model="mdweight" id="orangeForm-name2"
 			class="form-control validate" autocomplete="off"> <label
-			data-error="wrong" data-success="right" for="orangeForm-name">Weight</label>
+			for="orangeForm-name">Weight</label>
 	</div>
 
 
 </div>
 
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="register()">Register</button>
-	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-outline-success waves-effect" ng-click="register()">OK</button>
+	<button class="btn btn-outline-warning waves-effect" ng-click="cancel()">Cancel</button>
 </div>

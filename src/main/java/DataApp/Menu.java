@@ -2,6 +2,7 @@ package DataApp;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,8 @@ import javax.persistence.Persistence;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import DataApp.dto.BloodDataRequest;
+import DataApp.dto.BodyDataRequest;
 import DataApp.entity.Userdata;
 import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
+import DataApp.util.checkutil;
 import DataApp.util.jwtutil;
 
 @RestController
@@ -53,11 +59,11 @@ public class Menu {
 				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
 
 			} else {
-			    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
 
 		} catch (Exception e) {
-		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 		}
 
@@ -81,29 +87,49 @@ public class Menu {
 			tx = em.getTransaction();
 			tx.begin();
 
+			Userdata del_data = em.createNamedQuery("Userdata.selectData", Userdata.class).setParameter(1, UserObj)
+					.setParameter(2, id).getSingleResult();
+
 			em.createNamedQuery("Userdata.deleteData", Userdata.class).setParameter(1, UserObj).setParameter(2, id)
 					.executeUpdate();
 
 			tx.commit();
 
-			return ResponseEntity.ok().build();
+			if (!Objects.isNull(del_data)) {
+				ObjectMapper mapper = new ObjectMapper();
+				String ResJson = mapper.writeValueAsString(del_data);
+
+				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
+
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
 
 		} catch (Exception e) {
-		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 		}
 
 	}
 
 	@PostMapping("insertdata")
-	public ResponseEntity<String> insertdata(@RequestParam("jwt") final String jwt,
-			@RequestParam("height") final double height, @RequestParam("weight") final double weight)
+	public ResponseEntity<String> insertdata(@Validated BodyDataRequest bodydata, BindingResult result)
 			throws JsonProcessingException {
+
+		if (result.hasErrors()) {
+			Map<String, String> valueMap = checkutil.validCheck(result);
+
+			ObjectMapper mapper = new ObjectMapper();
+			String ResJson = mapper.writeValueAsString(valueMap);
+
+			return new ResponseEntity<String>(ResJson, HttpStatus.BAD_REQUEST);
+
+		}
 
 		try {
 
 			EntityTransaction tx = null;
-			String UserName = jwtutil.varifyJWT(jwt, "username");
+			String UserName = jwtutil.varifyJWT(bodydata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
@@ -116,8 +142,8 @@ public class Menu {
 
 			Userdata userdata = new Userdata();
 			userdata.setUserinformation(UserObj);
-			userdata.setHeight(height);
-			userdata.setWeight(weight);
+			userdata.setHeight(bodydata.getHeight());
+			userdata.setWeight(bodydata.getWeight());
 
 			long millis = System.currentTimeMillis();
 			userdata.setCreateTime(new Timestamp(millis));
@@ -136,7 +162,7 @@ public class Menu {
 			return new ResponseEntity<String>(ResJson, HttpStatus.OK);
 
 		} catch (Exception e) {
-		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 		}
 
@@ -165,24 +191,33 @@ public class Menu {
 				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
 
 			} else {
-			    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
 
 		} catch (Exception e) {
-		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 		}
 
 	}
 
 	@PostMapping("updatedata")
-	public ResponseEntity<String> updatedata(@RequestParam("jwt") final String jwt,
-			@RequestParam("newvalue") final double newvalue, @RequestParam("bloodname") final String bloodname)
+	public ResponseEntity<String> updatedata(@Validated BloodDataRequest blooddata, BindingResult result)
 			throws JsonProcessingException {
+
+		if (result.hasErrors()) {
+			Map<String, String> valueMap = checkutil.validCheck(result);
+
+			ObjectMapper mapper = new ObjectMapper();
+			String ResJson = mapper.writeValueAsString(valueMap);
+
+			return new ResponseEntity<String>(ResJson, HttpStatus.BAD_REQUEST);
+
+		}
 
 		try {
 
-			String UserName = jwtutil.varifyJWT(jwt, "username");
+			String UserName = jwtutil.varifyJWT(blooddata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
@@ -193,17 +228,17 @@ public class Menu {
 			EntityTransaction tx = em.getTransaction();
 			tx.begin();
 
-			String QueryName = "Userdatablood.update_" + bloodname;
+			String QueryName = "Userdatablood.update_" + blooddata.getBloodname();
 
-			em.createNamedQuery(QueryName, Userdatablood.class).setParameter(1, newvalue).setParameter(2, UserObj)
-					.executeUpdate();
+			em.createNamedQuery(QueryName, Userdatablood.class).setParameter(1, blooddata.getNewvalue())
+					.setParameter(2, UserObj).executeUpdate();
 
 			tx.commit();
 
 			return ResponseEntity.ok().build();
 
 		} catch (Exception e) {
-		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 		}
 

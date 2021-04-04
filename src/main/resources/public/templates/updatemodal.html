@@ -8,6 +8,9 @@
 
 <div class="modal-body mx-3">
 
+    <div align ="center" style = "color:red" >{{error_message_value}}</div>
+    <div align ="center" style = "color:red" >{{error_message_other}}</div>
+
 	<div class="md-form mb-4">
 		<i class="far fa-edit prefix grey-text" aria-hidden="true"></i> <input
 			type="text" ng-model="mdblood" id="orangeForm-name2"
@@ -19,6 +22,6 @@
 </div>
 
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="register()">Update</button>
-	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-outline-success waves-effect" ng-click="register()">OK</button>
+	<button class="btn btn-outline-warning waves-effect" ng-click="cancel()">Cancel</button>
 </div>
