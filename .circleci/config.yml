@@ -7,4 +7,3 @@ workflows:
   maven_test:
     jobs:
       - maven/test
-           test_results_path:test/reports
