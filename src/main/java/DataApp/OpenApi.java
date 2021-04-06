@@ -59,27 +59,30 @@ public class OpenApi {
 	}
 
 	@GetMapping("chartdata")
-	public ResponseEntity<String> chartdata() throws JsonProcessingException {
-		String resourceowner = "test1";
-	
+	public ResponseEntity<String> chartdata(@RequestHeader("Authorization") String authorization)
+			throws JsonProcessingException {
+		String token = authorization.split(" ")[1];
+		DecodedJWT decodedToken = new JWT().decodeJwt(token);
+		String UserName = decodedToken.getClaim("username").asString();
+
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
-	
+
 		Userinformation userobj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
-				.setParameter(1, resourceowner).getSingleResult();
-	
+				.setParameter(1, UserName).getSingleResult();
+
 		List<Userdatablood> userdata_list = em.createNamedQuery("Userdatablood.findUserid", Userdatablood.class)
 				.setParameter(1, userobj).getResultList();
-	
+
 		if (!Objects.isNull(userdata_list)) {
 			ObjectMapper mapper = new ObjectMapper();
 			String resjson = mapper.writeValueAsString(userdata_list);
-	
+
 			return new ResponseEntity<String>(resjson, HttpStatus.OK);
-	
+
 		} else {
 			return ResponseEntity.badRequest().build();
-	
+
 		}
 	}
 
