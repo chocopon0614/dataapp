@@ -4,24 +4,35 @@ orbs:
   maven: circleci/maven@1.1
 
 jobs:
+  test:
+      machine: 
+        image: default
+      steps:
+        - checkout
+        - run: maven package
+        - persist_to_workspace:
+            root: '.'
+            paths:
+              - target
   deploy:
       machine: 
         image: default
       steps:
-#          - checkout
-          - add_ssh_keys:
-              fingerprints:
-                - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
-#          - run: ssh ${USER_NAME}@${HOST_NAME} 'touch circleci.flg'
-          - run: ls -ltr
+        - attach_workspace:
+            at: '.'
+        - add_ssh_keys:
+            fingerprints:
+              - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
+#       - run: ssh ${USER_NAME}@${HOST_NAME} 'touch circleci.flg'
+        - run: ls -ltr
 
 workflows:
   test-depoly:
     jobs:
-      - maven/test
+      - test
       - deploy:
             requires:
-                - maven/test
+                - test
             filters:
                 branches:
                   only: master
