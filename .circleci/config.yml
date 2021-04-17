@@ -9,7 +9,9 @@ jobs:
         image: default
       steps:
         - checkout
-        - run: maven package
+        - run:
+            command: mvn clean install 
+        - run: ls -ltr
         - persist_to_workspace:
             root: '.'
             paths:
