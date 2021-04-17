@@ -25,9 +25,7 @@ jobs:
             fingerprints:
               - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
 #        - run: ssh ${USER_NAME}@${HOST_NAME} 'touch circleci.flg'
-        - run: scp target/DataApp.war ${USER_NAME}@${HOST_NAME}
-        - run: ls -ltr
-        - run: ls -ltr target
+        - run: scp target/DataApp.war ${USER_NAME}@${HOST_NAME}:/home/chocopon1
 
 workflows:
   test-depoly:
