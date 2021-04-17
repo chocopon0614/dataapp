@@ -3,7 +3,17 @@ version: 2.1
 orbs:
   maven: circleci/maven@1.1
 
+jobs:
+  deploy:
+      machine:
+          enabled: true
+      steps:
+          - attach_workspace:
+              at:'.'
+          - run: pwd
+
 workflows:
-  maven_test:
+  test-depoly:
     jobs:
       - maven/test
+      - deploy
