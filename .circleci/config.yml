@@ -9,7 +9,7 @@ jobs:
           enabled: true
       steps:
           - attach_workspace:
-              at:'.'
+              at: '.'
           - run: pwd
 
 workflows:
