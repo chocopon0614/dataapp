@@ -8,6 +8,8 @@ jobs:
       machine: 
         image: default
       steps:
+          - checkout
+          - run: ssh ${USER_NAME}@${HOST_NAME} 'touch circleci.flg'
           - run: pwd
 
 workflows:
