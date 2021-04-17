@@ -19,4 +19,9 @@ workflows:
   test-depoly:
     jobs:
       - maven/test
-      - deploy
+      - deploy:
+            requires:
+                - maven/test
+            filters:
+                branches:
+                  only: master
