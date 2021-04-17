@@ -5,11 +5,9 @@ orbs:
 
 jobs:
   deploy:
-      machine:
-          enabled: true
+      docker:
+        - image: default
       steps:
-          - attach_workspace:
-              at: '.'
           - run: pwd
 
 workflows:
