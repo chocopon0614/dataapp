@@ -8,7 +8,7 @@ jobs:
       machine: 
         image: default
       steps:
-          - checkout
+#          - checkout
           - add_ssh_keys:
               fingerprints:
                 - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
