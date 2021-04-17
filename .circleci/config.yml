@@ -5,8 +5,8 @@ orbs:
 
 jobs:
   deploy:
-      docker:
-        - image: default
+      machine: 
+        image: default
       steps:
           - run: pwd
 
