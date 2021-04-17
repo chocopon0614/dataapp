@@ -10,7 +10,7 @@ jobs:
       steps:
         - checkout
         - run:
-            command: mvn clean install 
+            command: mvn package
         - run: ls -ltr
         - persist_to_workspace:
             root: '.'
@@ -27,6 +27,7 @@ jobs:
               - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
 #       - run: ssh ${USER_NAME}@${HOST_NAME} 'touch circleci.flg'
         - run: ls -ltr
+        - run: ls -ltr target
 
 workflows:
   test-depoly:
