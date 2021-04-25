@@ -24,16 +24,16 @@ jobs:
             path: ~/test-results/junit
 
   deploy:
-      machine:
-        image: default
-#        - image: circleci/python:3.6-jessie
+      docker:
+#        image: default
+        - image: circleci/python:3.6-jessie
 #        - image: buildpack-deps:trusty
 #      working_directory: ~/
       steps:
         - attach_workspace:
             at: '.'
-        - run: sudo yum install python36u python36u-pip python36u-devel
-        - run: sudo pip install --upgrade pip
+#        - run: sudo yum install python36u python36u-pip python36u-devel
+#        - run: sudo pip install --upgrade pip
         - run: sudo pip install awscli
         - run:
             name: "authorize-security-group-ingress"
@@ -46,8 +46,8 @@ jobs:
         - add_ssh_keys:
             fingerprints:
               - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
-        - run: scp /home/circleci/target/DataApp.war ${USER_NAME}@${HOST_NAME}:~
-        - run: ssh -oStrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps'
+        - run: scp -o StrictHostKeyChecking=no /home/circleci/target/DataApp.war ${USER_NAME}@${HOST_NAME}:~
+        - run: ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps'
         - run:
             name: "revoke-security-group-ingress"
             command: |
