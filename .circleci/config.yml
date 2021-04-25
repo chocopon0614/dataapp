@@ -24,8 +24,9 @@ jobs:
             path: ~/test-results/junit
 
   deploy:
-      machine: 
-        image: circleci/python:3.6-jessie
+      docker:
+        - image: circleci/python:3.6-jessie
+#        - image: buildpack-deps:trusty
 #      working_directory: ~/
       steps:
         - attach_workspace:
