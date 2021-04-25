@@ -26,9 +26,11 @@ jobs:
   deploy:
       machine: 
         image: default
+      working_directory: ~/
       steps:
         - attach_workspace:
             at: '.'
+        - run: ls -ltr
         - run: sudo pip install awscli
         - run:
             name: "authorize-security-group-ingress"
@@ -41,7 +43,7 @@ jobs:
         - add_ssh_keys:
             fingerprints:
               - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
-        - run: scp target/DataApp.war ${USER_NAME}@${HOST_NAME}:/home/chocopon1
+        - run: scp /home/circleci/project/target/DataApp.war ${USER_NAME}@${HOST_NAME}:~
         - run: ssh ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps'
 
 workflows:
