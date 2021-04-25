@@ -24,16 +24,34 @@ jobs:
             path: ~/test-results/junit
 
   deploy:
-      machine: 
-        image: default
+      docker:
+        - image: circleci/python:3.6-jessie
+      working_directory: ~/
       steps:
         - attach_workspace:
             at: '.'
+        - run: sudo pip install awscli
+        - run:
+            name: "authorize-security-group-ingress"
+            command: |
+              IP=`curl -s ifconfig.me`
+              echo "#!/bin/bash" > ./sg.sh
+              echo "aws configure set region us-west-2" >> ./sg.sh
+              echo "aws ec2 authorize-security-group-ingress --group-id sg-0fd3983023d3016d5 --protocol tcp --port 22 --cidr ${IP}/32" >> ./sg.sh
+              bash ./sg.sh
         - add_ssh_keys:
             fingerprints:
               - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
-        - run: scp target/DataApp.war ${USER_NAME}@${HOST_NAME}:/home/chocopon1
-        - run: ssh -t ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps'
+        - run: scp -o StrictHostKeyChecking=no /home/circleci/target/DataApp.war ${USER_NAME}@${HOST_NAME}:~
+        - run: ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps'
+        - run:
+            name: "revoke-security-group-ingress"
+            command: |
+              IP=`curl -s ifconfig.me`
+              echo "#!/bin/bash" > ./sg.sh
+              echo "aws configure set region us-west-2" >> ./sg.sh
+              echo "aws ec2 revoke-security-group-ingress --group-id sg-0fd3983023d3016d5 --protocol tcp --port 22 --cidr ${IP}/32" >> ./sg.sh
+              bash ./sg.sh
 
 workflows:
   test-depoly:
