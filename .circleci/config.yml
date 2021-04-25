@@ -30,7 +30,7 @@ jobs:
       steps:
         - attach_workspace:
             at: '.'
-        - run: ls -ltr
+        - run: pwd
         - run: sudo pip install awscli
         - run:
             name: "authorize-security-group-ingress"
