@@ -27,7 +27,7 @@ jobs:
       docker:
 #        image: default
         - image: circleci/python:3.6-jessie
-#        - image: buildpack-deps:trusty
+        - image: buildpack-deps:trusty
       working_directory: ~/
       steps:
         - attach_workspace:
