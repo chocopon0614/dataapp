@@ -15,26 +15,31 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DataApp.entity.Userdata;
 import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
+import DataApp.util.checkutil;
 
 @RestController
 @RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OpenApi {
 
 	@GetMapping("userinfo")
-	public ResponseEntity<String> userinfo(@RequestHeader("Authorization") String authorization)
-			throws JsonProcessingException {
+	public ResponseEntity<String> userinfo(@RequestHeader("Token") String token) throws JsonProcessingException {
 
-		String token = authorization.split(" ")[1];
-		DecodedJWT decodedToken = new JWT().decodeJwt(token);
-		String UserName = decodedToken.getClaim("username").asString();
+		String tokencheck = checkutil.tokenCheck(token);
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(tokencheck);
+
+		if (!root.get("active").asBoolean())
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+
+		String UserName = root.get("username").asText();
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
@@ -46,7 +51,6 @@ public class OpenApi {
 				.setParameter(1, userobj).getResultList();
 
 		if (!Objects.isNull(userdata_list)) {
-			ObjectMapper mapper = new ObjectMapper();
 			String resjson = mapper.writeValueAsString(userdata_list);
 
 			return new ResponseEntity<String>(resjson, HttpStatus.OK);
@@ -59,11 +63,17 @@ public class OpenApi {
 	}
 
 	@GetMapping("chartdata")
-	public ResponseEntity<String> chartdata(@RequestHeader("Authorization") String authorization)
-			throws JsonProcessingException {
-		String token = authorization.split(" ")[1];
-		DecodedJWT decodedToken = new JWT().decodeJwt(token);
-		String UserName = decodedToken.getClaim("username").asString();
+	public ResponseEntity<String> chartdata(@RequestHeader("Token") String token) throws JsonProcessingException {
+
+		String tokencheck = checkutil.tokenCheck(token);
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(tokencheck);
+
+		if (!root.get("active").asBoolean())
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+
+		String UserName = root.get("username").asText();
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
@@ -75,7 +85,6 @@ public class OpenApi {
 				.setParameter(1, userobj).getResultList();
 
 		if (!Objects.isNull(userdata_list)) {
-			ObjectMapper mapper = new ObjectMapper();
 			String resjson = mapper.writeValueAsString(userdata_list);
 
 			return new ResponseEntity<String>(resjson, HttpStatus.OK);
