@@ -230,13 +230,13 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
                         toaster.success({title: "inserted", 
-                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 5sec..",
+                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 3sec..",
                                  bodyOutputType: 'trustedHtml'});
                         setTimeout(
                            function () {
 	    	                   $window.location.reload();
                           },
-                           "5000"
+                           "3000"
                         );
 
     	            }, function errorCallback(response) {
