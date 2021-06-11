@@ -23,14 +23,21 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 
 
-DataApp.controller('LoginController', ['$scope', '$http', '$window',
+DataApp.controller('LoginController', ['$uibModal','$scope', '$http', '$window',
 '$httpParamSerializerJQLike', 
-	 function($scope, $http, $window, $httpParamSerializerJQLike){
+	 function($uibModal, $scope, $http, $window, $httpParamSerializerJQLike){
 	   sessionStorage.removeItem('jwt');
+
+
 	
        $scope.submit = function(){
     	  var method = "POST";	
     	  var url = 'login/userlogin';	
+
+          $scope.login_message = ''
+	      if(!$scope.username) {$scope.login_message = "Username is required." ; return;};
+	      if(!$scope.password) {$scope.login_message = "Password is required." ; return;};
+
     		
     	  $http({
     	          method: method,
@@ -39,25 +46,61 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window',
                   },
                   transformRequest: $httpParamSerializerJQLike,
     	          url: url,
-//fixme temporary fixed 
-//    	          data: { username: $scope.username, password: $scope.password }
-    	          data: { username: 'test1', password: 'password'}
+    	          data: { username: $scope.username, password: $scope.password }
     	        }).then(function successCallback(response){
     	        	var resdata = response.data;
     	        	var jwt = resdata.JWT;
     	        	sessionStorage.setItem('jwt', jwt);
     	        	
     	        	$window.location.href = 'main.html';
-    	        }, function errorCallback(response) {
-    	        	var sts = response.status;
-
-    	        	if(sts == 400){
-      	        	   $scope.login_message = 'Password is wrong.';
-    	        	}else{
-         	           $scope.login_message = 'Your ID does not exist.';
-    	        	}
+    	        }, function errorCallback() {
+      	        	$scope.login_message = 'Login Error. Please try agian.'
     	      });
     	};
+
+  	$scope.register = function(){
+
+  		$uibModal.open({
+    		templateUrl : 'templates/registermodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+
+    	    	$scope.register = function () {
+	
+                 $scope.message=''
+	
+	             if(!$scope.mdusername) {$scope.message = "Username is required." ; return;};
+	             if(!$scope.mdpassword) {$scope.message = "Password is required." ; return;};
+    	    		
+    	        $http({
+    	             method: 'POST',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'login/register',
+    	               data: { username: $scope.mdusername, password: $scope.mdpassword }
+    	           }).then(function successCallback(){
+                       $scope.mdusername=''
+                       $scope.mdpassword=''
+                       $scope.message ='New account was created. Please login.'
+
+    	            }, function errorCallback() {
+                       $scope.mdusername=''
+                       $scope.mdpassword=''
+	                   $scope.message = 'Registration Error. Please try agian.'
+	
+    	        });
+
+    	  };
+    	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+
+
     }]);
 
 
