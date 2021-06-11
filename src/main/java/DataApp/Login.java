@@ -1,7 +1,6 @@
 package DataApp;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import DataApp.entity.Userdatablood;
 import DataApp.entity.Userinformation;
 import DataApp.util.hashutil;
 import DataApp.util.jwtutil;
@@ -23,76 +23,99 @@ import DataApp.util.jwtutil;
 @RestController
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Login {
-	
-	@PostMapping("userlogin")
-	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName, 
-			@RequestParam("password") final String PassWord) {
-		
-		String hash_password = hashutil.getSHA256(PassWord);
 
+	@PostMapping("userlogin")
+	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName,
+			@RequestParam("password") final String PassWord) {
+
+		String hash_password = hashutil.getSHA256(PassWord);
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
-		
-		List<Userinformation> UserObj = em.createNamedQuery("Userinformation.findbyusername",Userinformation.class)
-				.setParameter(1, UserName)
-				.getResultList();
-		
-		if (!(UserObj == null || UserObj.size() == 0)) {
-			String DbPass = UserObj.get(0).getPassword();
+
+		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+				.setParameter(1, UserName).getSingleResult();
+
+		if (!(UserObj == null)) {
+			String DbPass = UserObj.getPassword();
 			if (hash_password.equals(DbPass)) {
-				
+
 				String jwttoken = jwtutil.createJWT(UserName, DbPass);
 				String res = "{\"JWT\" : \"" + jwttoken + "\" }";
-				
+
 				return new ResponseEntity<String>(res, HttpStatus.OK);
-				
+
 			} else {
-			    return ResponseEntity.badRequest().build();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
 			}
-				
-		}else {
-		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-	  }
-	
-	@PostMapping("/register")
+	}
+
+	@PostMapping("register")
 	public ResponseEntity<String> register(@RequestParam("username") final String username,
 			@RequestParam("password") final String password) throws Exception {
-		
-		String hash_password = hashutil.getSHA256(password);
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = null;
-		
+
+		EntityManagerFactory emf2 = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em2 = emf2.createEntityManager();
+		EntityTransaction tx2 = null;
+
 		try {
-	      tx = em.getTransaction();
-	      tx.begin();
+			String hash_password = hashutil.getSHA256(password);
 
-	      Userinformation userinfo = new Userinformation();
-	      userinfo.setUsername(username);
-	      userinfo.setPassword(hash_password);
-	      userinfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
-	      userinfo.setModifiedTime(new Timestamp(System.currentTimeMillis()));
+			tx = em.getTransaction();
+			tx.begin();
 
-	      em.persist(userinfo);
-	    
-	      tx.commit();
+			Userinformation userinfo = new Userinformation();
+			userinfo.setUsername(username);
+			userinfo.setPassword(hash_password);
+			userinfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			userinfo.setModifiedTime(new Timestamp(System.currentTimeMillis()));
 
-		  return ResponseEntity.ok().build();
+			em.persist(userinfo);
 
-		}catch (RuntimeException e) {
-			if ( tx != null && tx.isActive() ) tx.rollback();
+			tx.commit();
+
+			tx2 = em2.getTransaction();
+			tx2.begin();
+
+			Userinformation UserObj = em2.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+					.setParameter(1, username).getSingleResult();
+
+			Userdatablood userblood = new Userdatablood();
+			userblood.setUserinformation(UserObj);
+			userblood.setFpg(0);
+			userblood.setGtp(0);
+			userblood.setHdl(0);
+			userblood.setLdl(0);
+			userblood.setTg(0);
+
+			em2.persist(userblood);
+
+			tx2.commit();
+
+			return ResponseEntity.ok().build();
+
+		} catch (RuntimeException e) {
+			if (tx != null && tx.isActive())
+				tx.rollback();
+
+			if (tx2 != null && tx2.isActive())
+				tx2.rollback();
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-			
+
 		} finally {
 			em.close();
 		}
-		
-	}
-	
 
- }
+	}
+
+}
