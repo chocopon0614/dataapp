@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -109,6 +110,39 @@ public class Login {
 
 			if (tx2 != null && tx2.isActive())
 				tx2.rollback();
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+		} finally {
+			em.close();
+		}
+
+	}
+
+	@DeleteMapping("userdelete")
+	public ResponseEntity<String> userDelete(@RequestParam("jwt") final String jwt) throws Exception {
+
+		String UserName = jwtutil.varifyJWT(jwt, "username");
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction tx = null;
+
+		try {
+
+			tx = em.getTransaction();
+			tx.begin();
+
+			em.createNamedQuery("Userinformation.deletebyusername", Userinformation.class).setParameter(1, UserName)
+					.executeUpdate();
+
+			tx.commit();
+
+			return ResponseEntity.ok().build();
+
+		} catch (RuntimeException e) {
+			if (tx != null && tx.isActive())
+				tx.rollback();
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 

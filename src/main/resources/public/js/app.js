@@ -3,7 +3,8 @@ var DataApp = angular.module('DataApp', ['ngAnimate','toaster', 'ui.bootstrap', 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
     .when('/', {
-      templateUrl: 'templates/top.html'
+      templateUrl: 'templates/top.html',
+      controller: 'TopController'
     })
     .when('/bodydata', {
       templateUrl: 'templates/bodydata.html',
@@ -93,6 +94,46 @@ DataApp.controller('LoginController', ['$uibModal','$scope', '$http', '$window',
 
     	  };
     	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+
+
+    }]);
+
+
+DataApp.controller('TopController', ['$uibModal','$scope', '$http', '$httpParamSerializerJQLike', '$window', '$location',
+	 function($uibModal, $scope, $http, $httpParamSerializerJQLike, $window, $location){
+
+      $scope.userdelete = function(){
+
+  		$uibModal.open({
+    		templateUrl : 'templates/userdeletemodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+	
+    	      $scope.ok = function () {
+
+    	        $http({
+    	             method: 'DELETE',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'login/userdelete',
+                       data: { jwt: sessionStorage.getItem('jwt')}
+    	           }).then(function successCallback(){
+    	        	  $window.location.href = 'index.html';
+
+    	            }, function errorCallback() {
+   	                  $location.path('/error');
+	
+    	        });
+
+    	      };
+
     	 $scope.cancel = function () {
     	       $uibModalInstance.dismiss('cancel');
     	   };
