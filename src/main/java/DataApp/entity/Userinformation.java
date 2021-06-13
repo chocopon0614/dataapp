@@ -11,36 +11,34 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
-
 /**
  * The persistent class for the USERINFORMATION database table.
  * 
  */
 @Entity
-@NamedQueries({
-@NamedQuery(name="Userinformation.findAll", query="SELECT u FROM Userinformation u"),
-@NamedQuery(name="Userinformation.findbyusername", query="SELECT u FROM Userinformation u where u.username =?1")
-})
+@NamedQueries({ @NamedQuery(name = "Userinformation.findAll", query = "SELECT u FROM Userinformation u"),
+		@NamedQuery(name = "Userinformation.findbyusername", query = "SELECT u FROM Userinformation u where u.username =?1"),
+		@NamedQuery(name = "Userinformation.deletebyusername", query = "DELETE FROM Userinformation u where u.username =?1") })
 public class Userinformation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(insertable=false)
+	@Column(insertable = false)
 	private int id;
 
-	@Column(name="CREATE_TIME")
+	@Column(name = "CREATE_TIME")
 	private Timestamp createTime;
 
-	@Column(name="MODIFIED_TIME")
+	@Column(name = "MODIFIED_TIME")
 	private Timestamp modifiedTime;
 
-	@Column(name="\"PASSWORD\"")
+	@Column(name = "\"PASSWORD\"")
 	private String password;
 
 	private String username;
 
-	//bi-directional many-to-one association to Userdata
-	@OneToMany(mappedBy="userinformation")
+	// bi-directional many-to-one association to Userdata
+	@OneToMany(mappedBy = "userinformation")
 	private List<Userdata> userdata;
 
 	public Userinformation() {

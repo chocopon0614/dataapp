@@ -25,18 +25,26 @@
 
           <p class="font-weight-bold">You can manage your health data here. You can add, delete and update data.</p>
 
-          <p class="text-muted" >If you want to manage your body data (height and weight), please proceed from the below link.</p>
+          <p class="text-muted" >If you want to manage your body data (height and weight), please proceed from the following link.</p>
 
           <button type="button" class="btn btn-outline-primary waves-effect" onclick="location.href='#!/bodydata'" >
             body data
            </button>
            
-          <br></br>
+          </br></br>
 
-          <p class="text-muted">If you want to manage your blood data (the main five components), please proceed from the below link.</p>
+          <p class="text-muted">If you want to manage your blood data (the main five components), please proceed from the following link.</p>
 
-          <button type="button" class="btn btn-outline-primary waves-effect" onclick="location.href='#!/blooddata'">
+          <button type="button" class="btn btn-outline-secondary waves-effect" onclick="location.href='#!/blooddata'">
             blood data
+          </button>
+
+          </br></br>
+          
+          <p class="text-muted">If you want to delete account, please proceed from the following link.</p>
+
+          <button type="button" class="btn btn-outline-danger waves-effect" ng-click="userdelete()">
+            !delete account
           </button>
 
         </div>
