@@ -152,4 +152,20 @@ public class Login {
 
 	}
 
+	@PostMapping("authorization")
+	public ResponseEntity<String> authorization(@RequestParam("jwt") final String jwt) {
+
+		try {
+
+			String username = jwtutil.varifyJWT(jwt, "username");
+			String password = jwtutil.varifyJWT(jwt, "password");
+
+			String res = "{\"username\" : \"" + username + "\" , \"password\" : \"" + password + "\"}";
+			return new ResponseEntity<String>(res, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
 }

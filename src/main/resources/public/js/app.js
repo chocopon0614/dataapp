@@ -24,11 +24,10 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 
 
-DataApp.controller('LoginController', ['$uibModal','$scope', '$http', '$window',
+DataApp.controller('LoginController', ['$uibModal','$scope', '$http', '$window', '$location',
 '$httpParamSerializerJQLike', 
-	 function($uibModal, $scope, $http, $window, $httpParamSerializerJQLike){
+	 function($uibModal, $scope, $http, $window, $location, $httpParamSerializerJQLike){
 	   sessionStorage.removeItem('jwt');
-
 
 	
        $scope.submit = function(){
@@ -101,6 +100,81 @@ DataApp.controller('LoginController', ['$uibModal','$scope', '$http', '$window',
       });
   	};
 
+       $scope.auth = function(){
+    	  var method = "POST";	
+    	  var url = 'login/userlogin';	
+
+          var originalurl = $location.absUrl();
+ 	      var urlParm = originalurl.split('?')[1];
+
+          sessionStorage.removeItem('jwt');
+
+          $scope.login_message = ''
+	      if(!$scope.username) {$scope.login_message = "Username is required." ; return;};
+	      if(!$scope.password) {$scope.login_message = "Password is required." ; return;};
+
+    	  	
+    	  $http({
+    	          method: method,
+    	          headers : {
+                      'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                  },
+                  transformRequest: $httpParamSerializerJQLike,
+    	          url: url,
+    	          data: { username: $scope.username, password: $scope.password }
+    	        }).then(function successCallback(response){
+                    var resdata = response.data;
+     	        	var jwt = resdata.JWT;
+     	        	sessionStorage.setItem('jwt', jwt);
+
+    	        	$window.location.href = 'authorization.html?' + urlParm;
+    	        }, function errorCallback() {
+      	        	$scope.login_message = 'Login Error. Please try agian.'
+    	      });
+    	};
+
+
+    }]);
+
+
+DataApp.controller('AuthController', ['$scope', '$http', '$httpParamSerializerJQLike', '$window', '$location',
+	 function($scope, $http, $httpParamSerializerJQLike, $window, $location){
+
+	  var url = $location.absUrl();
+ 	  var urlParm = url.split('?')[1];
+ 	  var originalurl = urlParm.split('&')[0];
+
+ 	  var originalurl_temp = decodeURIComponent(originalurl.split('=')[1]); 
+
+	  $scope.authorization = function(){
+      	  var method = "POST";	
+          var url = 'login/authorization';	
+
+     	  var jwt = sessionStorage.getItem('jwt');
+
+      	  $http({
+      	          method: method,
+      	          headers : {
+                        'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                   },
+                  transformRequest: $httpParamSerializerJQLike,
+      	          url: url,
+   	              data: { jwt: jwt}
+      	        }).then(function successCallback(response){
+      	        	var resdata = response.data;
+      	        	var url = originalurl_temp + '&username=' + resdata.username + '&confirmation=' + resdata.password ;
+       	        	$window.location.href = url;
+      	        }, function errorCallback(response) {
+      	        	console.log(response);
+
+      	      });
+      	};
+
+
+	  $scope.authcancel = function(){
+      	     var url = originalurl_temp + '&error=access_denied';
+       	     $window.location.href = url;
+      	};
 
     }]);
 
