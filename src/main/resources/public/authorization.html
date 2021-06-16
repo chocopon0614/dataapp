@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app="DataApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css"/>
+</head>
+
+<body ng-controller="AuthController">
+
+ <div class="container-for-admin">
+
+  <div class="container my-5 py-5 z-depth-1">
+
+    <!--Section: Content-->
+    <section class="px-md-5 mx-md-5 dark-grey-text text-center text-lg-left">
+
+      <!--Grid row-->
+      <div class="row">
+
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0 d-flex align-items-center justify-content-center">
+
+          <img src="pic/authorization.jpg" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+
+          <h3 class="font-weight-bold">Authorization</h3>
+
+          <p class="font-weight-bold">DATA VIEWER application is trying connecting to HEALTH CHECK application. </p>
+
+          <p class="text-muted" >Do you authorize to use your resource data? </p>
+
+          <button type="button" class="btn btn-outline-warning waves-effect" ng-click="authcancel()" >
+            Cancel
+           </button>
+           
+          <button type="button" class="btn btn-outline-success waves-effect" ng-click="authorization()" >
+            Authorize
+           </button>
+
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+
+    </section>
+    <!--Section: Content-->
+
+  </div>
+</div>
+
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/js/mdb.min.js"></script>
+
+ <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+ <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.min.js"></script>
+ <script type="text/javascript" src="//cdn.jsdelivr.net/npm/ui-bootstrap4@3.0.6/dist/ui-bootstrap-tpls.min.js"></script>
+ <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-animate.js" ></script>
+ <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
+
+
+ <script src="js/app.js"></script>
+ 
+ </body>
+</html>
