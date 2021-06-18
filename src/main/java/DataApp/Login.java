@@ -1,16 +1,19 @@
 package DataApp;
 
 import java.sql.Timestamp;
+import java.util.Enumeration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +27,8 @@ import DataApp.util.jwtutil;
 @RestController
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Login {
+
+	private HttpServletRequest httpRequest;
 
 	@PostMapping("userlogin")
 	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName,
@@ -166,6 +171,28 @@ public class Login {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+	}
+
+	@GetMapping("authurl")
+	public void authorization() {
+		StringBuilder sb = new StringBuilder();
+
+		// 全リクエストヘッダ名を取得
+		Enumeration<?> headerNames = httpRequest.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+
+			// ヘッダ名と値を取得
+			String headerName = (String) headerNames.nextElement();
+			String headerValue = httpRequest.getHeader(headerName);
+
+			sb.append(headerName);
+			sb.append("=");
+			sb.append(headerValue);
+			sb.append("\n");
+		}
+
+		System.out.print(sb);
+
 	}
 
 }
