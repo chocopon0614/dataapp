@@ -9,6 +9,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import DataApp.util.jwtutil;
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Login {
 
+	@Autowired
 	private HttpServletRequest httpRequest;
 
 	@PostMapping("userlogin")
