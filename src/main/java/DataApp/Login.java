@@ -1,15 +1,15 @@
 package DataApp;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.Enumeration;
+import java.util.Base64;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +28,6 @@ import DataApp.util.jwtutil;
 @RestController
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Login {
-
-	@Autowired
-	private HttpServletRequest httpRequest;
 
 	@PostMapping("userlogin")
 	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName,
@@ -176,24 +173,36 @@ public class Login {
 	}
 
 	@GetMapping("authurl")
-	public void authorization() {
-		StringBuilder sb = new StringBuilder();
+	public ResponseEntity<String> authurl(@RequestParam("authorization") final String auth) {
 
-		// 全リクエストヘッダ名を取得
-		Enumeration<?> headerNames = httpRequest.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
+		Charset charset = StandardCharsets.UTF_8;
+		String tmp = auth.split(" ")[1];
 
-			// ヘッダ名と値を取得
-			String headerName = (String) headerNames.nextElement();
-			String headerValue = httpRequest.getHeader(headerName);
+		byte[] b = Base64.getDecoder().decode(tmp.getBytes(charset));
+		String de1 = new String(b, charset);
 
-			sb.append(headerName);
-			sb.append("=");
-			sb.append(headerValue);
-			sb.append("\n");
+		String username = de1.split(":")[0];
+		String hash_password = de1.split(":")[1];
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManager em = emf.createEntityManager();
+
+		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+				.setParameter(1, username).getSingleResult();
+
+		if (!(UserObj == null)) {
+			String DbPass = UserObj.getPassword();
+			if (hash_password.equals(DbPass)) {
+
+				return ResponseEntity.ok().build();
+
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-
-		System.out.print(sb);
 
 	}
 
