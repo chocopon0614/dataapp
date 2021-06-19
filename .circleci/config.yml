@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.20
+  aws-cli: circleci/aws-cli@2.0
 
 jobs:
   test:
@@ -39,10 +39,11 @@ jobs:
       steps:
         - attach_workspace:
             at: '.'
+        - aws-cli/install
 #        - restore_cache:
 #            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-        - run: sudo pip install --upgrade pip
-        - run: sudo pip install awscli
+#        - run: sudo pip install --upgrade pip
+#        - run: sudo pip install awscli
 #        - save_cache:
 #            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 #            paths:
