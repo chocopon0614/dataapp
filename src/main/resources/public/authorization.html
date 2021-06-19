@@ -11,50 +11,56 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css"/>
 </head>
 
-<body>
-    <toaster-container toaster-options="{'time-out': 5000}"></toaster-container>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
-      <div class="container-fluid">
+<body ng-controller="AuthController">
 
-        <!-- Brand -->
-        <a class="navbar-brand waves-effect" href="#!/">
-          <strong class="blue-text">HOME</strong>
-        </a>
+ <div class="container-for-admin">
 
-        <!-- Collapse -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+  <div class="container my-5 py-5 z-depth-1">
 
-        <!-- Links -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!--Section: Content-->
+    <section class="px-md-5 mx-md-5 dark-grey-text text-center text-lg-left">
 
-          <!-- Left -->
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link waves-effect" href="#!/bodydata"><i class="fa fa-stethoscope"></i>BodyData</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link waves-effect" href="#!/blooddata"><i class="fa fa-heart"></i>BloodData</a>
-            </li>
-          </ul>
+      <!--Grid row-->
+      <div class="row">
 
-          <ul class="navbar-nav nav-flex-icons">
-            <li class="nav-item">
-              <a href="index.html" class="nav-link border border-light rounded waves-effect">
-                <i class="fa fa-sign-out-alt"></i> Logout
-              </a>
-            </li>
-          </ul>
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0 d-flex align-items-center justify-content-center">
+
+          <img src="pic/authorization.jpg" class="img-fluid" alt="">
 
         </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+
+          <h3 class="font-weight-bold">Authorization</h3>
+
+          <p class="font-weight-bold">DATA VIEWER application is trying connecting to HEALTH CHECK application. </p>
+
+          <p class="text-muted" >Do you authorize to use your resource data? </p>
+
+          <button type="button" class="btn btn-outline-warning waves-effect" ng-click="authcancel()" >
+            Cancel
+           </button>
+           
+          <button type="button" class="btn btn-outline-success waves-effect" ng-click="authorization()" >
+            Authorize
+           </button>
+
+
+        </div>
+        <!--Grid column-->
 
       </div>
-    </nav>
-    <!-- Navbar -->
+      <!--Grid row-->
 
-<div ng-view></div>
+
+    </section>
+    <!--Section: Content-->
+
+  </div>
+</div>
 
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
@@ -68,11 +74,6 @@
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
 
 
- <script type = "text/javascript">
- $(window).load(function(){
-		$('html,body').animate({ scrollTop: 0 }, '1');
-	}); 
- </script>
  <script src="js/app.js"></script>
  
  </body>

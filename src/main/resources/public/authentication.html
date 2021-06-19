@@ -11,50 +11,28 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css"/>
 </head>
 
-<body>
-    <toaster-container toaster-options="{'time-out': 5000}"></toaster-container>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
-      <div class="container-fluid">
+<body ng-controller="LoginController">
 
-        <!-- Brand -->
-        <a class="navbar-brand waves-effect" href="#!/">
-          <strong class="blue-text">HOME</strong>
-        </a>
+ <div style="height: 100vh">
+  <div class="flex-center flex-column">
+  <form class="text-center border p-5" ng-submit="auth()">
+    
+    <div align ="center" style = "color:red" >{{login_message}}</div>
 
-        <!-- Collapse -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    <p class="h4 mb-4">Authentication</p>
 
-        <!-- Links -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!-- Username -->
+    <input type="text" id="defaultLoginForUsername" class="form-control mb-4" placeholder="Username" ng-model="username">
 
-          <!-- Left -->
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link waves-effect" href="#!/bodydata"><i class="fa fa-stethoscope"></i>BodyData</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link waves-effect" href="#!/blooddata"><i class="fa fa-heart"></i>BloodData</a>
-            </li>
-          </ul>
+    <!-- Password -->
+    <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Password" ng-model="password">
 
-          <ul class="navbar-nav nav-flex-icons">
-            <li class="nav-item">
-              <a href="index.html" class="nav-link border border-light rounded waves-effect">
-                <i class="fa fa-sign-out-alt"></i> Logout
-              </a>
-            </li>
-          </ul>
+    <!-- Sign in button -->
+    <button class="btn btn-dark btn-block my-4" type="submit">Sign in</button>
 
-        </div>
-
-      </div>
-    </nav>
-    <!-- Navbar -->
-
-<div ng-view></div>
+  </form>
+  </div>
+ </div>
 
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
@@ -67,13 +45,8 @@
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-animate.js" ></script>
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
 
-
- <script type = "text/javascript">
- $(window).load(function(){
-		$('html,body').animate({ scrollTop: 0 }, '1');
-	}); 
- </script>
- <script src="js/app.js"></script>
  
- </body>
+ <script src="js/app.js"></script>
+
+</body>
 </html>

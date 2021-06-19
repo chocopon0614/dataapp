@@ -1,0 +1,33 @@
+<div class="modal-header text-center">
+	<h4 class="modal-title w-100 font-weight-bold">Create new account</h4>
+	<button type="button" class="close" data-dismiss="modal"
+		aria-label="Close"  ng-click="cancel()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<div class="modal-body mx-3">
+    
+    <div align ="center" style = "color:red" >{{message}}</div>
+    
+	<div class="md-form mb-4">
+		<i class="fas fa-user prefix" aria-hidden="true"></i> <input
+			type="text" ng-model="mdusername" id="orangeForm-name1"
+			class="form-control validate" autocomplete="off"> <label
+			for="orangeForm-name">Username</label>
+	</div>
+
+	<div class="md-form mb-4">
+		<i class="fas fa-key prefix" aria-hidden="true"></i> <input
+			type="password" ng-model="mdpassword" id="orangeForm-name2"
+			class="form-control validate" autocomplete="off"> <label
+			for="orangeForm-name">Password</label>
+	</div>
+
+
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-outline-success waves-effect" ng-click="register()">OK</button>
+	<button class="btn btn-outline-warning waves-effect" ng-click="cancel()">Cancel</button>
+</div>

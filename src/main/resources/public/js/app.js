@@ -3,7 +3,8 @@ var DataApp = angular.module('DataApp', ['ngAnimate','toaster', 'ui.bootstrap', 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
     .when('/', {
-      templateUrl: 'templates/top.html'
+      templateUrl: 'templates/top.html',
+      controller: 'TopController'
     })
     .when('/bodydata', {
       templateUrl: 'templates/bodydata.html',
@@ -23,14 +24,20 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 
 
-DataApp.controller('LoginController', ['$scope', '$http', '$window',
+DataApp.controller('LoginController', ['$uibModal','$scope', '$http', '$window', '$location',
 '$httpParamSerializerJQLike', 
-	 function($scope, $http, $window, $httpParamSerializerJQLike){
+	 function($uibModal, $scope, $http, $window, $location, $httpParamSerializerJQLike){
 	   sessionStorage.removeItem('jwt');
+
 	
        $scope.submit = function(){
     	  var method = "POST";	
     	  var url = 'login/userlogin';	
+
+          $scope.login_message = ''
+	      if(!$scope.username) {$scope.login_message = "Username is required." ; return;};
+	      if(!$scope.password) {$scope.login_message = "Password is required." ; return;};
+
     		
     	  $http({
     	          method: method,
@@ -39,25 +46,176 @@ DataApp.controller('LoginController', ['$scope', '$http', '$window',
                   },
                   transformRequest: $httpParamSerializerJQLike,
     	          url: url,
-//fixme temporary fixed 
-//    	          data: { username: $scope.username, password: $scope.password }
-    	          data: { username: 'test1', password: 'password'}
+    	          data: { username: $scope.username, password: $scope.password }
     	        }).then(function successCallback(response){
     	        	var resdata = response.data;
     	        	var jwt = resdata.JWT;
     	        	sessionStorage.setItem('jwt', jwt);
     	        	
     	        	$window.location.href = 'main.html';
-    	        }, function errorCallback(response) {
-    	        	var sts = response.status;
-
-    	        	if(sts == 400){
-      	        	   $scope.login_message = 'Password is wrong.';
-    	        	}else{
-         	           $scope.login_message = 'Your ID does not exist.';
-    	        	}
+    	        }, function errorCallback() {
+      	        	$scope.login_message = 'Login Error. Please try agian.'
     	      });
     	};
+
+  	$scope.register = function(){
+
+  		$uibModal.open({
+    		templateUrl : 'templates/registermodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+
+    	    	$scope.register = function () {
+	
+                 $scope.message=''
+	
+	             if(!$scope.mdusername) {$scope.message = "Username is required." ; return;};
+	             if(!$scope.mdpassword) {$scope.message = "Password is required." ; return;};
+    	    		
+    	        $http({
+    	             method: 'POST',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'login/register',
+    	               data: { username: $scope.mdusername, password: $scope.mdpassword }
+    	           }).then(function successCallback(){
+                       $scope.mdusername=''
+                       $scope.mdpassword=''
+                       $scope.message ='New account was created. Please login.'
+
+    	            }, function errorCallback() {
+                       $scope.mdusername=''
+                       $scope.mdpassword=''
+	                   $scope.message = 'Registration Error. Please try agian.'
+	
+    	        });
+
+    	  };
+    	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+
+       $scope.auth = function(){
+    	  var method = "POST";	
+    	  var url = 'login/userlogin';	
+
+          var originalurl = $location.absUrl();
+ 	      var urlParm = originalurl.split('?')[1];
+
+          sessionStorage.removeItem('jwt');
+
+          $scope.login_message = ''
+	      if(!$scope.username) {$scope.login_message = "Username is required." ; return;};
+	      if(!$scope.password) {$scope.login_message = "Password is required." ; return;};
+
+    	  	
+    	  $http({
+    	          method: method,
+    	          headers : {
+                      'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                  },
+                  transformRequest: $httpParamSerializerJQLike,
+    	          url: url,
+    	          data: { username: $scope.username, password: $scope.password }
+    	        }).then(function successCallback(response){
+                    var resdata = response.data;
+     	        	var jwt = resdata.JWT;
+     	        	sessionStorage.setItem('jwt', jwt);
+
+    	        	$window.location.href = 'authorization.html?' + urlParm;
+    	        }, function errorCallback() {
+      	        	$scope.login_message = 'Login Error. Please try agian.'
+    	      });
+    	};
+
+
+    }]);
+
+
+DataApp.controller('AuthController', ['$scope', '$http', '$httpParamSerializerJQLike', '$window', '$location',
+	 function($scope, $http, $httpParamSerializerJQLike, $window, $location){
+
+	  var url = $location.absUrl();
+ 	  var urlParm = url.split('?')[1];
+ 	  var originalurl = urlParm.split('&')[0];
+
+ 	  var originalurl_temp = decodeURIComponent(originalurl.split('=')[1]); 
+
+	  $scope.authorization = function(){
+      	  var method = "POST";	
+          var url = 'login/authorization';	
+
+     	  var jwt = sessionStorage.getItem('jwt');
+
+      	  $http({
+      	          method: method,
+      	          headers : {
+                        'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                   },
+                  transformRequest: $httpParamSerializerJQLike,
+      	          url: url,
+   	              data: { jwt: jwt}
+      	        }).then(function successCallback(response){
+      	        	var resdata = response.data;
+      	        	var url = originalurl_temp + '&username=' + resdata.username + '&confirmation=' + resdata.password ;
+       	        	$window.location.href = url;
+      	        }, function errorCallback(response) {
+      	        	console.log(response);
+
+      	      });
+      	};
+
+
+	  $scope.authcancel = function(){
+      	     var url = originalurl_temp + '&error=access_denied';
+       	     $window.location.href = url;
+      	};
+
+    }]);
+
+
+DataApp.controller('TopController', ['$uibModal','$scope', '$http', '$httpParamSerializerJQLike', '$window', '$location',
+	 function($uibModal, $scope, $http, $httpParamSerializerJQLike, $window, $location){
+
+      $scope.userdelete = function(){
+
+  		$uibModal.open({
+    		templateUrl : 'templates/userdeletemodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+	
+    	      $scope.ok = function () {
+
+    	        $http({
+    	             method: 'DELETE',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'login/userdelete',
+                       data: { jwt: sessionStorage.getItem('jwt')}
+    	           }).then(function successCallback(){
+    	        	  $window.location.href = 'index.html';
+
+    	            }, function errorCallback() {
+   	                  $location.path('/error');
+	
+    	        });
+
+    	      };
+
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+
+
     }]);
 
 
@@ -187,13 +345,13 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
                         toaster.success({title: "inserted", 
-                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 5sec..",
+                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 3sec..",
                                  bodyOutputType: 'trustedHtml'});
                         setTimeout(
                            function () {
 	    	                   $window.location.reload();
                           },
-                           "5000"
+                           "3000"
                         );
 
     	            }, function errorCallback(response) {
