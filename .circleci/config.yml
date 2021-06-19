@@ -36,8 +36,16 @@ jobs:
       steps:
         - attach_workspace:
             at: '.'
+        - restore_cache:
+            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
         - run: sudo pip install --upgrade pip
         - run: sudo pip install awscli
+        - save_cache:
+            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            paths:
+              - ".venv"
+              - "/usr/local/bin"
+              - "/usr/local/lib/python3.6/site-packages"
         - run:
             name: "authorize-security-group-ingress"
             command: |
