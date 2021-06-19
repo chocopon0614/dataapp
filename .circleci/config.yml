@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  aws-cli: circleci/aws-cli@0.1.20
+
 jobs:
   test:
       machine: 
@@ -36,16 +39,16 @@ jobs:
       steps:
         - attach_workspace:
             at: '.'
-        - restore_cache:
-            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+#        - restore_cache:
+#            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
         - run: sudo pip install --upgrade pip
         - run: sudo pip install awscli
-        - save_cache:
-            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            paths:
-              - ".venv"
-              - "/usr/local/bin"
-              - "/usr/local/lib/python3.6/site-packages"
+#        - save_cache:
+#            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+#            paths:
+#              - ".venv"
+#              - "/usr/local/bin"
+#              - "/usr/local/lib/python3.6/site-packages"
         - run:
             name: "authorize-security-group-ingress"
             command: |
@@ -69,7 +72,7 @@ jobs:
               bash ./sg.sh
 
 workflows:
-  test-depoly:
+  test-deploy:
     jobs:
       - test
       - deploy:
