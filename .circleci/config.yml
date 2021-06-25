@@ -1,13 +1,22 @@
 version: 2.1
 
+orbs:
+  aws-cli: circleci/aws-cli@2.0
+
 jobs:
   test:
       machine: 
         image: default
       steps:
         - checkout
+        - restore_cache:
+            key: circleci-java-maven-{{ checksum "pom.xml" }}
         - run:
             command: mvn clean install
+        - save_cache:
+            paths:
+              - ~/.m2
+            key: circleci-java-maven-{{ checksum "pom.xml" }}
         - persist_to_workspace:
             root: '.'
             paths:
@@ -30,13 +39,12 @@ jobs:
       steps:
         - attach_workspace:
             at: '.'
-        - run: sudo pip install awscli
+        - aws-cli/install
         - run:
             name: "authorize-security-group-ingress"
             command: |
               IP=`curl -s ifconfig.me`
               echo "#!/bin/bash" > ./sg.sh
-              echo "aws configure set region us-west-2" >> ./sg.sh
               echo "aws ec2 authorize-security-group-ingress --group-id sg-0fd3983023d3016d5 --protocol tcp --port 22 --cidr ${IP}/32" >> ./sg.sh
               bash ./sg.sh
         - add_ssh_keys:
@@ -49,12 +57,11 @@ jobs:
             command: |
               IP=`curl -s ifconfig.me`
               echo "#!/bin/bash" > ./sg.sh
-              echo "aws configure set region us-west-2" >> ./sg.sh
               echo "aws ec2 revoke-security-group-ingress --group-id sg-0fd3983023d3016d5 --protocol tcp --port 22 --cidr ${IP}/32" >> ./sg.sh
               bash ./sg.sh
 
 workflows:
-  test-depoly:
+  test-deploy:
     jobs:
       - test
       - deploy:
