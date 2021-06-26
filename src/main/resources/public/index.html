@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 
 <body ng-controller="LoginController">
@@ -32,7 +33,13 @@
     <p6>*New user? Please</p6> <a href="" ng-click="register()">sign up</a><p6>.</p6>
 
   </form>
+
   </div>
+
+ </div>
+ 
+ <div wc-overlay wc-overlay-delay="300">
+    <img src="pic/spinner.gif" /><br/>Loading..
  </div>
 
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -45,7 +52,8 @@
  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/ui-bootstrap4@3.0.6/dist/ui-bootstrap-tpls.min.js"></script>
  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-animate.js" ></script>
  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
- 
+
+ <script src="js/wcAngularOverlay.js"></script>
  <script src="js/app.js"></script>
 
 </body>

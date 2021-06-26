@@ -14,6 +14,10 @@
 				"database": "localdb",
 				"url": "jdbc:mysql://localhost:3306/localdb",
 				"type": "dev",
+				"properties": {
+					"connectTimeout": "20000",
+					"allowPublicKeyRetrieval": "TRUE"
+				},
 				"provider-properties": {
 					"@dbeaver-serverTimezone@": "Asia/Tokyo"
 				},
