@@ -1,4 +1,4 @@
-var DataApp = angular.module('DataApp', ['ngAnimate','toaster', 'ui.bootstrap', 'ngRoute']);
+var DataApp = angular.module('DataApp', [ 'ngRoute','wc.Directives', 'ngAnimate','toaster','ui.bootstrap']);
 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
