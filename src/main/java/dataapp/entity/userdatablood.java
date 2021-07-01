@@ -1,4 +1,4 @@
-package DataApp.entity;
+package dataapp.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -13,29 +13,26 @@ import javax.persistence.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 /**
  * The persistent class for the USERDATABLOOD database table.
  * 
  */
 @Entity
 @NamedQueries({
-@NamedQuery(name="Userdatablood.findAll", query="SELECT u FROM Userdatablood u"),
-@NamedQuery(name="Userdatablood.findUserid", query="SELECT u FROM Userdatablood u where u.userinformation =?1 order by u.id desc"),
-@NamedQuery(name="Userdatablood.update_TG", query="UPDATE Userdatablood u set u.tg =?1 where u.userinformation =?2"),
-@NamedQuery(name="Userdatablood.update_GTP", query="UPDATE Userdatablood u set u.gtp =?1 where u.userinformation =?2"),
-@NamedQuery(name="Userdatablood.update_HDL", query="UPDATE Userdatablood u set u.hdl =?1 where u.userinformation =?2"),
-@NamedQuery(name="Userdatablood.update_LDL", query="UPDATE Userdatablood u set u.ldl =?1 where u.userinformation =?2"),
-@NamedQuery(name="Userdatablood.update_FPG", query="UPDATE Userdatablood u set u.fpg =?1 where u.userinformation =?2")
-})
-public class Userdatablood implements Serializable {
+		@NamedQuery(name = "Userdatablood.finduserid", query = "SELECT u FROM userdatablood u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "Userdatablood.update_tg", query = "UPDATE userdatablood u set u.tg =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "Userdatablood.update_gtp", query = "UPDATE userdatablood u set u.gtp =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "Userdatablood.update_hdl", query = "UPDATE userdatablood u set u.hdl =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "Userdatablood.update_ldl", query = "UPDATE userdatablood u set u.ldl =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "Userdatablood.update_fpg", query = "UPDATE userdatablood u set u.fpg =?1 where u.userinformation =?2") })
+public class userdatablood implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(insertable=false)
+	@Column(insertable = false)
 	private int id;
 
-	@Column(name="CREATE_TIME")
+	@Column(name = "CREATE_TIME")
 	private Timestamp createTime;
 
 	private double tg;
@@ -46,16 +43,16 @@ public class Userdatablood implements Serializable {
 
 	private double ldl;
 
-	@Column(name="MODIFIED_TIME")
+	@Column(name = "MODIFIED_TIME")
 	private Timestamp modifiedTime;
 
 	private double fpg;
 
 	@ManyToOne
-	@JoinColumn(name="USERID")
-	private Userinformation userinformation;
+	@JoinColumn(name = "USERID")
+	private userinformation userinformation;
 
-	public Userdatablood() {
+	public userdatablood() {
 	}
 
 	public int getId() {
@@ -124,11 +121,11 @@ public class Userdatablood implements Serializable {
 	}
 
 	@JsonIgnore
-	public Userinformation getUserinformation() {
+	public userinformation getUserinformation() {
 		return this.userinformation;
 	}
 
-	public void setUserinformation(Userinformation userinformation) {
+	public void setUserinformation(userinformation userinformation) {
 		this.userinformation = userinformation;
 	}
 

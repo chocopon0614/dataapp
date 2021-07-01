@@ -1,9 +1,10 @@
-package DataApp.util;
+package dataapp.util;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,8 +15,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+@ConfigurationProperties("app")
 public class checkutil {
-	public static Map<String, String> validCheck(BindingResult result) {
+	private static String introspectionUrl;
+	private static String clientId;
+
+	public static Map<String, String> validdheck(BindingResult result) {
 
 		Map<String, String> map = new HashMap<>();
 
@@ -27,26 +35,23 @@ public class checkutil {
 		return map;
 	}
 
-	public static String tokenCheck(String token) {
+	public static String tokencheck(String token) throws JsonMappingException, JsonProcessingException {
 
 		RestTemplate restTemplate = new RestTemplate();
-		String URL = "https://api.au-syd.apiconnect.appdomain.cloud/chocopon0899gmailcom-dev/sb/oauthprovider/oauth2/introspect";
 
 		HttpHeaders headers = new HttpHeaders();
-
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("client_id", "1886b5cd-d923-41db-aff7-2e841997e22b");
+		map.add("client_id", clientId);
 		map.add("token", token);
 		map.add("token_type_hint", "access_token");
 
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
+		ResponseEntity<String> res = restTemplate.postForEntity(introspectionUrl, entity, String.class);
 
-		ResponseEntity<String> response = restTemplate.postForEntity(URL, entity, String.class);
-
-		return response.getBody();
+		return res.getBody();
 
 	}
 }

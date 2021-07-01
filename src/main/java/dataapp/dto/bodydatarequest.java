@@ -1,11 +1,11 @@
-package DataApp.dto;
+package dataapp.dto;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class BodyDataRequest {
+public class bodydatarequest {
 
 	@Min(value = 0, message = "Height:Height must be 0 and more.")
 	@Digits(integer = 3, fraction = 2, message = "Height:Height must be within 3 digit integer and 2 digit fraction.")

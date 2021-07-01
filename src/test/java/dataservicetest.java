@@ -19,21 +19,21 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import DataApp.Menu;
-import DataApp.entity.Userinformation;
-import DataApp.util.jwtutil;
+import dataapp.menu;
+import dataapp.entity.userinformation;
+import dataapp.util.jwtutil;
 
-public class DataServiceTest {
+public class dataservicetest {
 
 	@InjectMocks
-	private Menu menuservice = new Menu();
+	private menu menuservice = new menu();
 
 	@Test
 	void test1() {
 		MockedStatic<jwtutil> mocked = Mockito.mockStatic(jwtutil.class);
 
 		mocked.when(() -> {
-			jwtutil.varifyJWT(Mockito.anyString(), Mockito.anyString());
+			jwtutil.varifyjwt(Mockito.anyString(), Mockito.anyString());
 		}).thenReturn("dummy");
 
 		EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
@@ -49,7 +49,7 @@ public class DataServiceTest {
 
 		Mockito.when(em.createNamedQuery(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
 		Mockito.when(mockQuery.setParameter(Mockito.anyInt(), Mockito.any())).thenReturn(mockQuery);
-		when(mockQuery.getSingleResult()).thenReturn(new Userinformation());
+		when(mockQuery.getSingleResult()).thenReturn(new userinformation());
 		when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
 
 		try {
@@ -71,7 +71,7 @@ public class DataServiceTest {
 		MockedStatic<jwtutil> mocked = Mockito.mockStatic(jwtutil.class);
 
 		mocked.when(() -> {
-			jwtutil.varifyJWT(Mockito.anyString(), Mockito.anyString());
+			jwtutil.varifyjwt(Mockito.anyString(), Mockito.anyString());
 		}).thenReturn("dummy");
 
 		EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
@@ -87,7 +87,7 @@ public class DataServiceTest {
 
 		Mockito.when(em.createNamedQuery(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
 		Mockito.when(mockQuery.setParameter(Mockito.anyInt(), Mockito.any())).thenReturn(mockQuery);
-		when(mockQuery.getSingleResult()).thenReturn(new Userinformation());
+		when(mockQuery.getSingleResult()).thenReturn(new userinformation());
 		when(mockQuery.getResultList()).thenReturn(null);
 
 		try {

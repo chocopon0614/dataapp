@@ -1,4 +1,4 @@
-package DataApp;
+package dataapp;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -21,32 +21,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import DataApp.entity.Userdatablood;
-import DataApp.entity.Userinformation;
-import DataApp.util.hashutil;
-import DataApp.util.jwtutil;
+import dataapp.entity.userdatablood;
+import dataapp.entity.userinformation;
+import dataapp.util.hashutil;
+import dataapp.util.jwtutil;
 
 @RestController
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-public class Login {
+public class login {
 
 	@PostMapping("userlogin")
 	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName,
 			@RequestParam("password") final String PassWord) {
 
-		String hash_password = hashutil.getSHA256(PassWord);
+		String hash_password = hashutil.getsha256(PassWord);
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 
-		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+		userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 				.setParameter(1, UserName).getSingleResult();
 
 		if (!(UserObj == null)) {
 			String DbPass = UserObj.getPassword();
 			if (hash_password.equals(DbPass)) {
 
-				String jwttoken = jwtutil.createJWT(UserName, DbPass);
+				String jwttoken = jwtutil.createjwt(UserName, DbPass);
 				String res = "{\"JWT\" : \"" + jwttoken + "\" }";
 
 				return new ResponseEntity<String>(res, HttpStatus.OK);
@@ -74,12 +74,12 @@ public class Login {
 		EntityTransaction tx2 = null;
 
 		try {
-			String hash_password = hashutil.getSHA256(password);
+			String hash_password = hashutil.getsha256(password);
 
 			tx = em.getTransaction();
 			tx.begin();
 
-			Userinformation userinfo = new Userinformation();
+			userinformation userinfo = new userinformation();
 			userinfo.setUsername(username);
 			userinfo.setPassword(hash_password);
 			userinfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -92,11 +92,11 @@ public class Login {
 			tx2 = em2.getTransaction();
 			tx2.begin();
 
-			Userinformation UserObj = em2.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+			userinformation user = em2.createNamedQuery("userinformation.findbyusername", userinformation.class)
 					.setParameter(1, username).getSingleResult();
 
-			Userdatablood userblood = new Userdatablood();
-			userblood.setUserinformation(UserObj);
+			userdatablood userblood = new userdatablood();
+			userblood.setUserinformation(user);
 			userblood.setFpg(0);
 			userblood.setGtp(0);
 			userblood.setHdl(0);
@@ -127,7 +127,7 @@ public class Login {
 	@DeleteMapping("userdelete")
 	public ResponseEntity<String> userDelete(@RequestParam("jwt") final String jwt) throws Exception {
 
-		String UserName = jwtutil.varifyJWT(jwt, "username");
+		String UserName = jwtutil.varifyjwt(jwt, "username");
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
@@ -138,7 +138,7 @@ public class Login {
 			tx = em.getTransaction();
 			tx.begin();
 
-			em.createNamedQuery("Userinformation.deletebyusername", Userinformation.class).setParameter(1, UserName)
+			em.createNamedQuery("userinformation.deletebyusername", userinformation.class).setParameter(1, UserName)
 					.executeUpdate();
 
 			tx.commit();
@@ -162,8 +162,8 @@ public class Login {
 
 		try {
 
-			String username = jwtutil.varifyJWT(jwt, "username");
-			String password = jwtutil.varifyJWT(jwt, "password");
+			String username = jwtutil.varifyjwt(jwt, "username");
+			String password = jwtutil.varifyjwt(jwt, "password");
 
 			String res = "{\"username\" : \"" + username + "\" , \"password\" : \"" + password + "\"}";
 			return new ResponseEntity<String>(res, HttpStatus.OK);
@@ -188,7 +188,7 @@ public class Login {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 
-		Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+		userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 				.setParameter(1, username).getSingleResult();
 
 		if (!(UserObj == null)) {

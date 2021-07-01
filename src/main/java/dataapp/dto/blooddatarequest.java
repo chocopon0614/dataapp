@@ -1,4 +1,4 @@
-package DataApp.dto;
+package dataapp.dto;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class BloodDataRequest {
+public class blooddatarequest {
 
 	@Min(value = 0, message = "Value:New value must be 0 and more.")
 	@Digits(integer = 3, fraction = 2, message = "Value:New value must be within 3 digit integer and 2 digit fraction.")

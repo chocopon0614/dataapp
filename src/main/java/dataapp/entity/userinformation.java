@@ -1,4 +1,4 @@
-package DataApp.entity;
+package dataapp.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -16,10 +16,10 @@ import javax.persistence.OneToMany;
  * 
  */
 @Entity
-@NamedQueries({ @NamedQuery(name = "Userinformation.findAll", query = "SELECT u FROM Userinformation u"),
-		@NamedQuery(name = "Userinformation.findbyusername", query = "SELECT u FROM Userinformation u where u.username =?1"),
-		@NamedQuery(name = "Userinformation.deletebyusername", query = "DELETE FROM Userinformation u where u.username =?1") })
-public class Userinformation implements Serializable {
+@NamedQueries({
+		@NamedQuery(name = "userinformation.findbyusername", query = "SELECT u FROM userinformation u where u.username =?1"),
+		@NamedQuery(name = "userinformation.deletebyusername", query = "DELETE FROM userinformation u where u.username =?1") })
+public class userinformation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -39,9 +39,9 @@ public class Userinformation implements Serializable {
 
 	// bi-directional many-to-one association to Userdata
 	@OneToMany(mappedBy = "userinformation")
-	private List<Userdata> userdata;
+	private List<userdata> userdata;
 
-	public Userinformation() {
+	public userinformation() {
 	}
 
 	public int getId() {
@@ -84,22 +84,22 @@ public class Userinformation implements Serializable {
 		this.username = username;
 	}
 
-	public List<Userdata> getUserdata() {
+	public List<userdata> getUserdata() {
 		return this.userdata;
 	}
 
-	public void setUserdata(List<Userdata> userdata) {
+	public void setUserdata(List<userdata> userdata) {
 		this.userdata = userdata;
 	}
 
-	public Userdata addUserdata(Userdata userdata) {
+	public userdata addUserdata(userdata userdata) {
 		getUserdata().add(userdata);
 		userdata.setUserinformation(this);
 
 		return userdata;
 	}
 
-	public Userdata removeUserdata(Userdata userdata) {
+	public userdata removeUserdata(userdata userdata) {
 		getUserdata().remove(userdata);
 		userdata.setUserinformation(null);
 

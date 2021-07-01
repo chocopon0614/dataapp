@@ -1,4 +1,4 @@
-package DataApp;
+package dataapp;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -24,32 +24,32 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import DataApp.dto.BloodDataRequest;
-import DataApp.dto.BodyDataRequest;
-import DataApp.entity.Userdata;
-import DataApp.entity.Userdatablood;
-import DataApp.entity.Userinformation;
-import DataApp.util.checkutil;
-import DataApp.util.jwtutil;
+import dataapp.dto.blooddatarequest;
+import dataapp.dto.bodydatarequest;
+import dataapp.entity.userdata;
+import dataapp.entity.userdatablood;
+import dataapp.entity.userinformation;
+import dataapp.util.checkutil;
+import dataapp.util.jwtutil;
 
 @RestController
 @RequestMapping(value = "/menu", produces = MediaType.APPLICATION_JSON_VALUE)
-public class Menu {
+public class menu {
 
 	@PostMapping("bodydata")
 	public ResponseEntity<String> tabledata(@RequestParam("jwt") final String jwt) throws JsonProcessingException {
 
 		try {
 
-			String UserName = jwtutil.varifyJWT(jwt, "username");
+			String UserName = jwtutil.varifyjwt(jwt, "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
 
-			Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 					.setParameter(1, UserName).getSingleResult();
 
-			List<Userdata> UserDataList = em.createNamedQuery("Userdata.findUserid_desc", Userdata.class)
+			List<userdata> UserDataList = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
 					.setParameter(1, UserObj).getResultList();
 
 			if (!Objects.isNull(UserDataList)) {
@@ -76,21 +76,21 @@ public class Menu {
 		try {
 
 			EntityTransaction tx = null;
-			String UserName = jwtutil.varifyJWT(jwt, "username");
+			String UserName = jwtutil.varifyjwt(jwt, "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
 
-			Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 					.setParameter(1, UserName).getSingleResult();
 
 			tx = em.getTransaction();
 			tx.begin();
 
-			Userdata del_data = em.createNamedQuery("Userdata.selectData", Userdata.class).setParameter(1, UserObj)
+			userdata del_data = em.createNamedQuery("userdata.selectdata", userdata.class).setParameter(1, UserObj)
 					.setParameter(2, id).getSingleResult();
 
-			em.createNamedQuery("Userdata.deleteData", Userdata.class).setParameter(1, UserObj).setParameter(2, id)
+			em.createNamedQuery("userdata.deletedata", userdata.class).setParameter(1, UserObj).setParameter(2, id)
 					.executeUpdate();
 
 			tx.commit();
@@ -113,11 +113,11 @@ public class Menu {
 	}
 
 	@PostMapping("insertdata")
-	public ResponseEntity<String> insertdata(@Validated BodyDataRequest bodydata, BindingResult result)
+	public ResponseEntity<String> insertdata(@Validated bodydatarequest bodydata, BindingResult result)
 			throws JsonProcessingException {
 
 		if (result.hasErrors()) {
-			Map<String, String> valueMap = checkutil.validCheck(result);
+			Map<String, String> valueMap = checkutil.validdheck(result);
 
 			ObjectMapper mapper = new ObjectMapper();
 			String ResJson = mapper.writeValueAsString(valueMap);
@@ -129,18 +129,18 @@ public class Menu {
 		try {
 
 			EntityTransaction tx = null;
-			String UserName = jwtutil.varifyJWT(bodydata.getJwt(), "username");
+			String UserName = jwtutil.varifyjwt(bodydata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
 
-			Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 					.setParameter(1, UserName).getSingleResult();
 
 			tx = em.getTransaction();
 			tx.begin();
 
-			Userdata userdata = new Userdata();
+			userdata userdata = new userdata();
 			userdata.setUserinformation(UserObj);
 			userdata.setHeight(bodydata.getHeight());
 			userdata.setWeight(bodydata.getWeight());
@@ -153,7 +153,7 @@ public class Menu {
 
 			tx.commit();
 
-			List<Userdata> UserDataList = em.createNamedQuery("Userdata.findUserid_desc", Userdata.class)
+			List<userdata> UserDataList = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
 					.setParameter(1, UserObj).getResultList();
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -173,15 +173,15 @@ public class Menu {
 
 		try {
 
-			String UserName = jwtutil.varifyJWT(jwt, "username");
+			String UserName = jwtutil.varifyjwt(jwt, "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
 
-			Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 					.setParameter(1, UserName).getSingleResult();
 
-			List<Userdatablood> UserDataList = em.createNamedQuery("Userdatablood.findUserid", Userdatablood.class)
+			List<userdatablood> UserDataList = em.createNamedQuery("userdatablood.finduserid", userdatablood.class)
 					.setParameter(1, UserObj).getResultList();
 
 			if (!Objects.isNull(UserDataList)) {
@@ -202,11 +202,11 @@ public class Menu {
 	}
 
 	@PostMapping("updatedata")
-	public ResponseEntity<String> updatedata(@Validated BloodDataRequest blooddata, BindingResult result)
+	public ResponseEntity<String> updatedata(@Validated blooddatarequest blooddata, BindingResult result)
 			throws JsonProcessingException {
 
 		if (result.hasErrors()) {
-			Map<String, String> valueMap = checkutil.validCheck(result);
+			Map<String, String> valueMap = checkutil.validdheck(result);
 
 			ObjectMapper mapper = new ObjectMapper();
 			String ResJson = mapper.writeValueAsString(valueMap);
@@ -217,12 +217,12 @@ public class Menu {
 
 		try {
 
-			String UserName = jwtutil.varifyJWT(blooddata.getJwt(), "username");
+			String UserName = jwtutil.varifyjwt(blooddata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 			EntityManager em = emf.createEntityManager();
 
-			Userinformation UserObj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
+			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 					.setParameter(1, UserName).getSingleResult();
 
 			EntityTransaction tx = em.getTransaction();
@@ -230,7 +230,7 @@ public class Menu {
 
 			String QueryName = "Userdatablood.update_" + blooddata.getBloodname();
 
-			em.createNamedQuery(QueryName, Userdatablood.class).setParameter(1, blooddata.getNewvalue())
+			em.createNamedQuery(QueryName, userdatablood.class).setParameter(1, blooddata.getNewvalue())
 					.setParameter(2, UserObj).executeUpdate();
 
 			tx.commit();

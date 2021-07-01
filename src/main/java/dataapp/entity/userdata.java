@@ -1,4 +1,4 @@
-package DataApp.entity;
+package dataapp.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -19,13 +19,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  */
 @Entity
-@NamedQueries({ @NamedQuery(name = "Userdata.findAll", query = "SELECT u FROM Userdata u"),
-		@NamedQuery(name = "Userdata.findUserid", query = "SELECT u FROM Userdata u where u.userinformation =?1 order by u.id"),
-		@NamedQuery(name = "Userdata.findUserid_desc", query = "SELECT u FROM Userdata u where u.userinformation =?1 order by u.id desc"),
-		@NamedQuery(name = "Userdata.findUserid_selected", query = "SELECT u.createTime, u.height, u.weight FROM Userdata u where u.userinformation =?1 order by u.id desc"),
-		@NamedQuery(name = "Userdata.selectData", query = "SELECT u FROM Userdata u where u.userinformation =?1 and u.id =?2"),
-		@NamedQuery(name = "Userdata.deleteData", query = "DELETE FROM Userdata u where u.userinformation =?1 and u.id =?2") })
-public class Userdata implements Serializable {
+@NamedQueries({
+		@NamedQuery(name = "Userdata.finduserid", query = "SELECT u FROM userdata u where u.userinformation =?1 order by u.id"),
+		@NamedQuery(name = "Userdata.finduserid_desc", query = "SELECT u FROM userdata u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "Userdata.finduserid_selected", query = "SELECT u.createTime, u.height, u.weight FROM userdata u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "Userdata.selectdata", query = "SELECT u FROM userdata u where u.userinformation =?1 and u.id =?2"),
+		@NamedQuery(name = "Userdata.deletedata", query = "DELETE FROM userdata u where u.userinformation =?1 and u.id =?2") })
+public class userdata implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -47,9 +47,9 @@ public class Userdata implements Serializable {
 	// bi-directional many-to-one association to Userinformation
 	@ManyToOne
 	@JoinColumn(name = "USERID")
-	private Userinformation userinformation;
+	private userinformation userinformation;
 
-	public Userdata() {
+	public userdata() {
 	}
 
 	public int getId() {
@@ -94,11 +94,11 @@ public class Userdata implements Serializable {
 	}
 
 	@JsonIgnore
-	public Userinformation getUserinformation() {
+	public userinformation getUserinformation() {
 		return this.userinformation;
 	}
 
-	public void setUserinformation(Userinformation userinformation) {
+	public void setUserinformation(userinformation userinformation) {
 		this.userinformation = userinformation;
 	}
 

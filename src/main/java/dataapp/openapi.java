@@ -1,4 +1,4 @@
-package DataApp;
+package dataapp;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,42 +20,41 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import DataApp.entity.Userdata;
-import DataApp.entity.Userdatablood;
-import DataApp.entity.Userinformation;
-import DataApp.util.checkutil;
+import dataapp.entity.userdata;
+import dataapp.entity.userdatablood;
+import dataapp.entity.userinformation;
+import dataapp.util.checkutil;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
-public class OpenApi {
+public class openapi {
 
 	@GetMapping("userinfo")
-	public ResponseEntity<String> userinfo(@RequestHeader("Token") String token) throws JsonProcessingException {
+	public ResponseEntity<String> userInfo(@RequestHeader("Token") String token) throws JsonProcessingException {
 
-		String tokencheck = checkutil.tokenCheck(token);
+		String tokenCheck = checkutil.tokencheck(token);
 
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = mapper.readTree(tokencheck);
+		JsonNode root = mapper.readTree(tokenCheck);
 
 		if (!root.get("active").asBoolean())
 			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
-		String UserName = root.get("username").asText();
+		String userName = root.get("username").asText();
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 
-		Userinformation userobj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
-				.setParameter(1, UserName).getSingleResult();
+		userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+				.setParameter(1, userName).getSingleResult();
 
-		List<Userdata> userdata_list = em.createNamedQuery("Userdata.findUserid_selected", Userdata.class)
-				.setParameter(1, userobj).getResultList();
+		List<userdata> userData = em.createNamedQuery("userdata.findUserid_selected", userdata.class)
+				.setParameter(1, user).getResultList();
 
-		if (!Objects.isNull(userdata_list)) {
-			String resjson = mapper.writeValueAsString(userdata_list);
-
-			return new ResponseEntity<String>(resjson, HttpStatus.OK);
+		if (!Objects.isNull(userData)) {
+			String res = mapper.writeValueAsString(userData);
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} else {
 			return ResponseEntity.badRequest().build();
@@ -65,31 +64,30 @@ public class OpenApi {
 	}
 
 	@GetMapping("chartdata")
-	public ResponseEntity<String> chartdata(@RequestHeader("Token") String token) throws JsonProcessingException {
+	public ResponseEntity<String> chartData(@RequestHeader("Token") String token) throws JsonProcessingException {
 
-		String tokencheck = checkutil.tokenCheck(token);
+		String tokenCheck = checkutil.tokencheck(token);
 
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = mapper.readTree(tokencheck);
+		JsonNode root = mapper.readTree(tokenCheck);
 
 		if (!root.get("active").asBoolean())
 			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
-		String UserName = root.get("username").asText();
+		String userName = root.get("username").asText();
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
 		EntityManager em = emf.createEntityManager();
 
-		Userinformation userobj = em.createNamedQuery("Userinformation.findbyusername", Userinformation.class)
-				.setParameter(1, UserName).getSingleResult();
+		userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+				.setParameter(1, userName).getSingleResult();
 
-		List<Userdatablood> userdata_list = em.createNamedQuery("Userdatablood.findUserid", Userdatablood.class)
-				.setParameter(1, userobj).getResultList();
+		List<userdatablood> userData = em.createNamedQuery("userdatablood.findUserid", userdatablood.class)
+				.setParameter(1, user).getResultList();
 
-		if (!Objects.isNull(userdata_list)) {
-			String resjson = mapper.writeValueAsString(userdata_list);
-
-			return new ResponseEntity<String>(resjson, HttpStatus.OK);
+		if (!Objects.isNull(userData)) {
+			String res = mapper.writeValueAsString(userData);
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} else {
 			return ResponseEntity.badRequest().build();
