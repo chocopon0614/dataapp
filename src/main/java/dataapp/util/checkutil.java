@@ -16,7 +16,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 @ConfigurationProperties("app")
 public class checkutil {
@@ -35,7 +34,7 @@ public class checkutil {
 		return map;
 	}
 
-	public static String tokencheck(String token) throws JsonMappingException, JsonProcessingException {
+	public static String tokencheck(String token) throws JsonProcessingException {
 
 		RestTemplate restTemplate = new RestTemplate();
 

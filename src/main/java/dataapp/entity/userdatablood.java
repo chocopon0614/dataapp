@@ -19,12 +19,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "Userdatablood.finduserid", query = "SELECT u FROM userdatablood u where u.userinformation =?1 order by u.id desc"),
-		@NamedQuery(name = "Userdatablood.update_tg", query = "UPDATE userdatablood u set u.tg =?1 where u.userinformation =?2"),
-		@NamedQuery(name = "Userdatablood.update_gtp", query = "UPDATE userdatablood u set u.gtp =?1 where u.userinformation =?2"),
-		@NamedQuery(name = "Userdatablood.update_hdl", query = "UPDATE userdatablood u set u.hdl =?1 where u.userinformation =?2"),
-		@NamedQuery(name = "Userdatablood.update_ldl", query = "UPDATE userdatablood u set u.ldl =?1 where u.userinformation =?2"),
-		@NamedQuery(name = "Userdatablood.update_fpg", query = "UPDATE userdatablood u set u.fpg =?1 where u.userinformation =?2") })
+		@NamedQuery(name = "userdatablood.finduserid", query = "select u from userdatablood u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "userdatablood.update_tg", query = "update userdatablood u set u.tg =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "userdatablood.update_gtp", query = "update userdatablood u set u.gtp =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "userdatablood.update_hdl", query = "update userdatablood u set u.hdl =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "userdatablood.update_ldl", query = "update userdatablood u set u.ldl =?1 where u.userinformation =?2"),
+		@NamedQuery(name = "userdatablood.update_fpg", query = "update userdatablood u set u.fpg =?1 where u.userinformation =?2") })
 public class userdatablood implements Serializable {
 	private static final long serialVersionUID = 1L;
 

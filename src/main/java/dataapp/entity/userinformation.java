@@ -17,8 +17,8 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "userinformation.findbyusername", query = "SELECT u FROM userinformation u where u.username =?1"),
-		@NamedQuery(name = "userinformation.deletebyusername", query = "DELETE FROM userinformation u where u.username =?1") })
+		@NamedQuery(name = "userinformation.findbyusername", query = "select u from userinformation u where u.username =?1"),
+		@NamedQuery(name = "userinformation.deletebyusername", query = "delete from userinformation u where u.username =?1") })
 public class userinformation implements Serializable {
 	private static final long serialVersionUID = 1L;
 

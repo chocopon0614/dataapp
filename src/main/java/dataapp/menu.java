@@ -43,7 +43,7 @@ public class menu {
 
 			String UserName = jwtutil.varifyjwt(jwt, "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
 			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
@@ -78,7 +78,7 @@ public class menu {
 			EntityTransaction tx = null;
 			String UserName = jwtutil.varifyjwt(jwt, "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
 			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
@@ -131,7 +131,7 @@ public class menu {
 			EntityTransaction tx = null;
 			String UserName = jwtutil.varifyjwt(bodydata.getJwt(), "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
 			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
@@ -175,7 +175,7 @@ public class menu {
 
 			String UserName = jwtutil.varifyjwt(jwt, "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
 			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
@@ -219,7 +219,7 @@ public class menu {
 
 			String UserName = jwtutil.varifyjwt(blooddata.getJwt(), "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
 			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)

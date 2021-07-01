@@ -20,11 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "Userdata.finduserid", query = "SELECT u FROM userdata u where u.userinformation =?1 order by u.id"),
-		@NamedQuery(name = "Userdata.finduserid_desc", query = "SELECT u FROM userdata u where u.userinformation =?1 order by u.id desc"),
-		@NamedQuery(name = "Userdata.finduserid_selected", query = "SELECT u.createTime, u.height, u.weight FROM userdata u where u.userinformation =?1 order by u.id desc"),
-		@NamedQuery(name = "Userdata.selectdata", query = "SELECT u FROM userdata u where u.userinformation =?1 and u.id =?2"),
-		@NamedQuery(name = "Userdata.deletedata", query = "DELETE FROM userdata u where u.userinformation =?1 and u.id =?2") })
+		@NamedQuery(name = "userdata.finduserid", query = "select u from userdata u where u.userinformation =?1 order by u.id"),
+		@NamedQuery(name = "userdata.finduserid_desc", query = "select u from userdata u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "userdata.finduserid_selected", query = "select u.createTime, u.height, u.weight from userdata u where u.userinformation =?1 order by u.id desc"),
+		@NamedQuery(name = "userdata.selectdata", query = "select u from userdata u where u.userinformation =?1 and u.id =?2"),
+		@NamedQuery(name = "userdata.deletedata", query = "delete from userdata u where u.userinformation =?1 and u.id =?2") })
 public class userdata implements Serializable {
 	private static final long serialVersionUID = 1L;
 

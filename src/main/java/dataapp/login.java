@@ -1,7 +1,9 @@
 package dataapp;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Base64;
 
@@ -34,30 +36,36 @@ public class login {
 	public ResponseEntity<String> userLogin(@RequestParam("username") final String UserName,
 			@RequestParam("password") final String PassWord) {
 
-		String hash_password = hashutil.getsha256(PassWord);
+		String hashedPassword = null;
 
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		try {
+			hashedPassword = hashutil.getsha256(PassWord);
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 		EntityManager em = emf.createEntityManager();
 
-		userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+		userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 				.setParameter(1, UserName).getSingleResult();
 
-		if (!(UserObj == null)) {
-			String DbPass = UserObj.getPassword();
-			if (hash_password.equals(DbPass)) {
+		if (!(user == null)) {
+			String dbPassword = user.getPassword();
+			if (hashedPassword.equals(dbPassword)) {
 
-				String jwttoken = jwtutil.createjwt(UserName, DbPass);
+				String jwttoken = jwtutil.createjwt(UserName, dbPassword);
 				String res = "{\"JWT\" : \"" + jwttoken + "\" }";
 
 				return new ResponseEntity<String>(res, HttpStatus.OK);
 
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
 			}
 
 		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -65,11 +73,11 @@ public class login {
 	public ResponseEntity<String> register(@RequestParam("username") final String username,
 			@RequestParam("password") final String password) throws Exception {
 
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("DataApp");
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tx = null;
 
-		EntityManagerFactory emf2 = Persistence.createEntityManagerFactory("DataApp");
+		EntityManagerFactory emf2 = Persistence.createEntityManagerFactory("dataapp");
 		EntityManager em2 = emf2.createEntityManager();
 		EntityTransaction tx2 = null;
 
@@ -107,7 +115,7 @@ public class login {
 
 			tx2.commit();
 
-			return ResponseEntity.ok().build();
+			return new ResponseEntity<String>(HttpStatus.OK);
 
 		} catch (RuntimeException e) {
 			if (tx != null && tx.isActive())
@@ -116,7 +124,7 @@ public class login {
 			if (tx2 != null && tx2.isActive())
 				tx2.rollback();
 
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		} finally {
 			em.close();
