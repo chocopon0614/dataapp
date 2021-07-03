@@ -23,19 +23,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dataapp.entity.userdata;
 import dataapp.entity.userdatablood;
 import dataapp.entity.userinformation;
-import dataapp.util.checkutil;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
-public class openapi {
+public class open {
 
 	@GetMapping("userinfo")
 	public ResponseEntity<String> userInfo(@RequestHeader("Token") String token) {
 
 		try {
 
-			String tokenCheck = checkutil.tokencheck(token);
+			String tokenCheck = util.tokencheck(token);
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode root = mapper.readTree(tokenCheck);
 
@@ -73,7 +72,7 @@ public class openapi {
 
 		try {
 
-			String tokenCheck = checkutil.tokencheck(token);
+			String tokenCheck = util.tokencheck(token);
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode root = mapper.readTree(tokenCheck);
 

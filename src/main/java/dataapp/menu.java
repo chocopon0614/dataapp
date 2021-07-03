@@ -29,84 +29,115 @@ import dataapp.dto.bodydatarequest;
 import dataapp.entity.userdata;
 import dataapp.entity.userdatablood;
 import dataapp.entity.userinformation;
-import dataapp.util.checkutil;
-import dataapp.util.jwtutil;
 
 @RestController
 @RequestMapping(value = "/menu", produces = MediaType.APPLICATION_JSON_VALUE)
 public class menu {
 
 	@PostMapping("bodydata")
-	public ResponseEntity<String> tabledata(@RequestParam("jwt") final String jwt) throws JsonProcessingException {
+	public ResponseEntity<String> bodydata(@RequestParam("jwt") final String jwt) {
 
 		try {
 
-			String UserName = jwtutil.varifyjwt(jwt, "username");
+			String userName = util.varifyjwt(jwt, "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
-			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, UserName).getSingleResult();
+			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+					.setParameter(1, userName).getSingleResult();
 
-			List<userdata> UserDataList = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
-					.setParameter(1, UserObj).getResultList();
+			List<userdata> userData = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
+					.setParameter(1, user).getResultList();
 
-			if (!Objects.isNull(UserDataList)) {
+			if (!Objects.isNull(userData)) {
 				ObjectMapper mapper = new ObjectMapper();
-				String ResJson = mapper.writeValueAsString(UserDataList);
+				String res = mapper.writeValueAsString(userData);
 
-				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
+				return new ResponseEntity<String>(res, HttpStatus.OK);
 
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 
 	}
 
-	@DeleteMapping("trash")
-	public ResponseEntity<String> datatrash(@RequestParam("jwt") final String jwt, @RequestParam("id") final int id)
+	@PostMapping("blooddata")
+	public ResponseEntity<String> blooddata(@RequestParam("jwt") final String jwt) {
+
+		try {
+
+			String userName = util.varifyjwt(jwt, "username");
+
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
+			EntityManager em = emf.createEntityManager();
+
+			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+					.setParameter(1, userName).getSingleResult();
+
+			List<userdatablood> userData = em.createNamedQuery("userdatablood.finduserid", userdatablood.class)
+					.setParameter(1, user).getResultList();
+
+			if (!Objects.isNull(userData)) {
+				ObjectMapper mapper = new ObjectMapper();
+				String res = mapper.writeValueAsString(userData);
+
+				return new ResponseEntity<String>(res, HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		} catch (Exception e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+
+	}
+
+	@DeleteMapping("trashdata")
+	public ResponseEntity<String> trash(@RequestParam("jwt") final String jwt, @RequestParam("id") final int id)
 			throws JsonProcessingException {
 
 		try {
 
 			EntityTransaction tx = null;
-			String UserName = jwtutil.varifyjwt(jwt, "username");
+			String userName = util.varifyjwt(jwt, "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
-			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, UserName).getSingleResult();
+			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+					.setParameter(1, userName).getSingleResult();
 
 			tx = em.getTransaction();
 			tx.begin();
 
-			userdata del_data = em.createNamedQuery("userdata.selectdata", userdata.class).setParameter(1, UserObj)
+			userdata delData = em.createNamedQuery("userdata.selectdata", userdata.class).setParameter(1, user)
 					.setParameter(2, id).getSingleResult();
 
-			em.createNamedQuery("userdata.deletedata", userdata.class).setParameter(1, UserObj).setParameter(2, id)
+			em.createNamedQuery("userdata.deletedata", userdata.class).setParameter(1, user).setParameter(2, id)
 					.executeUpdate();
 
 			tx.commit();
 
-			if (!Objects.isNull(del_data)) {
+			if (!Objects.isNull(delData)) {
 				ObjectMapper mapper = new ObjectMapper();
-				String ResJson = mapper.writeValueAsString(del_data);
+				String res = mapper.writeValueAsString(delData);
 
-				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
+				return new ResponseEntity<String>(res, HttpStatus.OK);
 
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 
@@ -117,31 +148,31 @@ public class menu {
 			throws JsonProcessingException {
 
 		if (result.hasErrors()) {
-			Map<String, String> valueMap = checkutil.validdheck(result);
+			Map<String, String> valueMap = util.validdheck(result);
 
 			ObjectMapper mapper = new ObjectMapper();
-			String ResJson = mapper.writeValueAsString(valueMap);
+			String res = mapper.writeValueAsString(valueMap);
 
-			return new ResponseEntity<String>(ResJson, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(res, HttpStatus.BAD_REQUEST);
 
 		}
 
 		try {
 
 			EntityTransaction tx = null;
-			String UserName = jwtutil.varifyjwt(bodydata.getJwt(), "username");
+			String userName = util.varifyjwt(bodydata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
-			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, UserName).getSingleResult();
+			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+					.setParameter(1, userName).getSingleResult();
 
 			tx = em.getTransaction();
 			tx.begin();
 
 			userdata userdata = new userdata();
-			userdata.setUserinformation(UserObj);
+			userdata.setUserinformation(user);
 			userdata.setHeight(bodydata.getHeight());
 			userdata.setWeight(bodydata.getWeight());
 
@@ -153,49 +184,16 @@ public class menu {
 
 			tx.commit();
 
-			List<userdata> UserDataList = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
-					.setParameter(1, UserObj).getResultList();
+			List<userdata> userData = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
+					.setParameter(1, user).getResultList();
 
 			ObjectMapper mapper = new ObjectMapper();
-			String ResJson = mapper.writeValueAsString(UserDataList);
+			String res = mapper.writeValueAsString(userData);
 
-			return new ResponseEntity<String>(ResJson, HttpStatus.OK);
-
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-		}
-
-	}
-
-	@PostMapping("blooddata")
-	public ResponseEntity<String> blooddata(@RequestParam("jwt") final String jwt) throws JsonProcessingException {
-
-		try {
-
-			String UserName = jwtutil.varifyjwt(jwt, "username");
-
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, UserName).getSingleResult();
-
-			List<userdatablood> UserDataList = em.createNamedQuery("userdatablood.finduserid", userdatablood.class)
-					.setParameter(1, UserObj).getResultList();
-
-			if (!Objects.isNull(UserDataList)) {
-				ObjectMapper mapper = new ObjectMapper();
-				String ResJson = mapper.writeValueAsString(UserDataList);
-
-				return new ResponseEntity<String>(ResJson, HttpStatus.OK);
-
-			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-			}
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 
@@ -206,39 +204,39 @@ public class menu {
 			throws JsonProcessingException {
 
 		if (result.hasErrors()) {
-			Map<String, String> valueMap = checkutil.validdheck(result);
+			Map<String, String> valueMap = util.validdheck(result);
 
 			ObjectMapper mapper = new ObjectMapper();
-			String ResJson = mapper.writeValueAsString(valueMap);
+			String res = mapper.writeValueAsString(valueMap);
 
-			return new ResponseEntity<String>(ResJson, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(res, HttpStatus.BAD_REQUEST);
 
 		}
 
 		try {
 
-			String UserName = jwtutil.varifyjwt(blooddata.getJwt(), "username");
+			String userName = util.varifyjwt(blooddata.getJwt(), "username");
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 			EntityManager em = emf.createEntityManager();
 
-			userinformation UserObj = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, UserName).getSingleResult();
+			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
+					.setParameter(1, userName).getSingleResult();
 
 			EntityTransaction tx = em.getTransaction();
 			tx.begin();
 
-			String QueryName = "Userdatablood.update_" + blooddata.getBloodname();
+			String QueryName = "userdatablood.update_" + blooddata.getBloodname();
 
 			em.createNamedQuery(QueryName, userdatablood.class).setParameter(1, blooddata.getNewvalue())
-					.setParameter(2, UserObj).executeUpdate();
+					.setParameter(2, user).executeUpdate();
 
 			tx.commit();
 
-			return ResponseEntity.ok().build();
+			return new ResponseEntity<String>(HttpStatus.OK);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 
