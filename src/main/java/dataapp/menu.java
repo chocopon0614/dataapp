@@ -34,6 +34,9 @@ import dataapp.entity.userinformation;
 @RequestMapping(value = "/menu", produces = MediaType.APPLICATION_JSON_VALUE)
 public class menu {
 
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
+	EntityManager em = emf.createEntityManager();
+
 	@PostMapping("bodydata")
 	public ResponseEntity<String> bodydata(@RequestParam("jwt") final String jwt) {
 
@@ -41,12 +44,7 @@ public class menu {
 
 			String userName = util.varifyjwt(jwt, "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
-
+			userinformation user = util.getuser(userName);
 			List<userdata> userData = em.createNamedQuery("userdata.finduserid_desc", userdata.class)
 					.setParameter(1, user).getResultList();
 
@@ -74,12 +72,7 @@ public class menu {
 
 			String userName = util.varifyjwt(jwt, "username");
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
-
+			userinformation user = util.getuser(userName);
 			List<userdatablood> userData = em.createNamedQuery("userdatablood.finduserid", userdatablood.class)
 					.setParameter(1, user).getResultList();
 
@@ -100,22 +93,16 @@ public class menu {
 
 	}
 
-	@DeleteMapping("trashdata")
-	public ResponseEntity<String> trash(@RequestParam("jwt") final String jwt, @RequestParam("id") final int id)
+	@DeleteMapping("deletedata")
+	public ResponseEntity<String> deletedata(@RequestParam("jwt") final String jwt, @RequestParam("id") final int id)
 			throws JsonProcessingException {
 
 		try {
 
-			EntityTransaction tx = null;
 			String userName = util.varifyjwt(jwt, "username");
+			userinformation user = util.getuser(userName);
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
-
-			tx = em.getTransaction();
+			EntityTransaction tx = em.getTransaction();
 			tx.begin();
 
 			userdata delData = em.createNamedQuery("userdata.selectdata", userdata.class).setParameter(1, user)
@@ -159,16 +146,10 @@ public class menu {
 
 		try {
 
-			EntityTransaction tx = null;
 			String userName = util.varifyjwt(bodydata.getJwt(), "username");
+			userinformation user = util.getuser(userName);
 
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
-
-			tx = em.getTransaction();
+			EntityTransaction tx = em.getTransaction();
 			tx.begin();
 
 			userdata userdata = new userdata();
@@ -216,12 +197,7 @@ public class menu {
 		try {
 
 			String userName = util.varifyjwt(blooddata.getJwt(), "username");
-
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
+			userinformation user = util.getuser(userName);
 
 			EntityTransaction tx = em.getTransaction();
 			tx.begin();

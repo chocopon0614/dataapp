@@ -12,13 +12,13 @@
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 
-<body ng-controller="LoginController">
+<body ng-controller="AccountsController">
 
  <div style="height: 100vh">
   <div class="flex-center flex-column">
-  <form class="text-center border p-5" ng-submit="submit()">
+  <form class="text-center border p-5" ng-submit="login()">
     
-    <div align ="center" style = "color:red" ng-bind="login_message"></div>
+    <div align ="center" style = "color:red" ng-bind="msg"></div>
 
     <p class="h4 mb-4">Sign in</p>
 

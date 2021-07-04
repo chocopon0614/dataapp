@@ -102,18 +102,15 @@ public class util {
 
 	}
 
-	public static String getdbpassword(String username) {
+	public static userinformation getuser(String username) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 		EntityManager em = emf.createEntityManager();
 
 		userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
 				.setParameter(1, username).getSingleResult();
 
-		if (!(user == null))
-			return user.getPassword();
-		else {
-			return "";
-		}
+		return user;
+
 	}
 
 }

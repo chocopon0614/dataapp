@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dataapp.entity.userinformation;
+
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class auth {
@@ -41,7 +43,8 @@ public class auth {
 		String userName = de1.split(":")[0];
 		String hashedPassword = de1.split(":")[1];
 
-		String dbPassword = util.getdbpassword(userName);
+		userinformation user = util.getuser(userName);
+		String dbPassword = user.getPassword();
 
 		if (hashedPassword.equals(dbPassword)) {
 			return new ResponseEntity<String>(HttpStatus.OK);

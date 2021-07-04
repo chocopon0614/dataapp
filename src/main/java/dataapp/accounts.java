@@ -26,7 +26,7 @@ import dataapp.entity.userinformation;
 public class accounts {
 
 	@PostMapping("login")
-	public ResponseEntity<String> userLogin(@RequestParam("username") final String userName,
+	public ResponseEntity<String> login(@RequestParam("username") final String userName,
 			@RequestParam("password") final String passWord) {
 
 		String hashedPassword = null;
@@ -37,9 +37,10 @@ public class accounts {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		String dbPassword = util.getdbpassword(userName);
+		userinformation user = util.getuser(userName);
+		String dbPassword = user.getPassword();
 
-		if (hashedPassword.equals(dbPassword)) {
+		if (!(user == null) && hashedPassword.equals(dbPassword)) {
 
 			String jwttoken = util.createjwt(userName, dbPassword);
 			String res = "{\"jwt\" : \"" + jwttoken + "\" }";
@@ -113,14 +114,15 @@ public class accounts {
 
 		} finally {
 			em.close();
+			em2.close();
 		}
 
 	}
 
 	@DeleteMapping("delete")
-	public ResponseEntity<String> userDelete(@RequestParam("jwt") final String jwt) {
+	public ResponseEntity<String> delete(@RequestParam("jwt") final String jwt) {
 
-		String UserName = util.varifyjwt(jwt, "username");
+		String userName = util.varifyjwt(jwt, "username");
 
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataAap");
 		EntityManager em = emf.createEntityManager();
@@ -131,7 +133,7 @@ public class accounts {
 			tx = em.getTransaction();
 			tx.begin();
 
-			em.createNamedQuery("userinformation.deletebyusername", userinformation.class).setParameter(1, UserName)
+			em.createNamedQuery("userinformation.deletebyusername", userinformation.class).setParameter(1, userName)
 					.executeUpdate();
 
 			tx.commit();

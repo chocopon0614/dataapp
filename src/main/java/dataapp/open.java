@@ -29,8 +29,11 @@ import dataapp.entity.userinformation;
 @RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
 public class open {
 
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
+	EntityManager em = emf.createEntityManager();
+
 	@GetMapping("userinfo")
-	public ResponseEntity<String> userInfo(@RequestHeader("Token") String token) {
+	public ResponseEntity<String> userinfo(@RequestHeader("Token") String token) {
 
 		try {
 
@@ -42,12 +45,7 @@ public class open {
 				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
 			String userName = root.get("username").asText();
-
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
+			userinformation user = util.getuser(userName);
 
 			List<userdata> userData = em.createNamedQuery("userdata.finduserid_selected", userdata.class)
 					.setParameter(1, user).getResultList();
@@ -68,7 +66,7 @@ public class open {
 	}
 
 	@GetMapping("chartdata")
-	public ResponseEntity<String> chartData(@RequestHeader("Token") String token) {
+	public ResponseEntity<String> chartdata(@RequestHeader("Token") String token) {
 
 		try {
 
@@ -80,12 +78,7 @@ public class open {
 				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
 			String userName = root.get("username").asText();
-
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-			EntityManager em = emf.createEntityManager();
-
-			userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-					.setParameter(1, userName).getSingleResult();
+			userinformation user = util.getuser(userName);
 
 			List<userdatablood> userData = em.createNamedQuery("userdatablood.finduserid", userdatablood.class)
 					.setParameter(1, user).getResultList();
