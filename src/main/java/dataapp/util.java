@@ -13,11 +13,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
@@ -30,15 +31,15 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import dataapp.dto.properties;
 import dataapp.entity.userinformation;
 
-@ConfigurationProperties("app")
+@Service
 public class util {
-	private static String introspectionUrl;
-	private static String clientId;
-	private static long jwtExpiredTime;
+	@Autowired
+	private properties prop;
 
-	public static Map<String, String> validdheck(BindingResult result) {
+	public Map<String, String> validcheck(BindingResult result) {
 
 		Map<String, String> map = new HashMap<>();
 
@@ -50,7 +51,7 @@ public class util {
 		return map;
 	}
 
-	public static String tokencheck(String token) throws JsonProcessingException {
+	public String tokencheck(String token) throws JsonProcessingException {
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -59,18 +60,18 @@ public class util {
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("client_id", clientId);
+		map.add("client_id", prop.getClientId());
 		map.add("token", token);
 		map.add("token_type_hint", "access_token");
 
 		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
-		ResponseEntity<String> res = restTemplate.postForEntity(introspectionUrl, entity, String.class);
+		ResponseEntity<String> res = restTemplate.postForEntity(prop.getIntrospectionUrl(), entity, String.class);
 
 		return res.getBody();
 
 	}
 
-	public static String getsha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public String getsha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
 		String toReturn = null;
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -81,18 +82,18 @@ public class util {
 		return toReturn;
 	}
 
-	public static String createjwt(String username, String password) {
+	public String createjwt(String username, String password) {
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 
-		String token = JWT.create().withIssuer("dataapp").withSubject("loginauth")
-				.withExpiresAt(new Date(System.currentTimeMillis() + jwtExpiredTime))
+		String jwt = JWT.create().withIssuer("dataapp").withSubject("login")
+				.withExpiresAt(new Date(System.currentTimeMillis() + prop.getJwtExpiredTime()))
 				.withIssuedAt(new Date(System.currentTimeMillis())).withClaim("username", username)
 				.withClaim("password", password).sign(algorithm);
 
-		return token;
+		return jwt;
 	}
 
-	public static String varifyjwt(String token, String key) {
+	public String varifyjwt(String token, String key) {
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 
 		JWTVerifier verifier = JWT.require(algorithm).build();
@@ -102,7 +103,7 @@ public class util {
 
 	}
 
-	public static userinformation getuser(String username) {
+	public userinformation getuser(String username) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 		EntityManager em = emf.createEntityManager();
 

@@ -30,10 +30,10 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
 	   sessionStorage.removeItem('jwt');
 	
        $scope.login = function(){
+
           $scope.msg = '';
 	      if(!$scope.username) {$scope.msg = "Username is required." ; return;};
 	      if(!$scope.password) {$scope.msg = "Password is required." ; return;};
-
     		
     	  $http({
     	          method: 'POST',

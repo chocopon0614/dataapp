@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dataapp.dto.blooddatarequest;
@@ -33,6 +33,9 @@ import dataapp.entity.userinformation;
 @RestController
 @RequestMapping(value = "/menu", produces = MediaType.APPLICATION_JSON_VALUE)
 public class menu {
+
+	@Autowired
+	private util util;
 
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 	EntityManager em = emf.createEntityManager();
@@ -94,8 +97,7 @@ public class menu {
 	}
 
 	@DeleteMapping("deletedata")
-	public ResponseEntity<String> deletedata(@RequestParam("jwt") final String jwt, @RequestParam("id") final int id)
-			throws JsonProcessingException {
+	public ResponseEntity<String> deletedata(@RequestParam("jwt") final String jwt, @RequestParam("id") final int id) {
 
 		try {
 
@@ -131,20 +133,19 @@ public class menu {
 	}
 
 	@PostMapping("insertdata")
-	public ResponseEntity<String> insertdata(@Validated bodydatarequest bodydata, BindingResult result)
-			throws JsonProcessingException {
-
-		if (result.hasErrors()) {
-			Map<String, String> valueMap = util.validdheck(result);
-
-			ObjectMapper mapper = new ObjectMapper();
-			String res = mapper.writeValueAsString(valueMap);
-
-			return new ResponseEntity<String>(res, HttpStatus.BAD_REQUEST);
-
-		}
+	public ResponseEntity<String> insertdata(@Validated bodydatarequest bodydata, BindingResult result) {
 
 		try {
+
+			if (result.hasErrors()) {
+				Map<String, String> valueMap = util.validcheck(result);
+
+				ObjectMapper mapper = new ObjectMapper();
+				String res = mapper.writeValueAsString(valueMap);
+
+				return new ResponseEntity<String>(res, HttpStatus.BAD_REQUEST);
+
+			}
 
 			String userName = util.varifyjwt(bodydata.getJwt(), "username");
 			userinformation user = util.getuser(userName);
@@ -181,20 +182,19 @@ public class menu {
 	}
 
 	@PostMapping("updatedata")
-	public ResponseEntity<String> updatedata(@Validated blooddatarequest blooddata, BindingResult result)
-			throws JsonProcessingException {
-
-		if (result.hasErrors()) {
-			Map<String, String> valueMap = util.validdheck(result);
-
-			ObjectMapper mapper = new ObjectMapper();
-			String res = mapper.writeValueAsString(valueMap);
-
-			return new ResponseEntity<String>(res, HttpStatus.BAD_REQUEST);
-
-		}
+	public ResponseEntity<String> updatedata(@Validated blooddatarequest blooddata, BindingResult result) {
 
 		try {
+
+			if (result.hasErrors()) {
+				Map<String, String> valueMap = util.validcheck(result);
+
+				ObjectMapper mapper = new ObjectMapper();
+				String res = mapper.writeValueAsString(valueMap);
+
+				return new ResponseEntity<String>(res, HttpStatus.BAD_REQUEST);
+
+			}
 
 			String userName = util.varifyjwt(blooddata.getJwt(), "username");
 			userinformation user = util.getuser(userName);

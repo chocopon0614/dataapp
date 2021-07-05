@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -27,6 +28,9 @@ public class dataservicetest {
 
 	@InjectMocks
 	private menu menuservice = new menu();
+
+	@Autowired
+	private util util;
 
 	@Test
 	void test1() {

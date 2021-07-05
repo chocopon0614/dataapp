@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ import dataapp.entity.userinformation;
 @RestController
 @RequestMapping(value = "/accounts", produces = MediaType.APPLICATION_JSON_VALUE)
 public class accounts {
+	@Autowired
+	private util util;
 
 	@PostMapping("login")
 	public ResponseEntity<String> login(@RequestParam("username") final String userName,
@@ -42,8 +45,8 @@ public class accounts {
 
 		if (!(user == null) && hashedPassword.equals(dbPassword)) {
 
-			String jwttoken = util.createjwt(userName, dbPassword);
-			String res = "{\"jwt\" : \"" + jwttoken + "\" }";
+			String jwt = util.createjwt(userName, dbPassword);
+			String res = "{\"jwt\" : \"" + jwt + "\" }";
 
 			return new ResponseEntity<String>(res, HttpStatus.OK);
 

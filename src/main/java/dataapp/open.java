@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,8 @@ import dataapp.entity.userinformation;
 @RestController
 @RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
 public class open {
+	@Autowired
+	private util util;
 
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
 	EntityManager em = emf.createEntityManager();
