@@ -15,39 +15,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import dataapp.entity.userinformation;
+import dataapp.dao.UserInformationDao;
+import dataapp.entity.UserInformation;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
-public class auth {
+public class Auth {
+	@Autowired
+	private Util util;
 
 	@Autowired
-	private util util;
+	private UserInformationDao daoUser;
 
 	@PostMapping("authentication")
 	public ResponseEntity<String> authentication(@RequestParam("jwt") final String jwt) {
 
-		String username = util.varifyjwt(jwt, "username");
-		String password = util.varifyjwt(jwt, "password");
+		String userName = util.varifyJwt(jwt, "userName");
+		String passWord = util.varifyJwt(jwt, "passWord");
 
-		String res = "{\"username\" : \"" + username + "\" , \"password\" : \"" + password + "\"}";
+		String res = "{\"userName\" : \"" + userName + "\" , \"passWord\" : \"" + passWord + "\"}";
 		return new ResponseEntity<String>(res, HttpStatus.OK);
 
 	}
 
 	@GetMapping("authorization")
-	public ResponseEntity<String> authorization(@RequestHeader("authorization") final String authheader) {
+	public ResponseEntity<String> authorization(@RequestHeader("authorization") final String authorization) {
 
-		Charset charset = StandardCharsets.UTF_8;
-		String tmp = authheader.split(" ")[1];
+		Charset charSet = StandardCharsets.UTF_8;
+		String tmp = authorization.split(" ")[1];
 
-		byte[] b = Base64.getDecoder().decode(tmp.getBytes(charset));
-		String de1 = new String(b, charset);
+		byte[] b = Base64.getDecoder().decode(tmp.getBytes(charSet));
+		String de = new String(b, charSet);
 
-		String userName = de1.split(":")[0];
-		String hashedPassword = de1.split(":")[1];
+		String userName = de.split(":")[0];
+		String hashedPassword = de.split(":")[1];
 
-		userinformation user = util.getuser(userName);
+		UserInformation user = daoUser.findByUsername(userName);
 		String dbPassword = user.getPassword();
 
 		if (hashedPassword.equals(dbPassword)) {

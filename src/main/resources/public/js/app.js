@@ -59,12 +59,12 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
     		templateUrl : 'templates/registermodal.html',
     	    controller: function ($scope, $uibModalInstance) {
 
+    	      $scope.ok = function () {
+
                 $scope.msg=''
 	            if(!$scope.mdusername) {$scope.msg = "Username is required." ; return;};
 	            if(!$scope.mdpassword) {$scope.msg = "Password is required." ; return;};
     	    		
-    	      $scope.ok = function () {
-
     	        $http({
     	             method: 'POST',
     	              headers : {
@@ -306,10 +306,11 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 
   	
   	$scope.insertdata = function(){
-
   		$uibModal.open({
     		templateUrl : 'templates/insertmodal.html',
     	    controller: function ($scope, $uibModalInstance) {
+    	    
+　　　　　　　$scope.ok = function () {
 
 	             $scope.msg_height = ''
 	             $scope.msg_weight = ''
@@ -319,8 +320,6 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 	             if(isNaN($scope.mdheight)) {$scope.msg_height = "Height must be numeric." ; return;};
 	             if(!$scope.mdweight) {$scope.msg_weight = "Weight is required." ; return;};
 	             if(isNaN($scope.mdweight)) {$scope.msg_weight = "Weight must be numeric." ; return;};
-    	    		
-    	        $scope.ok = function () {
 
     	          $http({
     	             method: 'POST',
@@ -358,7 +357,6 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 
     	        	 }
     	        });
-
     	  };
     	        
     	 $scope.cancel = function () {
@@ -406,13 +404,13 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     		templateUrl : 'templates/updatemodal.html',
     	    controller: function ($scope, $uibModalInstance) {
 
+　　　　　　　$scope.ok = function () {
+
 	           $scope.msg_value = ''
 	           $scope.msg_other = ''
  	           if(!$scope.mdblood) {$scope.msg_value = "New value is required." ; return;};
 	           if(isNaN($scope.mdblood)) {$scope.msg_value = "New value must be numeric." ; return;};
 
-    	        $scope.ok = function () {
-   	    		
     	        $http({
     	             method: 'POST',
     	              headers : {
@@ -443,7 +441,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	           
     	        });
 
-    	  };
+    	    };
     	        
     	 $scope.cancel = function () {
     	       $uibModalInstance.dismiss('cancel');

@@ -5,7 +5,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class bodydatarequest {
+public class BodyDataRequest {
 
 	@Min(value = 0, message = "Height:Height must be 0 and more.")
 	@Digits(integer = 3, fraction = 2, message = "Height:Height must be within 3 digit integer and 2 digit fraction.")

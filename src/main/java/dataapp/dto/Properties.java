@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "app")
-public class properties {
+public class Properties {
 	private String introspectionUrl;
 	private String clientId;
 	private long jwtExpiredTime;

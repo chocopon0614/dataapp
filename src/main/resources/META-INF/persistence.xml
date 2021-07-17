@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="dataapp">
-		<class>dataapp.entity.userdata</class>
-		<class>dataapp.entity.userinformation</class>
-		<class>dataapp.entity.userdatablood</class>
+	<persistence-unit name="DataApp">
+		<class>dataapp.entity.AbstractEntity</class>
+		<class>dataapp.entity.UserData</class>
+		<class>dataapp.entity.UserInformation</class>
+		<class>dataapp.entity.UserDatablood</class>
        <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/localdb" />

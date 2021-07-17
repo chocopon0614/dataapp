@@ -9,10 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,15 +27,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import dataapp.dto.properties;
-import dataapp.entity.userinformation;
+import dataapp.dto.Properties;
 
 @Service
-public class util {
+public class Util {
 	@Autowired
-	private properties prop;
+	private Properties prop;
 
-	public Map<String, String> validcheck(BindingResult result) {
+	public Map<String, String> validCheck(BindingResult result) {
 
 		Map<String, String> map = new HashMap<>();
 
@@ -51,7 +46,7 @@ public class util {
 		return map;
 	}
 
-	public String tokencheck(String token) throws JsonProcessingException {
+	public String tokenCheck(String token) throws JsonProcessingException {
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -71,7 +66,7 @@ public class util {
 
 	}
 
-	public String getsha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+	public String getSha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
 		String toReturn = null;
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -82,35 +77,24 @@ public class util {
 		return toReturn;
 	}
 
-	public String createjwt(String username, String password) {
+	public String createJwt(String userName, String passWord) {
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 
-		String jwt = JWT.create().withIssuer("dataapp").withSubject("login")
+		String jwt = JWT.create().withIssuer("DataApp").withSubject("login")
 				.withExpiresAt(new Date(System.currentTimeMillis() + prop.getJwtExpiredTime()))
-				.withIssuedAt(new Date(System.currentTimeMillis())).withClaim("username", username)
-				.withClaim("password", password).sign(algorithm);
+				.withIssuedAt(new Date(System.currentTimeMillis())).withClaim("userName", userName)
+				.withClaim("passWord", passWord).sign(algorithm);
 
 		return jwt;
 	}
 
-	public String varifyjwt(String token, String key) {
+	public String varifyJwt(String token, String key) {
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 
 		JWTVerifier verifier = JWT.require(algorithm).build();
 		DecodedJWT jwt = verifier.verify(token);
 
 		return jwt.getClaim(key).asString();
-
-	}
-
-	public userinformation getuser(String username) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("dataapp");
-		EntityManager em = emf.createEntityManager();
-
-		userinformation user = em.createNamedQuery("userinformation.findbyusername", userinformation.class)
-				.setParameter(1, username).getSingleResult();
-
-		return user;
 
 	}
 

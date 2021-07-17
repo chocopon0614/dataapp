@@ -20,24 +20,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import dataapp.menu;
-import dataapp.util;
-import dataapp.entity.userinformation;
+import dataapp.Menu;
+import dataapp.Util;
+import dataapp.entity.UserInformation;
 
 public class dataservicetest {
 
 	@InjectMocks
-	private menu menuservice = new menu();
+	private Menu menuservice = new Menu();
 
 	@Autowired
-	private util util;
+	private Util util;
 
 	@Test
 	void test1() {
-		MockedStatic<util> mocked = Mockito.mockStatic(util.class);
+		MockedStatic<Util> mocked = Mockito.mockStatic(Util.class);
 
 		mocked.when(() -> {
-			util.varifyjwt(Mockito.anyString(), Mockito.anyString());
+			util.varifyJwt(Mockito.anyString(), Mockito.anyString());
 		}).thenReturn("dummy");
 
 		EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
@@ -53,11 +53,11 @@ public class dataservicetest {
 
 		Mockito.when(em.createNamedQuery(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
 		Mockito.when(mockQuery.setParameter(Mockito.anyInt(), Mockito.any())).thenReturn(mockQuery);
-		when(mockQuery.getSingleResult()).thenReturn(new userinformation());
+		when(mockQuery.getSingleResult()).thenReturn(new UserInformation());
 		when(mockQuery.getResultList()).thenReturn(new ArrayList<>());
 
 		try {
-			ResponseEntity<String> result1 = menuservice.bodydata("dummy");
+			ResponseEntity<String> result1 = menuservice.bodyData("dummy");
 			assertEquals(HttpStatus.OK, result1.getStatusCode());
 			assertNotNull(result1.getBody());
 
@@ -72,10 +72,10 @@ public class dataservicetest {
 
 	@Test
 	void test2() {
-		MockedStatic<util> mocked = Mockito.mockStatic(util.class);
+		MockedStatic<Util> mocked = Mockito.mockStatic(Util.class);
 
 		mocked.when(() -> {
-			util.varifyjwt(Mockito.anyString(), Mockito.anyString());
+			util.varifyJwt(Mockito.anyString(), Mockito.anyString());
 		}).thenReturn("dummy");
 
 		EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
@@ -91,11 +91,11 @@ public class dataservicetest {
 
 		Mockito.when(em.createNamedQuery(Mockito.anyString(), Mockito.any())).thenReturn(mockQuery);
 		Mockito.when(mockQuery.setParameter(Mockito.anyInt(), Mockito.any())).thenReturn(mockQuery);
-		when(mockQuery.getSingleResult()).thenReturn(new userinformation());
+		when(mockQuery.getSingleResult()).thenReturn(new UserInformation());
 		when(mockQuery.getResultList()).thenReturn(null);
 
 		try {
-			ResponseEntity<String> result2 = menuservice.bodydata("dummy");
+			ResponseEntity<String> result2 = menuservice.bodyData("dummy");
 			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result2.getStatusCode());
 			assertNull(result2.getBody());
 
