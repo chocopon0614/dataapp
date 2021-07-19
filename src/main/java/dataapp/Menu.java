@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dataapp.dao.UserDataDao;
@@ -53,7 +54,7 @@ public class Menu {
 			UserInformation user = daoUser.findByUsername(userName);
 			List<UserData> userData = daoData.findByUserid(user);
 
-			userData.sort(Comparator.comparing(UserData::getId));
+			userData.sort(Comparator.comparing(UserData::getId).reversed());
 
 			if (!Objects.isNull(userData)) {
 				ObjectMapper mapper = new ObjectMapper();
@@ -104,10 +105,10 @@ public class Menu {
 
 		try {
 
-			String userName = util.varifyJwt(jwt, "username");
+			String userName = util.varifyJwt(jwt, "userName");
 
 			UserData delData = daoData.find(id);
-			if (userName != delData.getUserinformation().getUsername())
+			if (!userName.equals(delData.getUserinformation().getUsername()))
 				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
 			daoData.remove(delData);
@@ -154,7 +155,7 @@ public class Menu {
 
 			daoData.persist(userData);
 
-			ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 			String res = mapper.writeValueAsString(userData);
 
 			return new ResponseEntity<String>(res, HttpStatus.OK);

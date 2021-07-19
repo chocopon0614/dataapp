@@ -42,6 +42,10 @@ public class UserDataDao extends AbstractDao {
 
 		try {
 			tx.begin();
+			if (!em.contains(data)) {
+				data = em.merge(data);
+			}
+
 			em.remove(data);
 			tx.commit();
 		} catch (Exception e) {
@@ -63,16 +67,6 @@ public class UserDataDao extends AbstractDao {
 		return userDataList;
 	}
 
-//	public List<UserData> findUseridDesc(UserInformation user) {
-//		EntityManager em = getEm();
-//		List<UserData> userDataList = em.createNamedQuery("UserData.findUseridDesc", UserData.class)
-//				.setParameter(1, user).getResultList();
-//
-//		em.close();
-//
-//		return userDataList;
-//	}
-
 	public List<UserData> findByUseridSelected(UserInformation user) {
 		EntityManager em = getEm();
 		List<UserData> userDataList = em.createNamedQuery("UserData.findUseridSelected", UserData.class)
@@ -82,24 +76,5 @@ public class UserDataDao extends AbstractDao {
 
 		return userDataList;
 	}
-
-//	public UserData selectData(UserInformation user, int id) {
-//		EntityManager em = getEm();
-//		UserData userData = em.createNamedQuery("UserData.selectData", UserData.class).setParameter(1, user)
-//				.setParameter(2, id).getSingleResult();
-//
-//		em.close();
-//
-//		return userData;
-//	}
-//
-//	public void deleteData(UserInformation user, int id) {
-//		EntityManager em = getEm();
-//		em.createNamedQuery("UserData.deleteData", UserData.class).setParameter(1, user).setParameter(2, id)
-//				.executeUpdate();
-//
-//		em.close();
-//
-//	}
 
 }

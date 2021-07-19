@@ -42,7 +42,7 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
                   },
                   transformRequest: $httpParamSerializerJQLike,
     	          url: 'accounts/login',
-    	          data: { username: $scope.username, password: $scope.password }
+    	          data: { userName: $scope.username, passWord: $scope.password }
     	        }).then(function successCallback(response){
     	        	var resdata = response.data;
     	        	sessionStorage.setItem('jwt', resdata.jwt);
@@ -72,7 +72,7 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
     	               },
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'accounts/register',
-    	               data: { username: $scope.mdusername, password: $scope.mdpassword }
+    	               data: { userName: $scope.mdusername, passWord: $scope.mdpassword }
     	           }).then(function successCallback(){
                        $scope.mdusername=''
                        $scope.mdpassword=''
@@ -109,7 +109,7 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
                 },
                 transformRequest: $httpParamSerializerJQLike,
     	        url: 'accounts/login',
-    	        data: { username: $scope.username, password: $scope.password }
+    	        data: { userName: $scope.username, passWsord: $scope.password }
     	      }).then(function successCallback(response){
                   var resdata = response.data;
      	          sessionStorage.setItem('jwt', resdata.jwt);
@@ -385,11 +385,11 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
         }).then(function successCallback(response){
         	var resdata = response.data;
         	
-	        $scope.gtp = resdata[0].gtp;
-	        $scope.hdl = resdata[0].hdl;
-	        $scope.ldl = resdata[0].ldl;
-	        $scope.tg = resdata[0].tg;
-	        $scope.fpg = resdata[0].fpg;
+	        $scope.gtp = resdata.gtp;
+	        $scope.hdl = resdata.hdl;
+	        $scope.ldl = resdata.ldl;
+	        $scope.tg = resdata.tg;
+	        $scope.fpg = resdata.fpg;
 
 	    }, function errorCallback() {
    	        $location.path('/error');

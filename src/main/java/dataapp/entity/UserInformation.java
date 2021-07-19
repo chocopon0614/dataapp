@@ -15,10 +15,6 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQuery(name = "UserInformation.findByUsername", query = "select u from UserInformation u where u.userName =?1")
-
-//@NamedQueries(
-//		@NamedQuery(name = "UserInformation.findByUsername", query = "select u from UserInformation u where u.userName =?1") })
-//		@NamedQuery(name = "UserInformation.deleteUsername", query = "delete from UserInformation u where u.userName =?1") })
 public class UserInformation extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

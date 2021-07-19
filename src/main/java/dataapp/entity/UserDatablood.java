@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,13 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  */
 @Entity
-@NamedQueries({
-		@NamedQuery(name = "UserDatablood.findByUserid", query = "select u from UserDatablood u where u.userInformation =?1"),
-		@NamedQuery(name = "UserDatablood.updateTg", query = "update UserDatablood u set u.tg =?1 where u.userInformation =?2"),
-		@NamedQuery(name = "UserDatablood.updateGtp", query = "update UserDatablood u set u.gtp =?1 where u.userInformation =?2"),
-		@NamedQuery(name = "UserDatablood.updateHdl", query = "update UserDatablood u set u.hdl =?1 where u.userInformation =?2"),
-		@NamedQuery(name = "UserDatablood.updateLdl", query = "update UserDatablood u set u.ldl =?1 where u.userInformation =?2"),
-		@NamedQuery(name = "UserDatablood.updateFpg", query = "update UserDatablood u set u.fpg =?1 where u.userInformation =?2") })
+@NamedQuery(name = "UserDatablood.findByUserid", query = "select u from UserDatablood u where u.userInformation =?1")
 public class UserDatablood extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

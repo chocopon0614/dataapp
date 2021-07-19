@@ -10,12 +10,6 @@ import dataapp.entity.UserInformation;
 @Repository
 public class UserInformationDao extends AbstractDao {
 
-	public UserInformation find(int id) {
-		EntityManager em = getEm();
-		return em.find(UserInformation.class, id);
-
-	}
-
 	public void persist(UserInformation data) {
 		EntityManager em = getEm();
 		EntityTransaction tx = em.getTransaction();
@@ -33,21 +27,26 @@ public class UserInformationDao extends AbstractDao {
 
 	}
 
-	public void remove(UserInformation data) {
+	public void remove(UserInformation data) throws Exception {
 		EntityManager em = getEm();
 		EntityTransaction tx = em.getTransaction();
 
 		try {
 			tx.begin();
+			if (!em.contains(data)) {
+				data = em.merge(data);
+			}
+
 			em.remove(data);
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null && tx.isActive())
 				tx.rollback();
+
+			throw e;
+		} finally {
+			em.close();
 		}
-
-		em.close();
-
 	}
 
 	public UserInformation findByUsername(String userName) {

@@ -28,23 +28,6 @@ public class UserDatabloodDao extends AbstractDao {
 
 	}
 
-	public void remove(UserDatablood data) {
-		EntityManager em = getEm();
-		EntityTransaction tx = em.getTransaction();
-
-		try {
-			tx.begin();
-			em.remove(data);
-			tx.commit();
-		} catch (Exception e) {
-			if (tx != null && tx.isActive())
-				tx.rollback();
-		}
-
-		em.close();
-
-	}
-
 	public UserDatablood findByUserid(UserInformation user) {
 		EntityManager em = getEm();
 		UserDatablood userData = em.createNamedQuery("UserDatablood.findByUserid", UserDatablood.class)
@@ -55,22 +38,42 @@ public class UserDatabloodDao extends AbstractDao {
 		return userData;
 	}
 
-	public void update(String item, double value, UserDatablood userData) {
+	public void update(String item, double value, UserDatablood data) {
 
-		switch (item) {
-		case "Tg":
-			userData.setTg(value);
-		case "Gtp":
-			userData.setTg(value);
-		case "Hdl":
-			userData.setTg(value);
-		case "Ldl":
-			userData.setTg(value);
-		case "Fpg":
-			userData.setTg(value);
+		EntityManager em = getEm();
+		EntityTransaction tx = em.getTransaction();
 
+		try {
+			tx.begin();
+			if (!em.contains(data)) {
+				data = em.merge(data);
+			}
+
+			switch (item) {
+			case "TG":
+				data.setTg(value);
+				break;
+			case "GTP":
+				data.setGtp(value);
+				break;
+			case "HDL":
+				data.setHdl(value);
+				break;
+			case "LDL":
+				data.setLdl(value);
+				break;
+			case "FPG":
+				data.setFpg(value);
+				break;
+			}
+
+			tx.commit();
+		} catch (Exception e) {
+			if (tx != null && tx.isActive())
+				tx.rollback();
 		}
 
+		em.close();
 	}
 
 }
