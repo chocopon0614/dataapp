@@ -55,6 +55,10 @@ public class Auth {
 			UserInformation user = daoUser.findByUsername(userName);
 			String dbPassword = user.getPassword();
 
+			System.out.println("！！！！！" + userName);
+			System.out.println("！！！！！" + hashedPassword);
+			System.out.println("！！！！！" + dbPassword);
+
 			if (hashedPassword.equals(dbPassword)) {
 				return new ResponseEntity<String>(HttpStatus.OK);
 
