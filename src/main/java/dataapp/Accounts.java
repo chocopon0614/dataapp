@@ -1,8 +1,5 @@
 package dataapp;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,23 +35,24 @@ public class Accounts {
 
 		try {
 			hashedPassword = util.getSha256(passWord);
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+
+			UserInformation user = daoUser.findByUsername(userName);
+			String dbPassword = user.getPassword();
+
+			if (!(user == null) && hashedPassword.equals(dbPassword)) {
+
+				String jwt = util.createJwt(userName, dbPassword);
+				String res = "{\"jwt\" : \"" + jwt + "\" }";
+
+				return new ResponseEntity<String>(res, HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+			}
+
+		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		UserInformation user = daoUser.findByUsername(userName);
-		String dbPassword = user.getPassword();
-
-		if (!(user == null) && hashedPassword.equals(dbPassword)) {
-
-			String jwt = util.createJwt(userName, dbPassword);
-			String res = "{\"jwt\" : \"" + jwt + "\" }";
-
-			return new ResponseEntity<String>(res, HttpStatus.OK);
-
-		} else {
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-
 		}
 
 	}

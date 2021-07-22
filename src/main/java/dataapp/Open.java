@@ -61,7 +61,7 @@ public class Open {
 				return new ResponseEntity<String>(res, HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 			}
 
@@ -93,7 +93,7 @@ public class Open {
 				return new ResponseEntity<String>(res, HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 			}
 

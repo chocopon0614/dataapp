@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dataapp.dao.UserDataDao;
@@ -155,10 +154,7 @@ public class Menu {
 
 			daoData.persist(userData);
 
-			ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-			String res = mapper.writeValueAsString(userData);
-
-			return new ResponseEntity<String>(res, HttpStatus.OK);
+			return new ResponseEntity<String>(HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);

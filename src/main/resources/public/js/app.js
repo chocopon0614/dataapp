@@ -49,7 +49,7 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
     	        	
     	        	$window.location.href = 'main.html';
     	        }, function errorCallback() {
-      	        	$scope.message = 'Login Error. Please try again.'
+      	        	$scope.msg = 'Login Error. Please try again.'
     	      });
     	};
 

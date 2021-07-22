@@ -41,24 +41,30 @@ public class Auth {
 	@GetMapping("authorization")
 	public ResponseEntity<String> authorization(@RequestHeader("authorization") final String authorization) {
 
-		Charset charSet = StandardCharsets.UTF_8;
-		String tmp = authorization.split(" ")[1];
+		try {
 
-		byte[] b = Base64.getDecoder().decode(tmp.getBytes(charSet));
-		String de = new String(b, charSet);
+			Charset charSet = StandardCharsets.UTF_8;
+			String tmp = authorization.split(" ")[1];
 
-		String userName = de.split(":")[0];
-		String hashedPassword = de.split(":")[1];
+			byte[] b = Base64.getDecoder().decode(tmp.getBytes(charSet));
+			String de = new String(b, charSet);
 
-		UserInformation user = daoUser.findByUsername(userName);
-		String dbPassword = user.getPassword();
+			String userName = de.split(":")[0];
+			String hashedPassword = de.split(":")[1];
 
-		if (hashedPassword.equals(dbPassword)) {
-			return new ResponseEntity<String>(HttpStatus.OK);
+			UserInformation user = daoUser.findByUsername(userName);
+			String dbPassword = user.getPassword();
 
-		} else {
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+			if (hashedPassword.equals(dbPassword)) {
+				return new ResponseEntity<String>(HttpStatus.OK);
 
+			} else {
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+			}
+
+		} catch (Exception e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}

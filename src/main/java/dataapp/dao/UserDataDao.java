@@ -19,7 +19,7 @@ public class UserDataDao extends AbstractDao {
 
 	}
 
-	public void persist(UserData data) {
+	public void persist(UserData data) throws Exception {
 		EntityManager em = getEm();
 		EntityTransaction tx = em.getTransaction();
 
@@ -30,13 +30,15 @@ public class UserDataDao extends AbstractDao {
 		} catch (Exception e) {
 			if (tx != null && tx.isActive())
 				tx.rollback();
+
+			throw e;
 		}
 
 		em.close();
 
 	}
 
-	public void remove(UserData data) {
+	public void remove(UserData data) throws Exception {
 		EntityManager em = getEm();
 		EntityTransaction tx = em.getTransaction();
 
@@ -51,6 +53,8 @@ public class UserDataDao extends AbstractDao {
 		} catch (Exception e) {
 			if (tx != null && tx.isActive())
 				tx.rollback();
+
+			throw e;
 		}
 
 		em.close();

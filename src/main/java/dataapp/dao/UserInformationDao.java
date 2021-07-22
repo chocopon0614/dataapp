@@ -10,7 +10,7 @@ import dataapp.entity.UserInformation;
 @Repository
 public class UserInformationDao extends AbstractDao {
 
-	public void persist(UserInformation data) {
+	public void persist(UserInformation data) throws Exception {
 		EntityManager em = getEm();
 		EntityTransaction tx = em.getTransaction();
 
@@ -21,6 +21,8 @@ public class UserInformationDao extends AbstractDao {
 		} catch (Exception e) {
 			if (tx != null && tx.isActive())
 				tx.rollback();
+
+			throw e;
 		}
 
 		em.close();
