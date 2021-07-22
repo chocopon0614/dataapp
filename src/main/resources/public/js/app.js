@@ -109,7 +109,7 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
                 },
                 transformRequest: $httpParamSerializerJQLike,
     	        url: 'accounts/login',
-    	        data: { userName: $scope.username, passWsord: $scope.password }
+    	        data: { userName: $scope.username, passWord: $scope.password }
     	      }).then(function successCallback(response){
                   var resdata = response.data;
      	          sessionStorage.setItem('jwt', resdata.jwt);
