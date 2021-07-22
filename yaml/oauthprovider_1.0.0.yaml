@@ -243,7 +243,7 @@ x-ibm-configuration:
       redirect-url: "https://chocopon-forest.com/dataapp/authentication.html"
     authentication:
       x-ibm-authentication-url:
-        url: "https://chocopon-forest.com/dataapp/login/authurl"
+        url: "https://chocopon-forest.com/dataapp/auth/authorization"
         tls-profile: ""
     authorization:
       type: "authenticated"

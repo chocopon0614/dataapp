@@ -1,4 +1,4 @@
-package DataApp.dto;
+package dataapp.dto;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
