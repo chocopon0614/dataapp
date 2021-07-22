@@ -147,7 +147,7 @@ DataApp.controller('AuthController', ['$scope', '$http', '$httpParamSerializerJQ
 
       	        }).then(function successCallback(response){
       	        	var resdata = response.data;
-      	        	var nextUrl = originalUrl + '&username=' + resdata.username + '&confirmation=' + resdata.password ;
+      	        	var nextUrl = originalUrl + '&username=' + resdata.userName + '&confirmation=' + resdata.passWord ;
        	        	$window.location.href = nextUrl;
 
       	      });
