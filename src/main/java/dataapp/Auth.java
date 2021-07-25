@@ -68,7 +68,8 @@ public class Auth {
 			}
 
 		} catch (Exception e) {
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+//			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
