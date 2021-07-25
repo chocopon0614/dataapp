@@ -73,7 +73,7 @@ public class UserDataDao extends AbstractDao {
 
 	public List<UserData> findByUseridSelected(UserInformation user) {
 		EntityManager em = getEm();
-		List<UserData> userDataList = em.createNamedQuery("UserData.findUseridSelected", UserData.class)
+		List<UserData> userDataList = em.createNamedQuery("UserData.findByUseridSelected", UserData.class)
 				.setParameter(1, user).getResultList();
 
 		em.close();
