@@ -51,7 +51,7 @@ public class Open {
 			if (!root.get("active").asBoolean())
 				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
-			String userName = root.get("userName").asText();
+			String userName = root.get("username").asText();
 			UserInformation user = daoUser.findByUsername(userName);
 
 			List<UserData> userData = daoData.findByUseridSelected(user);
@@ -83,7 +83,7 @@ public class Open {
 			if (!root.get("active").asBoolean())
 				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 
-			String userName = root.get("userName").asText();
+			String userName = root.get("username").asText();
 			UserInformation user = daoUser.findByUsername(userName);
 
 			UserDatablood userData = daoBlood.findByUserid(user);
