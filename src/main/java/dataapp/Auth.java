@@ -55,10 +55,6 @@ public class Auth {
 			UserInformation user = daoUser.findByUsername(userName);
 			String dbPassword = user.getPassword();
 
-			System.out.println("！！！！！" + userName);
-			System.out.println("！！！！！" + hashedPassword);
-			System.out.println("！！！！！" + dbPassword);
-
 			if (hashedPassword.equals(dbPassword)) {
 				return new ResponseEntity<String>(HttpStatus.OK);
 
@@ -66,10 +62,8 @@ public class Auth {
 				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 			}
-
 		} catch (Exception e) {
-			throw e;
-//			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
