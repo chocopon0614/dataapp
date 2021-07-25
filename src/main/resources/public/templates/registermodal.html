@@ -1,5 +1,5 @@
 <div class="modal-header text-center">
-	<h4 class="modal-title w-100 font-weight-bold">Input new data</h4>
+	<h4 class="modal-title w-100 font-weight-bold">Create new account</h4>
 	<button type="button" class="close" data-dismiss="modal"
 		aria-label="Close"  ng-click="cancel()">
 		<span aria-hidden="true">&times;</span>
@@ -8,22 +8,20 @@
 
 <div class="modal-body mx-3">
     
-    <div align ="center" style = "color:red" ng-bind="msg_height"></div>
-    <div align ="center" style = "color:red" ng-bind="msg_weight"></div>
-    <div align ="center" style = "color:red" ng-bind="msg_other"></div>
+    <div align ="center" style = "color:red" ng-bind="msg"></div>
     
 	<div class="md-form mb-4">
-		<i class="fas fa-text-height prefix grey-text" aria-hidden="true"></i> <input
-			type="text" ng-model="mdheight" id="orangeForm-name1"
+		<i class="fas fa-user prefix" aria-hidden="true"></i> <input
+			type="text" ng-model="mdusername" id="orangeForm-name1"
 			class="form-control validate" autocomplete="off"> <label
-			for="orangeForm-name">Height</label>
+			for="orangeForm-name">Username</label>
 	</div>
 
 	<div class="md-form mb-4">
-		<i class="fas fa-weight prefix grey-text" aria-hidden="true"></i> <input
-			type="text" ng-model="mdweight" id="orangeForm-name2"
+		<i class="fas fa-key prefix" aria-hidden="true"></i> <input
+			type="password" ng-model="mdpassword" id="orangeForm-name2"
 			class="form-control validate" autocomplete="off"> <label
-			for="orangeForm-name">Weight</label>
+			for="orangeForm-name">Password</label>
 	</div>
 
 

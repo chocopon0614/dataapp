@@ -1,23 +1,19 @@
 {
 	"folders": {},
 	"connections": {
-		"mysql8-176c145efd9-7e8eaa08c82a16e4": {
+		"mysql8-1783b24cd11-420a2307a46ca856": {
 			"provider": "mysql",
 			"driver": "mysql8",
-			"name": "mydb",
+			"name": "localdb",
 			"save-password": true,
 			"show-system-objects": true,
 			"read-only": false,
 			"configuration": {
 				"host": "localhost",
 				"port": "3306",
-				"database": "mydb",
-				"url": "jdbc:mysql://localhost:3306/mydb",
+				"database": "localdb",
+				"url": "jdbc:mysql://localhost:3306/localdb",
 				"type": "dev",
-				"properties": {
-					"connectTimeout": "20000",
-					"allowPublicKeyRetrieval": "TRUE"
-				},
 				"provider-properties": {
 					"@dbeaver-serverTimezone@": "Asia/Tokyo"
 				},

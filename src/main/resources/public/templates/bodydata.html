@@ -28,7 +28,7 @@
                 <thead class="blue-grey lighten-4"  id ="thead">
                  <tr>
                   <th style="display:none;">ID</th>
-                  <th>Time</th>
+                  <th>Time(DD-MM-YYYY:UTC)</th>
                   <th>Height</th>
                   <th>Weight</th>
                   <th></th>
@@ -39,7 +39,7 @@
                      <td>{{data.createTime}}</td>
                      <td>{{data.Height}}</td>
                      <td>{{data.Weight}}</td>
-                     <td><i class="fa fa-trash" data-toggle="deletemodal" ng-click="setId(data.id,$index)"></i></td>
+                     <td><i class="fa fa-trash" data-toggle="deletemodal" ng-click="deletedata(data.id,$index)"></i></td>
                     </tr>
                 </tbody>
               </table>
@@ -48,8 +48,8 @@
                  <a class="page-link" ng-repeat="pager in pagerArr(data_source.length / pageLimit)" ng-click="pagerClick($index)">[{{pager + 1}}]</a>
               </ul>
 
-            <button type="button" class="btn btn-outline-primary waves-effect" > 
-               <a ng-click="insertdata()">Register</a>
+            <button type="button" class="btn btn-outline-primary waves-effect" ng-click="insertdata()"> 
+               Register
             </button>
             </div>
           </div>

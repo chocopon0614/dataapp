@@ -1,4 +1,4 @@
-package DataApp.dto;
+package dataapp.dto;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -10,30 +10,30 @@ public class BloodDataRequest {
 
 	@Min(value = 0, message = "Value:New value must be 0 and more.")
 	@Digits(integer = 3, fraction = 2, message = "Value:New value must be within 3 digit integer and 2 digit fraction.")
-	private double newvalue;
+	private double newValue;
 
 	@NotBlank(message = "Other:Invalid input error occured. Please retry or start over.")
 	@Pattern(regexp = "TG|GTP|HDL|LDL|FPG", message = "Other:Invalid input error occured. Please retry or start over.")
-	private String bloodname;
+	private String bloodName;
 
 	@NotBlank(message = "Other:Invalid input error occured. Please retry or start over.")
 	@Size(min = 1, max = 512, message = "Other:Invalid input error occured. Please retry or start over.")
 	private String jwt;
 
 	public double getNewvalue() {
-		return newvalue;
+		return newValue;
 	}
 
-	public void setNewvalue(double newvalue) {
-		this.newvalue = newvalue;
+	public void setNewvalue(double newValue) {
+		this.newValue = newValue;
 	}
 
 	public String getBloodname() {
-		return bloodname;
+		return bloodName;
 	}
 
-	public void setBloodname(String bloodname) {
-		this.bloodname = bloodname;
+	public void setBloodname(String bloodName) {
+		this.bloodName = bloodName;
 	}
 
 	public String getJwt() {

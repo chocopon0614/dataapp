@@ -1,9 +1,10 @@
-var DataApp = angular.module('DataApp', ['ngAnimate','toaster', 'ui.bootstrap', 'ngRoute']);
+var DataApp = angular.module('DataApp', [ 'ngRoute','wc.Directives', 'ngAnimate','toaster','ui.bootstrap']);
 
 DataApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
     .when('/', {
-      templateUrl: 'templates/top.html'
+      templateUrl: 'templates/top.html',
+      controller: 'TopController'
     })
     .when('/bodydata', {
       templateUrl: 'templates/bodydata.html',
@@ -23,61 +24,201 @@ DataApp.config(['$routeProvider', function($routeProvider){
 
 
 
-DataApp.controller('LoginController', ['$scope', '$http', '$window',
+DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$window', '$location',
 '$httpParamSerializerJQLike', 
-	 function($scope, $http, $window, $httpParamSerializerJQLike){
+	 function($uibModal, $scope, $http, $window, $location, $httpParamSerializerJQLike){
 	   sessionStorage.removeItem('jwt');
 	
-       $scope.submit = function(){
-    	  var method = "POST";	
-    	  var url = 'login/userlogin';	
+       $scope.login = function(){
+
+          $scope.msg = '';
+	      if(!$scope.username) {$scope.msg = "Username is required." ; return;};
+	      if(!$scope.password) {$scope.msg = "Password is required." ; return;};
     		
     	  $http({
-    	          method: method,
+    	          method: 'POST',
     	          headers : {
                       'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
                   },
                   transformRequest: $httpParamSerializerJQLike,
-    	          url: url,
-//fixme temporary fixed 
-//    	          data: { username: $scope.username, password: $scope.password }
-    	          data: { username: 'test1', password: 'password'}
+    	          url: 'accounts/login',
+    	          data: { userName: $scope.username, passWord: $scope.password }
     	        }).then(function successCallback(response){
     	        	var resdata = response.data;
-    	        	var jwt = resdata.JWT;
-    	        	sessionStorage.setItem('jwt', jwt);
+    	        	sessionStorage.setItem('jwt', resdata.jwt);
     	        	
     	        	$window.location.href = 'main.html';
-    	        }, function errorCallback(response) {
-    	        	var sts = response.status;
-
-    	        	if(sts == 400){
-      	        	   $scope.login_message = 'Password is wrong.';
-    	        	}else{
-         	           $scope.login_message = 'Your ID does not exist.';
-    	        	}
+    	        }, function errorCallback() {
+      	        	$scope.msg = 'Login Error. Please try again.'
     	      });
     	};
+
+  	   $scope.register = function(){
+
+  		 $uibModal.open({
+    		templateUrl : 'templates/registermodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+
+    	      $scope.ok = function () {
+
+                $scope.msg=''
+	            if(!$scope.mdusername) {$scope.msg = "Username is required." ; return;};
+	            if(!$scope.mdpassword) {$scope.msg = "Password is required." ; return;};
+    	    		
+    	        $http({
+    	             method: 'POST',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'accounts/register',
+    	               data: { userName: $scope.mdusername, passWord: $scope.mdpassword }
+    	           }).then(function successCallback(){
+                       $scope.mdusername=''
+                       $scope.mdpassword=''
+                       $scope.msg ='New account was created. Please login.'
+
+    	            }, function errorCallback() {
+                       $scope.mdusername=''
+                       $scope.mdpassword=''
+	                   $scope.msg = 'Registration Error. Please try again.'
+	
+    	        });
+
+    	      };
+    	        
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+
+      $scope.authentication = function(){
+          var url = $location.absUrl();
+ 	      var urlParm = url.split('?')[1];
+
+          $scope.msg = ''
+	      if(!$scope.username) {$scope.msg = "Username is required." ; return;};
+	      if(!$scope.password) {$scope.msg = "Password is required." ; return;};
+    	  	
+    	  $http({
+    	        method: 'POST',
+    	        headers : {
+                    'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                },
+                transformRequest: $httpParamSerializerJQLike,
+    	        url: 'accounts/login',
+    	        data: { userName: $scope.username, passWord: $scope.password }
+    	      }).then(function successCallback(response){
+                  var resdata = response.data;
+     	          sessionStorage.setItem('jwt', resdata.jwt);
+
+    	          $window.location.href = 'authorization.html?' + urlParm;
+
+    	      }, function errorCallback() {
+      	          $scope.login_msg = 'Login Error. Please try again.'
+    	      
+             });
+    	};
+
     }]);
+
+
+DataApp.controller('AuthController', ['$scope', '$http', '$httpParamSerializerJQLike', '$window', '$location',
+	 function($scope, $http, $httpParamSerializerJQLike, $window, $location){
+      var jwt = sessionStorage.getItem('jwt');
+
+	  var url = $location.absUrl();
+ 	  var urlParm = url.split('?')[1];
+ 	  var tmp = urlParm.split('&')[0];
+ 	  var originalUrl = decodeURIComponent(tmp.split('=')[1]); 
+
+	  $scope.authorization = function(){
+
+      	  $http({
+      	          method: 'POST',
+      	          headers : {
+                        'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+                   },
+                  transformRequest: $httpParamSerializerJQLike,
+      	          url: 'auth/authentication',
+   	              data: { jwt: jwt}
+
+      	        }).then(function successCallback(response){
+      	        	var resdata = response.data;
+      	        	var nextUrl = originalUrl + '&username=' + resdata.userName + '&confirmation=' + resdata.passWord ;
+       	        	$window.location.href = nextUrl;
+
+      	      });
+      	};
+
+
+	  $scope.authcancel = function(){
+      	     var nextUrl = originalUrl + '&error=access_denied';
+       	     $window.location.href = nextUrl ;
+      	};
+
+    }]);
+
+
+DataApp.controller('TopController', ['$uibModal','$scope', '$http', '$httpParamSerializerJQLike', '$window', '$location',
+	 function($uibModal, $scope, $http, $httpParamSerializerJQLike, $window, $location){
+
+      $scope.userdelete = function(){
+
+  		$uibModal.open({
+    		templateUrl : 'templates/userdeletemodal.html',
+    	    controller: function ($scope, $uibModalInstance) {
+	
+    	      $scope.ok = function () {
+
+    	        $http({
+    	             method: 'DELETE',
+    	              headers : {
+    	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
+    	               },
+    	               transformRequest: $httpParamSerializerJQLike,
+    	               url: 'accounts/delete',
+                       data: { jwt: sessionStorage.getItem('jwt')}
+
+    	           }).then(function successCallback(){
+    	        	  $window.location.href = 'index.html';
+
+    	            }, function errorCallback() {
+   	                  $location.path('/error');
+	
+    	        });
+
+    	      };
+
+    	 $scope.cancel = function () {
+    	       $uibModalInstance.dismiss('cancel');
+    	   };
+    	 }
+      });
+  	};
+
+
+   }]);
 
 
 DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 ,'$httpParamSerializerJQLike', 'toaster' ,'$window',
 	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, toaster, $window){
-	var method = "POST";	
-	var url = 'menu/bodydata';	
 
     $scope.pageLimit = 10; 
     $scope.limitBegin = 0; 
 
 	$http({
-          method: method,
+          method: 'POST',
           headers : {
               'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
           },
           transformRequest: $httpParamSerializerJQLike,
-          url: url,
+          url: 'menu/bodydata',
           data: { jwt: sessionStorage.getItem('jwt')}
+
         }).then(function successCallback(response){
         	var resdata = response.data;
         	
@@ -114,12 +255,13 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     };
 
 
-    $scope.setId = function(id, index){
+     $scope.deletedata = function(id, index){
     	var tabledata = $scope.data_source;
     	
     	$uibModal.open({
     		templateUrl : 'templates/deletemodal.html',
     	    controller: function ($scope, $uibModalInstance) {
+
     	          $scope.ok = function () {
     	        	  $http({
     	    	          method: 'DELETE',
@@ -127,7 +269,7 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	                      'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
     	                  },
     	                  transformRequest: $httpParamSerializerJQLike,
-    	    	          url:  'menu/trash',
+    	    	          url:  'menu/deletedata',
     	    	          data: { jwt: sessionStorage.getItem('jwt'), id: id}
     	    	        }).then(function successCallback(response){
                             var resdata = response.data;;
@@ -164,19 +306,22 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 
   	
   	$scope.insertdata = function(){
-
   		$uibModal.open({
     		templateUrl : 'templates/insertmodal.html',
     	    controller: function ($scope, $uibModalInstance) {
+    	    
+　　　　　　　$scope.ok = function () {
 
-    	    	$scope.register = function () {
-	
-	             if(!$scope.mdheight) {$scope.error_message_height = "Height is required." ; return;};
-	             if(isNaN($scope.mdheight)) {$scope.error_message_height = "Height must be numeric." ; return;};
-	             if(!$scope.mdweight) {$scope.error_message_weight = "Weight is required." ; return;};
-	             if(isNaN($scope.mdweight)) {$scope.error_message_weight = "Weight must be numeric." ; return;};
-    	    		
-    	        $http({
+	             $scope.msg_height = ''
+	             $scope.msg_weight = ''
+	             $scope.msg_other = ''
+
+	             if(!$scope.mdheight) {$scope.msg_height = "Height is required." ; return;};
+	             if(isNaN($scope.mdheight)) {$scope.msg_height = "Height must be numeric." ; return;};
+	             if(!$scope.mdweight) {$scope.msg_weight = "Weight is required." ; return;};
+	             if(isNaN($scope.mdweight)) {$scope.msg_weight = "Weight must be numeric." ; return;};
+
+    	          $http({
     	             method: 'POST',
     	              headers : {
     	                   'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
@@ -184,16 +329,17 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'menu/insertdata',
     	       	       data: { jwt: sessionStorage.getItem('jwt'), height: $scope.mdheight, weight: $scope.mdweight }
+
     	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
                         toaster.success({title: "inserted", 
-                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 5sec..",
+                                 body: " Height:" + $scope.mdheight + " Weight:" + $scope.mdweight + "<br>refreshing in 3sec..",
                                  bodyOutputType: 'trustedHtml'});
                         setTimeout(
                            function () {
 	    	                   $window.location.reload();
                           },
-                           "5000"
+                           "3000"
                         );
 
     	            }, function errorCallback(response) {
@@ -202,14 +348,15 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
     	        	  if(sts == 400){
 	                   var resdata = response.data;
 
-      	        	   $scope.error_message_height = resdata.Height;
-      	        	   $scope.error_message_weight = resdata.Weight;
-      	        	   $scope.error_message_other = resdata.Other;
+      	        	   $scope.msg_height = resdata.Height;
+      	        	   $scope.msg_weight = resdata.Weight;
+      	        	   $scope.msg_other = resdata.Other;
+
     	        	  }else{
     	              $location.path('/error');
+
     	        	 }
     	        });
-
     	  };
     	        
     	 $scope.cancel = function () {
@@ -225,26 +372,24 @@ DataApp.controller('BodyController', ['$uibModal','$scope', '$http', '$location'
 DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location','$httpParamSerializerJQLike', '$window',
 	function($uibModal, $scope, $http, $location, $httpParamSerializerJQLike, $window){
 
-	var method = "POST";	
-	var url = 'menu/blooddata';	
-
 
 	$http({
-          method: method,
+          method: 'POST',
           headers : {
               'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8'
           },
           transformRequest: $httpParamSerializerJQLike,
-          url: url,
+          url: 'menu/blooddata',
           data: { jwt: sessionStorage.getItem('jwt')}
+
         }).then(function successCallback(response){
         	var resdata = response.data;
         	
-	        $scope.gtp = resdata[0].gtp;
-	        $scope.hdl = resdata[0].hdl;
-	        $scope.ldl = resdata[0].ldl;
-	        $scope.tg = resdata[0].tg;
-	        $scope.fpg = resdata[0].fpg;
+	        $scope.gtp = resdata.gtp;
+	        $scope.hdl = resdata.hdl;
+	        $scope.ldl = resdata.ldl;
+	        $scope.tg = resdata.tg;
+	        $scope.fpg = resdata.fpg;
 
 	    }, function errorCallback() {
    	        $location.path('/error');
@@ -259,11 +404,13 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     		templateUrl : 'templates/updatemodal.html',
     	    controller: function ($scope, $uibModalInstance) {
 
-    	    	$scope.register = function () {
+　　　　　　　$scope.ok = function () {
 
- 	             if(!$scope.mdblood) {$scope.error_message_value = "New value is required." ; return;};
-	             if(isNaN($scope.mdblood)) {$scope.error_message_value = "New value must be numeric." ; return;};
-   	    		
+	           $scope.msg_value = ''
+	           $scope.msg_other = ''
+ 	           if(!$scope.mdblood) {$scope.msg_value = "New value is required." ; return;};
+	           if(isNaN($scope.mdblood)) {$scope.msg_value = "New value must be numeric." ; return;};
+
     	        $http({
     	             method: 'POST',
     	              headers : {
@@ -272,6 +419,7 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	               transformRequest: $httpParamSerializerJQLike,
     	               url: 'menu/updatedata',
     	       	       data: { jwt: sessionStorage.getItem('jwt'), newvalue: $scope.mdblood, bloodname: bloodname }
+
     	           }).then(function successCallback(){
 	    	            $uibModalInstance.close();
 	    	            $window.location.reload();
@@ -283,8 +431,8 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	        	  if(sts == 400){
 	                   var resdata = response.data;
 
-      	        	   $scope.error_message_value = resdata.Value;
-      	        	   $scope.error_message_other = resdata.Other;
+      	        	   $scope.msg_value = resdata.Value;
+      	        	   $scope.msg_other = resdata.Other;
 
     	        	  }else{
 
@@ -293,13 +441,15 @@ DataApp.controller('BloodController', ['$uibModal','$scope', '$http', '$location
     	           
     	        });
 
-    	  };
+    	    };
     	        
     	 $scope.cancel = function () {
     	       $uibModalInstance.dismiss('cancel');
     	   };
     	 }
+
       });
+
   	};
   	
   }]);
