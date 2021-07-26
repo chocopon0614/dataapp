@@ -24,7 +24,7 @@ import dataapp.Menu;
 import dataapp.Util;
 import dataapp.entity.UserInformation;
 
-public class dataservicetest {
+public class MenuTest {
 
 	@InjectMocks
 	private Menu menuservice = new Menu();
