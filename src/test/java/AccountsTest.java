@@ -37,9 +37,6 @@ public class AccountsTest {
 	@Mock
 	private UserDatabloodDao daoBlood;
 
-	@Mock
-	private UserInformation dummyUser;
-
 	@InjectMocks
 	private Accounts accountsController;
 
