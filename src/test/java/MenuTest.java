@@ -13,6 +13,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import dataapp.Util;
 import dataapp.dao.UserDataDao;
 import dataapp.dao.UserDatabloodDao;
 import dataapp.dao.UserInformationDao;
+import dataapp.dto.BloodDataRequest;
 import dataapp.dto.BodyDataRequest;
 import dataapp.entity.UserData;
 import dataapp.entity.UserDatablood;
@@ -133,9 +135,9 @@ public class MenuTest {
 		try {
 			doReturn("dummyUsername").when(util).varifyJwt(Mockito.anyString(), Mockito.anyString());
 			doReturn(new UserInformation()).when(daoUser).findByUsername(Mockito.anyString());
-			doReturn(data1).when(daoBlood).findByUserid(user);
+			doReturn(data1).when(daoBlood).findByUserid(Mockito.any());
 
-			ResponseEntity<String> result = menuController.bodyData("dummyJwt");
+			ResponseEntity<String> result = menuController.bloodData("dummyJwt");
 			assertEquals(HttpStatus.OK, result.getStatusCode());
 			assertNotNull(result.getBody());
 
@@ -219,7 +221,6 @@ public class MenuTest {
 		try {
 			doReturn("dummyUsername").when(util).varifyJwt(Mockito.anyString(), Mockito.anyString());
 			doReturn(data1).when(daoData).find(Mockito.anyInt());
-			doNothing().when(daoData).remove(data1);
 
 			ResponseEntity<String> result = menuController.deleteData("dummyJwt", 273);
 			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
@@ -304,6 +305,62 @@ public class MenuTest {
 			doThrow(new EntityExistsException()).when(daoData).persist(Mockito.any());
 
 			ResponseEntity<String> result = menuController.insertData(new BodyDataRequest(), bindingResult);
+			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	void updateDataTestNormal() {
+
+		BloodDataRequest bloodData = new BloodDataRequest();
+		bloodData.setBloodname("gtp");
+		bloodData.setJwt("dummyJwt");
+		bloodData.setNewvalue(34);
+
+		try {
+			doReturn(false).when(bindingResult).hasErrors();
+			doReturn("dummyUsername").when(util).varifyJwt(Mockito.anyString(), Mockito.anyString());
+			doReturn(new UserInformation()).when(daoUser).findByUsername(Mockito.anyString());
+			doNothing().when(daoBlood).update(Mockito.anyString(), Mockito.anyDouble(), Mockito.any());
+
+			ResponseEntity<String> result = menuController.updateData(bloodData, bindingResult);
+			assertEquals(HttpStatus.OK, result.getStatusCode());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	void updateDataTestError() {
+
+		try {
+			doReturn(true).when(bindingResult).hasErrors();
+			ResponseEntity<String> result = menuController.updateData(new BloodDataRequest(), bindingResult);
+			assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	void updateDataTestException() {
+
+		try {
+			doReturn(false).when(bindingResult).hasErrors();
+			doReturn("dummyUsername").when(util).varifyJwt(Mockito.anyString(), Mockito.anyString());
+			doReturn(new UserInformation()).when(daoUser).findByUsername(Mockito.anyString());
+			doThrow(new PersistenceException()).when(daoBlood).update(Mockito.anyString(), Mockito.anyDouble(),
+					Mockito.any());
+
+			ResponseEntity<String> result = menuController.updateData(new BloodDataRequest(), bindingResult);
 			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
 
 		} catch (Exception e) {
