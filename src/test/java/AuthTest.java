@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 
 import dataapp.Auth;
 import dataapp.Util;
@@ -30,9 +29,6 @@ public class AuthTest {
 
 	@Mock
 	private UserInformationDao daoUser;
-
-	@Mock
-	BindingResult bindingResult;
 
 	@InjectMocks
 	private Auth authController;
