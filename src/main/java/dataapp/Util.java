@@ -34,6 +34,9 @@ public class Util {
 	@Autowired
 	private Properties prop;
 
+	@Autowired
+	private RestTemplate restTemplate;
+
 	public Map<String, String> validCheck(BindingResult result) {
 
 		Map<String, String> map = new HashMap<>();
@@ -47,8 +50,6 @@ public class Util {
 	}
 
 	public String tokenCheck(String token) throws JsonProcessingException {
-
-		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
