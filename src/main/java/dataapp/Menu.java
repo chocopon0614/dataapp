@@ -55,15 +55,10 @@ public class Menu {
 
 			userData.sort(Comparator.comparing(UserData::getId).reversed());
 
-			if (!Objects.isNull(userData)) {
-				ObjectMapper mapper = new ObjectMapper();
-				String res = mapper.writeValueAsString(userData);
+			ObjectMapper mapper = new ObjectMapper();
+			String res = mapper.writeValueAsString(userData);
 
-				return new ResponseEntity<String>(res, HttpStatus.OK);
-
-			} else {
-				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -82,15 +77,10 @@ public class Menu {
 			UserInformation user = daoUser.findByUsername(userName);
 			UserDatablood userData = daoBlood.findByUserid(user);
 
-			if (!Objects.isNull(userData)) {
-				ObjectMapper mapper = new ObjectMapper();
-				String res = mapper.writeValueAsString(userData);
+			ObjectMapper mapper = new ObjectMapper();
+			String res = mapper.writeValueAsString(userData);
 
-				return new ResponseEntity<String>(res, HttpStatus.OK);
-
-			} else {
-				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -107,20 +97,15 @@ public class Menu {
 			String userName = util.varifyJwt(jwt, "userName");
 
 			UserData delData = daoData.find(id);
-			if (!userName.equals(delData.getUserinformation().getUsername()))
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			if (Objects.isNull(delData) || !userName.equals(delData.getUserinformation().getUsername()))
+				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 			daoData.remove(delData);
 
-			if (!Objects.isNull(delData)) {
-				ObjectMapper mapper = new ObjectMapper();
-				String res = mapper.writeValueAsString(delData);
+			ObjectMapper mapper = new ObjectMapper();
+			String res = mapper.writeValueAsString(delData);
 
-				return new ResponseEntity<String>(res, HttpStatus.OK);
-
-			} else {
-				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);

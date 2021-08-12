@@ -1,7 +1,6 @@
 package dataapp;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,15 +54,8 @@ public class Open {
 			UserInformation user = daoUser.findByUsername(userName);
 
 			List<UserData> userData = daoData.findByUseridSelected(user);
-
-			if (!Objects.isNull(userData)) {
-				String res = mapper.writeValueAsString(userData);
-				return new ResponseEntity<String>(res, HttpStatus.OK);
-
-			} else {
-				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-			}
+			String res = mapper.writeValueAsString(userData);
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -87,15 +79,8 @@ public class Open {
 			UserInformation user = daoUser.findByUsername(userName);
 
 			UserDatablood userData = daoBlood.findByUserid(user);
-
-			if (!Objects.isNull(userData)) {
-				String res = mapper.writeValueAsString(userData);
-				return new ResponseEntity<String>(res, HttpStatus.OK);
-
-			} else {
-				return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-			}
+			String res = mapper.writeValueAsString(userData);
+			return new ResponseEntity<String>(res, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -14,7 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
@@ -29,10 +29,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import dataapp.dto.Properties;
 
-@Service
+@Component
 public class Util {
 	@Autowired
 	private Properties prop;
+
+	@Autowired
+	private RestTemplate restTemplate;
 
 	public Map<String, String> validCheck(BindingResult result) {
 
@@ -47,8 +50,6 @@ public class Util {
 	}
 
 	public String tokenCheck(String token) throws JsonProcessingException {
-
-		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
