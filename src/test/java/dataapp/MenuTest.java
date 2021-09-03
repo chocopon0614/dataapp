@@ -1,3 +1,4 @@
+package dataapp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,8 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
-import dataapp.Menu;
-import dataapp.Util;
 import dataapp.dao.UserDataDao;
 import dataapp.dao.UserDatabloodDao;
 import dataapp.dao.UserInformationDao;
@@ -362,6 +361,24 @@ public class MenuTest {
 
 			ResponseEntity<String> result = menuController.updateData(new BloodDataRequest(), bindingResult);
 			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	void insertDataTestError2() {
+
+		BodyDataRequest bodyDataError2 = new BodyDataRequest();
+		bodyDataError2.setHeight(123.922);
+		bodyDataError2.setWeight(43.2);
+		bodyDataError2.setJwt("dummyJwt");
+
+		try {
+			ResponseEntity<String> result = menuController.insertData(bodyDataError2, bindingResult);
+			assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
 
 		} catch (Exception e) {
 			e.printStackTrace();
