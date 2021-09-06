@@ -22,9 +22,9 @@ public class BloodDataRequestTest {
 
 	@BeforeEach
 	public void setup() {
+		blooddataRequest.setNewvalue(23.2);
 		blooddataRequest.setBloodname("TG");
 		blooddataRequest.setJwt("dummyJwt");
-		blooddataRequest.setNewvalue(23.2);
 	}
 
 	@Test
@@ -43,4 +43,70 @@ public class BloodDataRequestTest {
 
 	}
 
+	@Test
+	void newvalueError_digit_1() {
+		blooddataRequest.setNewvalue(1234.1);
+		validator.validate(blooddataRequest, bindingResult);
+
+		assertEquals("newValue", bindingResult.getFieldError().getField());
+		assertEquals("Value:New value must be within 3 digit integer and 2 digit fraction.",
+				bindingResult.getFieldError().getDefaultMessage());
+
+	}
+
+	@Test
+	void newvalueError_digit_2() {
+		blooddataRequest.setNewvalue(1.143);
+		validator.validate(blooddataRequest, bindingResult);
+
+		assertEquals("newValue", bindingResult.getFieldError().getField());
+		assertEquals("Value:New value must be within 3 digit integer and 2 digit fraction.",
+				bindingResult.getFieldError().getDefaultMessage());
+
+	}
+
+	@Test
+	void bloodnameError_blank() {
+		blooddataRequest.setBloodname("");
+		validator.validate(blooddataRequest, bindingResult);
+
+		assertEquals("bloodName", bindingResult.getFieldError().getField());
+		assertEquals("Other:Invalid input error occured. Please retry or start over.",
+				bindingResult.getFieldError().getDefaultMessage());
+
+	}
+
+	@Test
+	void bloodnameError_pattern() {
+		blooddataRequest.setBloodname("DUM");
+		validator.validate(blooddataRequest, bindingResult);
+
+		assertEquals("bloodName", bindingResult.getFieldError().getField());
+		assertEquals("Other:Invalid input error occured. Please retry or start over.",
+				bindingResult.getFieldError().getDefaultMessage());
+
+	}
+
+	@Test
+	void jwtError_blank() {
+		blooddataRequest.setJwt("");
+		validator.validate(blooddataRequest, bindingResult);
+
+		assertEquals("jwt", bindingResult.getFieldError().getField());
+		assertEquals("Other:Invalid input error occured. Please retry or start over.",
+				bindingResult.getFieldError().getDefaultMessage());
+
+	}
+
+	@Test
+	void jwtError_max() {
+		blooddataRequest.setJwt(
+				"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
+		validator.validate(blooddataRequest, bindingResult);
+
+		assertEquals("jwt", bindingResult.getFieldError().getField());
+		assertEquals("Other:Invalid input error occured. Please retry or start over.",
+				bindingResult.getFieldError().getDefaultMessage());
+
+	}
 }
