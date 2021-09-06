@@ -1,3 +1,4 @@
+package dataapp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,8 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import dataapp.Accounts;
-import dataapp.Util;
 import dataapp.dao.UserDatabloodDao;
 import dataapp.dao.UserInformationDao;
 import dataapp.entity.UserInformation;

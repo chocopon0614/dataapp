@@ -1,3 +1,4 @@
+package dataapp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import dataapp.Util;
 import dataapp.dto.Properties;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +34,13 @@ public class UtilTest {
 	}
 
 	@Test
+	void validCheckTestNormal() {
+
+		// Todo
+
+	}
+
+	@Test
 	void tokencheckTestNormal() {
 
 		ResponseEntity<String> dummyRes = new ResponseEntity<>("testRes", HttpStatus.OK);
@@ -45,6 +52,35 @@ public class UtilTest {
 
 			String result = utilController.tokenCheck("dummyToken");
 			assertEquals("testRes", result);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	void getSha256TestNormal() {
+
+		try {
+			String result = utilController.getSha256("dummyString");
+			assertEquals("37b0f902984de6eca6fcdc4a512680e4915f8d85d5295b2043ec4cafdc9d18b4", result);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
+	void createJwt_varifyJwtTestNormal() {
+
+		doReturn((long) 3600).when(prop).getJwtExpiredTime();
+
+		try {
+			String result1 = utilController.createJwt("dummyUsername", "dummyPassword");
+			String result2 = utilController.varifyJwt(result1, "userName");
+			assertEquals("dummyUsername", result2);
 
 		} catch (Exception e) {
 			e.printStackTrace();
