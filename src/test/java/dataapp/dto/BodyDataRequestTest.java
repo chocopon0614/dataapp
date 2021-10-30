@@ -27,11 +27,11 @@ public class BodyDataRequestTest {
 		bodydataRequest.setJwt("dummyJwt");
 	}
 
-	@Test
-	void noError() {
-		validator.validate(bodydataRequest, bindingResult);
-		assertNull(bindingResult.getFieldError());
-	}
+//	@Test
+//	void noError() {
+//		validator.validate(bodydataRequest, bindingResult);
+//		assertNull(bindingResult.getFieldError());
+//	}
 
 	@Test
 	void heightError_min() {

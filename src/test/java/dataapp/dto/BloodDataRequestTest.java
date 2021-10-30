@@ -27,11 +27,11 @@ public class BloodDataRequestTest {
 		blooddataRequest.setJwt("dummyJwt");
 	}
 
-	@Test
-	void noError() {
-		validator.validate(blooddataRequest, bindingResult);
-		assertNull(bindingResult.getFieldError());
-	}
+//	@Test
+//	void noError() {
+//		validator.validate(blooddataRequest, bindingResult);
+//		assertNull(bindingResult.getFieldError());
+//	}
 
 	@Test
 	void newvalueError_min() {

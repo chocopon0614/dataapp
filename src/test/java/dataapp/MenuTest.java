@@ -368,22 +368,4 @@ public class MenuTest {
 
 	}
 
-	@Test
-	void insertDataTestError2() {
-
-		BodyDataRequest bodyDataError2 = new BodyDataRequest();
-		bodyDataError2.setHeight(123.922);
-		bodyDataError2.setWeight(43.2);
-		bodyDataError2.setJwt("dummyJwt");
-
-		try {
-			ResponseEntity<String> result = menuController.insertData(bodyDataError2, bindingResult);
-			assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
 }
