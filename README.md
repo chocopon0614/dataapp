@@ -9,6 +9,7 @@ This application can manage your health data and simply show it on table. <br>
 The stored data is accessed by other application.
 
 The connection with other application is conducted by Oauth2 Authorization Code Grant.<br>
+
 The resource owner's information in this application is securely accessed by other application with token issued by the authorization server.
 
 <br>
