@@ -12,7 +12,7 @@ jobs:
         - restore_cache:
             key: circleci-java-maven-{{ checksum "pom.xml" }}
         - run:
-            command: mvn clean install
+            command: mvn package
         - save_cache:
             paths:
               - ~/.m2
