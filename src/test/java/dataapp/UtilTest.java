@@ -34,13 +34,6 @@ public class UtilTest {
 	}
 
 	@Test
-	void validCheckTestNormal() {
-
-		// Todo
-
-	}
-
-	@Test
 	void tokencheckTestNormal() {
 
 		ResponseEntity<String> dummyRes = new ResponseEntity<>("testRes", HttpStatus.OK);
