@@ -51,7 +51,7 @@ jobs:
             fingerprints:
               - '3a:5c:be:07:a4:f0:df:4d:04:11:59:90:53:a4:58:55'
         - run: scp -o StrictHostKeyChecking=no /home/circleci/target/DataApp.war ${USER_NAME}@${HOST_NAME}:~
-        - run: ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps'
+        - run: ssh -t -o StrictHostKeyChecking=no ${USER_NAME}@${HOST_NAME} 'cp /home/chocopon1/DataApp.war /opt/apache-tomcat/webapps | sudo systemctl restart tomcat'
         - run:
             name: "revoke-security-group-ingress"
             command: |
