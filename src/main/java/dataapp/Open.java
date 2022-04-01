@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dataapp.dao.UserDataDao;
@@ -27,9 +28,6 @@ import dataapp.entity.UserInformation;
 @RequestMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
 public class Open {
 	@Autowired
-	private Util util;
-
-	@Autowired
 	private UserInformationDao daoUser;
 
 	@Autowired
@@ -39,21 +37,17 @@ public class Open {
 	private UserDatabloodDao daoBlood;
 
 	@GetMapping("bardata")
-	public ResponseEntity<String> userInfo(@RequestHeader("Token") String token) {
+	public ResponseEntity<String> userInfo(@RequestHeader("Authorization") String authorization) {
 
 		try {
+			String token = authorization.split(" ")[1];
+			DecodedJWT decodedToken = new JWT().decodeJwt(token);
+			String userName = decodedToken.getClaim("username").asString();
 
-			String tokenCheck = util.tokenCheck(token);
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode root = mapper.readTree(tokenCheck);
-
-			if (!root.get("active").asBoolean())
-				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-
-			String userName = root.get("username").asText();
 			UserInformation user = daoUser.findByUsername(userName);
-
 			List<UserData> userData = daoData.findByUseridSelected(user);
+
+			ObjectMapper mapper = new ObjectMapper();
 			String res = mapper.writeValueAsString(userData);
 			return new ResponseEntity<String>(res, HttpStatus.OK);
 
@@ -64,21 +58,17 @@ public class Open {
 	}
 
 	@GetMapping("chartdata")
-	public ResponseEntity<String> chartData(@RequestHeader("Token") String token) {
+	public ResponseEntity<String> chartData(@RequestHeader("Authorization") String authorization) {
 
 		try {
+			String token = authorization.split(" ")[1];
+			DecodedJWT decodedToken = new JWT().decodeJwt(token);
+			String userName = decodedToken.getClaim("username").asString();
 
-			String tokenCheck = util.tokenCheck(token);
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode root = mapper.readTree(tokenCheck);
-
-			if (!root.get("active").asBoolean())
-				return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-
-			String userName = root.get("username").asText();
 			UserInformation user = daoUser.findByUsername(userName);
-
 			UserDatablood userData = daoBlood.findByUserid(user);
+
+			ObjectMapper mapper = new ObjectMapper();
 			String res = mapper.writeValueAsString(userData);
 			return new ResponseEntity<String>(res, HttpStatus.OK);
 

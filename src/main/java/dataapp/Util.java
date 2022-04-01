@@ -4,22 +4,14 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.client.RestTemplate;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -33,9 +25,6 @@ public class Util {
 	@Autowired
 	private Properties prop;
 
-	@Autowired
-	private RestTemplate restTemplate;
-
 	public Map<String, String> validCheck(BindingResult result) {
 
 		Map<String, String> map = new HashMap<>();
@@ -46,24 +35,6 @@ public class Util {
 		}
 
 		return map;
-	}
-
-	public String tokenCheck(String token) {
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("client_id", prop.getClientId());
-		map.add("token", token);
-		map.add("token_type_hint", "access_token");
-
-		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
-		ResponseEntity<String> res = restTemplate.postForEntity(prop.getIntrospectionUrl(), entity, String.class);
-
-		return res.getBody();
-
 	}
 
 	public String getSha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
