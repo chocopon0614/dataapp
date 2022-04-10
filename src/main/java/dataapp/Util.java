@@ -13,17 +13,31 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
+import com.amazonaws.services.cognitoidp.model.AdminConfirmSignUpRequest;
+import com.amazonaws.services.cognitoidp.model.AdminDeleteUserRequest;
+import com.amazonaws.services.cognitoidp.model.SignUpRequest;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import dataapp.dao.AwsConfigDao;
 import dataapp.dto.Properties;
+import dataapp.entity.AwsConfig;
 
 @Component
 public class Util {
 	@Autowired
 	private Properties prop;
+
+	@Autowired
+	private AwsConfigDao daoAws;
 
 	public Map<String, String> validCheck(BindingResult result) {
 
@@ -69,4 +83,30 @@ public class Util {
 
 	}
 
+	public void userPool(String userName, String password) {
+
+		AwsConfig aws = daoAws.find(1);
+		AWSCredentials credentials = new BasicAWSCredentials(aws.getAccesskey(), aws.getSecretKey());
+
+		AWSCognitoIdentityProvider userPoolClient = AWSCognitoIdentityProviderClientBuilder.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_WEST_2).build();
+
+		if (password != null) {
+			SignUpRequest signUpRequest = new SignUpRequest().withUsername(userName).withPassword(password)
+					.withClientId(aws.getClientid());
+			userPoolClient.signUp(signUpRequest);
+
+			AdminConfirmSignUpRequest adminConfirmSignUpRequest = new AdminConfirmSignUpRequest()
+					.withUserPoolId(aws.getUserpoolid()).withUsername(userName);
+			userPoolClient.adminConfirmSignUp(adminConfirmSignUpRequest);
+
+		} else {
+
+			AdminDeleteUserRequest delRequest = new AdminDeleteUserRequest().withUsername(userName)
+					.withUserPoolId(aws.getUserpoolid());
+
+			userPoolClient.adminDeleteUser(delRequest);
+
+		}
+	}
 }

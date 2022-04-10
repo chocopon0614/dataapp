@@ -84,5 +84,10 @@
       	<artifactId>spring-boot-configuration-processor</artifactId>
       	<optional>true</optional>
       </dependency>
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-cognitoidp</artifactId>
+         <version>1.11.828</version>
+      </dependency>
 	</dependencies>
 </project>

@@ -73,6 +73,8 @@ public class Accounts {
 			data.setUserinformation(daoUser.findByUsername(userName));
 			daoBlood.persist(data);
 
+			util.userPool(userName, hashedPassword);
+
 			return new ResponseEntity<String>(HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -90,6 +92,8 @@ public class Accounts {
 
 			UserInformation user = daoUser.findByUsername(userName);
 			daoUser.remove(user);
+
+			util.userPool(userName, null);
 
 			return new ResponseEntity<String>(HttpStatus.OK);
 

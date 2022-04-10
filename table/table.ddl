@@ -1,6 +1,7 @@
 drop table USERDATA;
 drop table USERDATABLOOD;
 drop table USERINFORMATION;
+drop table AWSCONFIG;
 
 create table USERINFORMATION(
   id int auto_increment not null primary key, 
@@ -34,3 +35,15 @@ create table USERDATABLOOD(
   modified_time timestamp not null,
   foreign key fk_userid(userid) references USERINFORMATION(id) on delete cascade on update cascade
 );
+
+create table AWSCONFIG(
+  id int auto_increment not null primary key, 
+  userpoolid varchar(256) not null,
+  clientid varchar(256) not null,
+  accesskey varchar(256) not null, 
+  secretkey varchar(256) not null,
+  create_time timestamp not null, 
+  modified_time timestamp not null
+);
+
+
