@@ -33,7 +33,7 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
 
           $scope.msg = '';
 	      if(!$scope.username) {$scope.msg = "Username is required." ; return;};
-	      if(!$scope.password) {$scope.msg = "Password is required." ; return;};
+	      if(!$scope.password ) {$scope.msg = "Password is required." ; return;};
     		
     	  $http({
     	          method: 'POST',
@@ -64,7 +64,8 @@ DataApp.controller('AccountsController', ['$uibModal','$scope', '$http', '$windo
                 $scope.msg=''
 	            if(!$scope.mdusername) {$scope.msg = "Username is required." ; return;};
 	            if(!$scope.mdpassword) {$scope.msg = "Password is required." ; return;};
-    	    		
+    	        if($scope.mdpassword.length < 6) {$scope.msg = "Password must be 6 and more." ; return;};
+	    		
     	        $http({
     	             method: 'POST',
     	              headers : {
