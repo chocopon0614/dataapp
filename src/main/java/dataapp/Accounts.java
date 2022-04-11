@@ -73,7 +73,7 @@ public class Accounts {
 			data.setUserinformation(daoUser.findByUsername(userName));
 			daoBlood.persist(data);
 
-			util.userPool(userName, hashedPassword);
+			util.userPool(userName, passWord);
 
 			return new ResponseEntity<String>(HttpStatus.OK);
 
